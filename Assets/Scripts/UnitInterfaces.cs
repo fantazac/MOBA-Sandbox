@@ -1,184 +1,49 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Threading;
+using System.Collections.Generic;
 
-public interface Unit{
-    public float health { get; set; }
-    public float attack { get; set; }
-    public float defense { get; set; }
-    public float agility { get; set; }
-    public float movementSpeed { get; set; }
-    public float attackSpeed { get; set; }
-    public Animation attackAnimation { get; set; }
-    public Animation walkAnimation { get; set; }
-    public Animation idleAnimation { get; set; }
-    public Animation deathAnimation { get; set; }
-    public Animation lifeAnimation { get; set; }
+public interface Unit
+{
+    float health { get; set; }
+    float attack { get; set; }
+    float defense { get; set; }
+    float agility { get; set; }
+    float movementSpeed { get; set; }
+    float attackSpeed { get; set; }
 
-    public void Move(Vector3 movement)
-    {
+    Animation attackAnimation { get; set; }
+    Animation walkAnimation { get; set; }
+    Animation idleAnimation { get; set; }
+    Animation deathAnimation { get; set; }
+    Animation lifeAnimation { get; set; }
 
-    }
-
-    public void DecreaseHealth(double attackedAmmount)
-    {
-
-    }
-
-    public void HealHealth(double healAmmount)
-    {
-
-    }
-
-    public void IncreaseHealth(double increaseAmmount)
-    {
-
-    }
-
-    public void Attack(GameObject target)
-    {
-
-    }
+    void Move(Vector3 movement);
+    void DecreaseHealth(double attackedAmmount);
+    void HealHealth(double healAmmount);
+    void IncreaseHealth(double increaseAmmount);
+    void Attack(GameObject target);
 }
 
 public interface Mob : Unit
 {
-    public float health { get; set; }
-    public float attack { get; set; }
-    public float defense { get; set; }
-    public float agility { get; set; }
-    public float movementSpeed { get; set; }
-    public float attackSpeed { get; set; }
-    public Animation attackAnimation { get; set; }
-    public Animation walkAnimation { get; set; }
-    public Animation idleAnimation { get; set; }
-    public Animation deathAnimation { get; set; }
-    public Animation lifeAnimation { get; set; }
 
-    public void Move(Vector3 movement)
-    {
-
-    }
-
-    public void DecreaseHealth(double attackedAmmount)
-    {
-
-    }
-
-    public void HealHealth(double healAmmount)
-    {
-
-    }
-
-    public void IncreaseHealth(double increaseAmmount)
-    {
-
-    }
-
-    public void Attack(GameObject target)
-    {
-
-    }
 }
 
 public interface SuperMob : Unit
 {
-    public float health { get; set; }
-    public float attack { get; set; }
-    public float defense { get; set; }
-    public float agility { get; set; }
-    public float movementSpeed { get; set; }
-    public float attackSpeed { get; set; }
-    public Animation attackAnimation { get; set; }
-    public Animation walkAnimation { get; set; }
-    public Animation idleAnimation { get; set; }
-    public Animation deathAnimation { get; set; }
-    public Animation lifeAnimation { get; set; }
 
-    public void Move(Vector3 movement)
-    {
-
-    }
-
-    public void DecreaseHealth(double attackedAmmount)
-    {
-
-    }
-
-    public void HealHealth(double healAmmount)
-    {
-
-    }
-
-    public void IncreaseHealth(double increaseAmmount)
-    {
-
-    }
-
-    public void Attack(GameObject target)
-    {
-
-    }
 }
 
 public interface Character : Unit
 {
-    public float health { get; set; }
-    public float mana { get; set; }
-    public float attack { get; set; }
-    public float defense { get; set; }
-    public float agility { get; set; }
-    public float abilityPower { get; set; }
-    public float movementSpeed { get; set; }
-    public float attackSpeed { get; set; }
-    public float physicalPenetration { get; set; }
-    public float magicalPenetration { get; set; }
-    public List<Ability> abilities { get; set; }
-    public List<Equippable> equipment { get; set; }
-    public int money { get; set; }
-    public Animation attackAnimation { get; set; }
-    public Animation walkAnimation { get; set; }
-    public Animation idleAnimation { get; set; }
-    public Animation deathAnimation { get; set; }
-    public Animation lifeAnimation { get; set; }
+    float mana { get; set; }
+    float abilityPower { get; set; }
+    float physicalPenetration { get; set; }
+    float magicalPenetration { get; set; }
+    List<Ability> abilities { get; set; }
+    List<Equippable> equipment { get; set; }
+    int money { get; set; }
 
-    public void Equip(GameObject equipable)
-    {
-
-    }
-
-    public void Move(Vector3 movement)
-    {
-
-    }
-
-    public void DecreaseHealth(double attackedAmmount)
-    {
-
-    }
-
-    public void HealHealth(double healAmmount)
-    {
-
-    }
-
-    public void IncreaseHealth(double increaseAmmount)
-    {
-
-    }
-
-    public void Attack(GameObject target)
-    {
-
-    }
-
-    public void CastTargetSelectAbility(GameObject target)
-    {
-
-    }
-
-    public void CastAreaSelectAbility(Vector3 location)
-    {
-
-    }
+    void Equip(GameObject equipable);
+    void CastTargetSelectAbility(GameObject target);
+    void CastAreaSelectAbility(Vector3 location);
 }
