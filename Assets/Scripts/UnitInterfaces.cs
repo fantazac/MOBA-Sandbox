@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MOBA.ExtClasses;
 
-public interface Unit
+public interface IUnit
 {
     float health { get; set; }
     float attack { get; set; }
@@ -17,23 +18,18 @@ public interface Unit
     Animation lifeAnimation { get; set; }
 
     void Move(Vector3 movement);
-    void DecreaseHealth(double attackedAmmount);
-    void HealHealth(double healAmmount);
-    void IncreaseHealth(double increaseAmmount);
+    void DecreaseHealth(float attackedAmmount);
+    void HealHealth(float healAmmount);
+    void IncreaseHealth(float increaseAmmount);
     void Attack(GameObject target);
 }
 
-public interface Mob : Unit
+public interface IMob : IUnit
 {
 
 }
 
-public interface SuperMob : Unit
-{
-
-}
-
-public interface Character : Unit
+public interface ICharacter : IUnit
 {
     float mana { get; set; }
     float abilityPower { get; set; }
