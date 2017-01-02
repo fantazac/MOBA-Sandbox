@@ -4,6 +4,9 @@ using System.Collections;
 public class GameManager : Photon.MonoBehaviour
 {
     [SerializeField]
+    private GameObject lobbyCamera;
+
+    [SerializeField]
     private GameObject[] blueSpawns;
 
     [SerializeField]
@@ -34,7 +37,14 @@ public class GameManager : Photon.MonoBehaviour
     private void Spawn(int team, string character)
     {
         state = 3;
-        Debug.Log("You are on team... " + team + ". You are playing as... " + character);
+        lobbyCamera.SetActive(false);
+
+        GameObject spawn = blueSpawns[Random.Range(0, blueSpawns.Length)];
+
+        GameObject player = PhotonNetwork.Instantiate(character, spawn.transform.position, spawn.transform.rotation, 0);
+
+
+        //Debug.Log("You are on team... " + team + ". You are playing as... " + character);
     }
 
     private void OnGUI()
