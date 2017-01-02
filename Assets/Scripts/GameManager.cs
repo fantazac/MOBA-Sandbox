@@ -13,7 +13,7 @@ public class GameManager : Photon.MonoBehaviour
 
     private void Connect()
     {
-        PhotonNetwork.ConnectToBestCloudServer("V1.0");
+        PhotonNetwork.ConnectUsingSettings("V1.0");
     }
 
     private void OnJoinedLobby()
@@ -48,14 +48,14 @@ public class GameManager : Photon.MonoBehaviour
                 }
                 break;
             case 1:
-                GUI.Label(new Rect(10, 10, 100, 30), "Connected");
+                GUI.Label(new Rect(10, 40, 100, 30), "Connected");
                 if (GUI.Button(new Rect(10, 10, 100, 30), "Search"))
                 {
                     PhotonNetwork.JoinRandomRoom();
                 }
                 break;
             case 2:
-                GUI.Label(new Rect(10, 10, 100, 30), "Select Your Champion");
+                GUI.Label(new Rect(10, 40, 100, 30), "Select Your Champion");
                 if (GUI.Button(new Rect(70, 10, 100, 30), "Alex"))
                 {
                     Spawn(0, "Alex");
