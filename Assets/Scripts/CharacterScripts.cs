@@ -63,7 +63,7 @@ public class GeneralCharacter : ICharacter
 
     public void Move(Vector3 movement)
     {
-        transform.position = Vector3.MoveTowards(transform.position, movement, Time.deltaTime * 5);
+        //transform.position = Vector3.MoveTowards(transform.position, movement, Time.deltaTime * 5);
     }
 
     public void DecreaseHealth(float attackedAmmount)
