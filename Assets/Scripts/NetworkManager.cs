@@ -6,6 +6,9 @@ public class NetworkManager : MonoBehaviour
     [SerializeField]
     private GameObject menuCamera;
 
+    [SerializeField]
+    private GameObject[] spawners;
+
     private void Start()
     {
         Connect();
@@ -42,7 +45,7 @@ public class NetworkManager : MonoBehaviour
 
     private void SpawnMyPlayer()
     {
-        PhotonNetwork.Instantiate("Player", Vector3.up, new Quaternion(), 0);
+        PhotonNetwork.Instantiate("Player", spawners[Random.Range(0, spawners.Length)].transform.position, new Quaternion(), 0);
         menuCamera.SetActive(false);
     }
 }
