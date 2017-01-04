@@ -1,47 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LucianE : MonoBehaviour
+public class LucianE : PlayerSkill
 {
     private float maxDistance = 6;
     private float minDistance = 2;
 
     private float dashSpeed = 32;
 
-    private float cooldown = 2;
-    private WaitForSeconds delayCooldown;
+    RaycastHit hit;
 
-    private bool canUse = true;
-
-    private PlayerMovement playerMovement;
-    private InputManager inputManager;
-
-    public delegate void LucianEActivatedHandler();
-    public event LucianEActivatedHandler LucianEActivated;
-
-    public delegate void LucianEFinishedHandler();
-    public event LucianEFinishedHandler LucianEFinished;
-
-    private void Start()
+    protected override void Start()
     {
-        inputManager = GetComponent<InputManager>();
-        inputManager.OnPressedE += ActivateLucianE;
-        playerMovement = GetComponent<PlayerMovement>();
-        delayCooldown = new WaitForSeconds(cooldown);
+        skillId = 0;
+        base.Start();
     }
 
-    private void ActivateLucianE(Vector3 mousePosition)
+    public override void ActivateSkill()
     {
-        if (canUse)
-        {
-            RaycastHit hit;
-            if (playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity))
-            {
-                canUse = false;
-                LucianEActivated();
-                StartCoroutine(MoveLucian(hit.point + playerMovement.halfHeight));
-            }
-        }
+        SkillBeingUsed(skillId);
+        StartCoroutine(SkillEffect(hit.point + playerMovement.halfHeight));
+    }
+
+    public override bool CanUseSkill(Vector3 mousePosition)
+    {
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
     }
 
     private Vector3 FindPointToDashTo(Vector3 mousePositionOnTerrain, Vector3 currentPosition)
@@ -55,7 +38,7 @@ public class LucianE : MonoBehaviour
             (minDistance * normalizedVector + currentPosition) : mousePositionOnTerrain;
     }
 
-    private IEnumerator MoveLucian(Vector3 mousePositionOnTerrain)
+    protected override IEnumerator SkillEffect(Vector3 mousePositionOnTerrain)
     {
         Vector3 target = FindPointToDashTo(mousePositionOnTerrain, transform.position);
 
@@ -67,14 +50,6 @@ public class LucianE : MonoBehaviour
 
             yield return null;
         }
-        LucianEFinished();
-        StartCoroutine(Cooldown());
-    }
-
-    private IEnumerator Cooldown()
-    {
-        yield return delayCooldown;
-
-        canUse = true;
+        SkillDone(skillId);
     }
 }

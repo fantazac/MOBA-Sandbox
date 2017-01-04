@@ -58,8 +58,14 @@ public class NetworkManager : MonoBehaviour
         GameObject player = PhotonNetwork.Instantiate("Player", spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
+        player.transform.parent.GetChild(1).gameObject.SetActive(true);
+        player.transform.parent.gameObject.GetComponentInChildren<SkillCooldown>().player = player;
+
         player.GetComponent<PlayerMovement>().enabled = true;
-        player.GetComponent<LucianE>().enabled = true;
+        foreach(PlayerSkill ps in player.GetComponents<PlayerSkill>())
+        {
+            ps.enabled = true;
+        }
         player.GetComponent<InputManager>().enabled = true;
         
         menuCamera.SetActive(false);

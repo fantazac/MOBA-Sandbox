@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -19,8 +20,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 target;
 
     private InputManager inputManager;
+    public List<PlayerSkill> skills;
     private LucianE lucianE;
-    private bool isUsingLucianE = false;
+    private bool isDashing = false;
 
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
@@ -32,9 +34,12 @@ public class PlayerMovement : MonoBehaviour
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         childCamera = transform.parent.GetComponentInChildren<Camera>();
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
-        lucianE = GetComponent<LucianE>();
-        lucianE.LucianEActivated += LucianEActivated;
-        lucianE.LucianEFinished += LucianEFinished;
+        foreach(PlayerSkill ps in GetComponents<PlayerSkill>())
+        {
+            skills.Add(ps);
+            ps.SkillActivated += SkillActivated;
+            ps.SkillFinished += SkillFinished;
+        }
 
     }
 
@@ -46,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
             Destroy(moveToPoint);
             moveToPoint = (GameObject)Instantiate(moveTo, hit.point + halfHeight, new Quaternion());
             target = hit.point + halfHeight;
-            if (!isUsingLucianE)
+            if (!isDashing)
             {
                 StopAllCoroutines();
                 StartCoroutine(MoveTowardsWherePlayerClicked(target));
@@ -60,15 +65,35 @@ public class PlayerMovement : MonoBehaviour
         return childCamera.ScreenPointToRay(mousePosition);
     }
 
-    private void LucianEActivated()
+    private void SkillActivated(int skillId)
     {
-        isUsingLucianE = true;
+        switch (skillId)
+        {
+            case 0:
+                Dashing();
+                break;
+        }
+    }
+
+    private void SkillFinished(int skillId)
+    {
+        switch (skillId)
+        {
+            case 0:
+                DashingFinished();
+                break;
+        }
+    }
+
+    private void Dashing()
+    {
+        isDashing = true;
         StopAllCoroutines();
     }
 
-    private void LucianEFinished()
+    private void DashingFinished()
     {
-        isUsingLucianE = false;
+        isDashing = false;
         if(target != Vector3.zero)
         {
             StopAllCoroutines();
@@ -86,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
     {
         while(transform.position != wherePlayerClickedToMove)
         {
-            if (!isUsingLucianE)
+            if (!isDashing)
             {
                 transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * 10);
 
@@ -104,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
         rotationAmount = Vector3.up;
         while (rotationAmountLastFrame != rotationAmount)
         {
-            if (!isUsingLucianE)
+            if (!isDashing)
             {
                 rotationAmountLastFrame = rotationAmount;
 

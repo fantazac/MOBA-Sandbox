@@ -235,7 +235,9 @@
     <Compile Include="Assets\Scripts\NetworkCharacterMovement.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\PlayerSkill.cs" />
     <Compile Include="Assets\Scripts\RotateSpawner.cs" />
+    <Compile Include="Assets\Scripts\SkillCooldown.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />

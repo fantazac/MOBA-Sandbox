@@ -3,9 +3,8 @@ using System.Collections;
 
 public class InputManager : MonoBehaviour
 {
-
-    public delegate void OnPressedEHandler(Vector3 mousePosition);
-    public event OnPressedEHandler OnPressedE;
+    public delegate void OnPressedSkillHandler(int skillId, Vector3 mousePosition);
+    public event OnPressedSkillHandler OnPressedSkill;
 
     public delegate void OnPressedYHandler();
     public event OnPressedYHandler OnPressedY;
@@ -23,7 +22,7 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            OnPressedE(Input.mousePosition);
+            OnPressedSkill(0, Input.mousePosition);
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {
