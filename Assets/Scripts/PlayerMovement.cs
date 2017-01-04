@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private GameObject moveTo;
 
-    private Rigidbody _rigidbody;
     public TerrainCollider terrainCollider;
     private Camera childCamera;
 
@@ -22,14 +21,11 @@ public class PlayerMovement : MonoBehaviour
     private LucianE lucianE;
     private bool isUsingLucianE = false;
 
-    private bool isMoving = false;
-
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
 
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody>();
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         childCamera = transform.parent.GetComponentInChildren<Camera>();
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;

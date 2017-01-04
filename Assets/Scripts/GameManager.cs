@@ -41,7 +41,8 @@ public class GameManager : Photon.MonoBehaviour
 
         GameObject spawn = blueSpawns[Random.Range(0, blueSpawns.Length)];
 
-        GameObject player = PhotonNetwork.Instantiate(character, spawn.transform.position, spawn.transform.rotation, 0);
+        //GameObject player = 
+        PhotonNetwork.Instantiate(character, spawn.transform.position, spawn.transform.rotation, 0);
 
 
         //Debug.Log("You are on team... " + team + ". You are playing as... " + character);
