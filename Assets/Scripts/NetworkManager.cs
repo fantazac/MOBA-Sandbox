@@ -7,6 +7,9 @@ public class NetworkManager : MonoBehaviour
     private GameObject menuCamera;
 
     [SerializeField]
+    private GameObject playerParent;
+
+    [SerializeField]
     private GameObject[] spawners;
 
     private void Start()
@@ -50,8 +53,15 @@ public class NetworkManager : MonoBehaviour
 
     private void SpawnMyPlayer()
     {
-        GameObject player = PhotonNetwork.Instantiate("Player", spawners[Random.Range(0, spawners.Length)].transform.position - (Vector3.up * 1.5f), new Quaternion(), 0);
-        player.transform.GetChild(1).gameObject.SetActive(true);
+        Vector3 spawner = spawners[Random.Range(0, spawners.Length)].transform.position;
+        GameObject playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
+        GameObject player = PhotonNetwork.Instantiate("Player", spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
+        player.transform.parent = playerTemplate.transform;
+        player.transform.parent.GetChild(0).gameObject.SetActive(true);
+        player.GetComponent<PlayerMovement>().enabled = true;
+        player.GetComponent<LucianE>().enabled = true;
+        player.GetComponent<InputManager>().enabled = true;
+        
         menuCamera.SetActive(false);
     }
 }

@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 target;
 
+    private InputManager inputManager;
     private LucianE lucianE;
     private bool isUsingLucianE = false;
 
@@ -26,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        inputManager = GetComponent<InputManager>();
+        inputManager.OnRightClick += PressedRightClick;
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         childCamera = transform.parent.GetComponentInChildren<Camera>();
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
@@ -35,29 +38,26 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void Update()
+    private void PressedRightClick(Vector3 mousePosition)
     {
-        if (Input.GetMouseButtonDown(1))
+        RaycastHit hit;
+        if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
         {
-            RaycastHit hit;
-            if (terrainCollider.Raycast(GetRay(), out hit, Mathf.Infinity))
+            Destroy(moveToPoint);
+            moveToPoint = (GameObject)Instantiate(moveTo, hit.point + halfHeight, new Quaternion());
+            target = hit.point + halfHeight;
+            if (!isUsingLucianE)
             {
-                Destroy(moveToPoint);
-                moveToPoint = (GameObject)Instantiate(moveTo, hit.point + halfHeight, new Quaternion());
-                target = hit.point + halfHeight;
-                if (!isUsingLucianE)
-                {
-                    StopAllCoroutines();
-                    StartCoroutine(MoveTowardsWherePlayerClicked(target));
-                    StartCoroutine(RotateTowardsWherePlayerClicked(target));
-                }
+                StopAllCoroutines();
+                StartCoroutine(MoveTowardsWherePlayerClicked(target));
+                StartCoroutine(RotateTowardsWherePlayerClicked(target));
             }
         }
     }
 
-    public Ray GetRay()
+    public Ray GetRay(Vector3 mousePosition)
     {
-        return childCamera.ScreenPointToRay(Input.mousePosition);
+        return childCamera.ScreenPointToRay(mousePosition);
     }
 
     private void LucianEActivated()

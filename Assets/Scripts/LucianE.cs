@@ -14,6 +14,7 @@ public class LucianE : MonoBehaviour
     private bool canUse = true;
 
     private PlayerMovement playerMovement;
+    private InputManager inputManager;
 
     public delegate void LucianEActivatedHandler();
     public event LucianEActivatedHandler LucianEActivated;
@@ -23,16 +24,18 @@ public class LucianE : MonoBehaviour
 
     private void Start()
     {
+        inputManager = GetComponent<InputManager>();
+        inputManager.OnPressedE += ActivateLucianE;
         playerMovement = GetComponent<PlayerMovement>();
         delayCooldown = new WaitForSeconds(cooldown);
     }
 
-    private void Update()
+    private void ActivateLucianE(Vector3 mousePosition)
     {
-        if (canUse && Input.GetKeyDown(KeyCode.E))
+        if (canUse)
         {
             RaycastHit hit;
-            if (playerMovement.terrainCollider.Raycast(playerMovement.GetRay(), out hit, Mathf.Infinity))
+            if (playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity))
             {
                 canUse = false;
                 LucianEActivated();

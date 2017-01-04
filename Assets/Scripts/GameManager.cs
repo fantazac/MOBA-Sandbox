@@ -44,7 +44,6 @@ public class GameManager : Photon.MonoBehaviour
         //GameObject player = 
         PhotonNetwork.Instantiate(character, spawn.transform.position, spawn.transform.rotation, 0);
 
-
         //Debug.Log("You are on team... " + team + ". You are playing as... " + character);
     }
 
