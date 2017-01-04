@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOBA-Sandbox.Plugins", "MOBA-Sandbox.Plugins.csproj", "{74A2DCE7-716B-05DA-B63C-CBB161DA5F0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOBA-Sandbox.CSharp.Plugins", "MOBA-Sandbox.CSharp.Plugins.csproj", "{CBDF74A1-13AD-5F87-2E75-FCEC625CDAC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOBA-Sandbox", "MOBA-Sandbox.csproj", "{714F2D87-B1E2-E1B0-D43D-970109F533DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOBA-Sandbox.CSharp", "MOBA-Sandbox.CSharp.csproj", "{A0FDA8C6-5AEB-0D71-5259-39545AB4B10E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOBA-Sandbox.Editor", "MOBA-Sandbox.Editor.csproj", "{907F28B5-F986-CDFE-80D8-415890057150}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MOBA-Sandbox.CSharp.Editor", "MOBA-Sandbox.CSharp.Editor.csproj", "{119A86DD-6A84-76DF-1BD0-EDEC39135B82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +13,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{74A2DCE7-716B-05DA-B63C-CBB161DA5F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74A2DCE7-716B-05DA-B63C-CBB161DA5F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74A2DCE7-716B-05DA-B63C-CBB161DA5F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74A2DCE7-716B-05DA-B63C-CBB161DA5F0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{714F2D87-B1E2-E1B0-D43D-970109F533DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{714F2D87-B1E2-E1B0-D43D-970109F533DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{714F2D87-B1E2-E1B0-D43D-970109F533DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{714F2D87-B1E2-E1B0-D43D-970109F533DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{907F28B5-F986-CDFE-80D8-415890057150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{907F28B5-F986-CDFE-80D8-415890057150}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{907F28B5-F986-CDFE-80D8-415890057150}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{907F28B5-F986-CDFE-80D8-415890057150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBDF74A1-13AD-5F87-2E75-FCEC625CDAC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBDF74A1-13AD-5F87-2E75-FCEC625CDAC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBDF74A1-13AD-5F87-2E75-FCEC625CDAC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBDF74A1-13AD-5F87-2E75-FCEC625CDAC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0FDA8C6-5AEB-0D71-5259-39545AB4B10E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0FDA8C6-5AEB-0D71-5259-39545AB4B10E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0FDA8C6-5AEB-0D71-5259-39545AB4B10E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0FDA8C6-5AEB-0D71-5259-39545AB4B10E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{119A86DD-6A84-76DF-1BD0-EDEC39135B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{119A86DD-6A84-76DF-1BD0-EDEC39135B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{119A86DD-6A84-76DF-1BD0-EDEC39135B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{119A86DD-6A84-76DF-1BD0-EDEC39135B82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
