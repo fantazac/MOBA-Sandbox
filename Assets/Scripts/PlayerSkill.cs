@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public abstract class PlayerSkill : MonoBehaviour
 {
+
+    public float cooldown;
+    public Sprite skillImage;
 
     protected PlayerMovement playerMovement;
     protected InputManager inputManager;

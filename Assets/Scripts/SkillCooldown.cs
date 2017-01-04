@@ -18,8 +18,14 @@ public class SkillCooldown : MonoBehaviour
     {
         inputManager = player.GetComponent<InputManager>();
         inputManager.OnPressedSkill += ActivateSkill;
-
+        
         playerSkills = player.GetComponent<PlayerMovement>().skills;
+        for(int i = 0; i < skills.Count; i++)
+        {
+            skills[i].cooldown = playerSkills[i].cooldown;
+            skills[i].skillIcon.sprite = playerSkills[i].skillImage;
+            skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
+        }
     }
 
     private void ActivateSkill(int skillId, Vector3 mousePosition)
@@ -40,6 +46,18 @@ public class SkillCooldown : MonoBehaviour
         {
             s.cooldownLeft -= Time.deltaTime;
             s.skillIcon.fillAmount = 1 - (s.cooldownLeft / s.cooldown);
+            if(s.cooldownLeft >= 1)
+            {
+                s.cooldownText.text = ((int)s.cooldownLeft).ToString();
+            }
+            else if(s.cooldownLeft <= 0)
+            {
+                s.cooldownText.text = "";
+            }
+            else
+            {
+                s.cooldownText.text = s.cooldownLeft.ToString("f1");
+            }
 
             yield return null;
         }
@@ -50,8 +68,10 @@ public class SkillCooldown : MonoBehaviour
 [System.Serializable]
 public class UISkill
 {
+    [HideInInspector]
     public float cooldown;
     public Image skillIcon;
+    public Text cooldownText;
     [HideInInspector]
     public float cooldownLeft;
     [HideInInspector]

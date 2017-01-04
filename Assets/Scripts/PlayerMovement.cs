@@ -21,7 +21,6 @@ public class PlayerMovement : MonoBehaviour
 
     private InputManager inputManager;
     public List<PlayerSkill> skills;
-    private LucianE lucianE;
     private bool isDashing = false;
 
     public delegate void PlayerMovedHandler();
@@ -34,13 +33,12 @@ public class PlayerMovement : MonoBehaviour
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         childCamera = transform.parent.GetComponentInChildren<Camera>();
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
+
         foreach(PlayerSkill ps in GetComponents<PlayerSkill>())
         {
-            skills.Add(ps);
             ps.SkillActivated += SkillActivated;
             ps.SkillFinished += SkillFinished;
         }
-
     }
 
     private void PressedRightClick(Vector3 mousePosition)
@@ -70,7 +68,10 @@ public class PlayerMovement : MonoBehaviour
         switch (skillId)
         {
             case 0:
-                Dashing();
+                if (!isDashing)
+                {
+                    Dashing();
+                }
                 break;
         }
     }
@@ -80,7 +81,10 @@ public class PlayerMovement : MonoBehaviour
         switch (skillId)
         {
             case 0:
-                DashingFinished();
+                if (isDashing)
+                {
+                    DashingFinished();
+                }
                 break;
         }
     }
@@ -127,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator RotateTowardsWherePlayerClicked(Vector3 wherePlayerClickedToMove)
     {
         rotationAmount = Vector3.up;
+        rotationAmountLastFrame = Vector3.zero;
         while (rotationAmountLastFrame != rotationAmount)
         {
             if (!isDashing)
