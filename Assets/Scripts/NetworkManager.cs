@@ -14,6 +14,11 @@ public class NetworkManager : MonoBehaviour
         Connect();
     }
 
+    private void Update()
+    {
+        Debug.Log(PhotonNetwork.playerList.Length);
+    }
+
     private void Connect()
     {
         PhotonNetwork.ConnectUsingSettings("MOBA v1.0.0");
@@ -45,7 +50,8 @@ public class NetworkManager : MonoBehaviour
 
     private void SpawnMyPlayer()
     {
-        PhotonNetwork.Instantiate("Player", spawners[Random.Range(0, spawners.Length)].transform.position, new Quaternion(), 0);
+        GameObject player = PhotonNetwork.Instantiate("Player", spawners[Random.Range(0, spawners.Length)].transform.position - (Vector3.up * 1.5f), new Quaternion(), 0);
+        player.transform.GetChild(1).gameObject.SetActive(true);
         menuCamera.SetActive(false);
     }
 }
