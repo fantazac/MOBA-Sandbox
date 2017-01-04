@@ -68,10 +68,7 @@ public class PlayerMovement : MonoBehaviour
         switch (skillId)
         {
             case 0:
-                if (!isDashing)
-                {
-                    Dashing();
-                }
+                Dashing();
                 break;
         }
     }
@@ -81,10 +78,7 @@ public class PlayerMovement : MonoBehaviour
         switch (skillId)
         {
             case 0:
-                if (isDashing)
-                {
-                    DashingFinished();
-                }
+                DashingFinished();
                 break;
         }
     }
