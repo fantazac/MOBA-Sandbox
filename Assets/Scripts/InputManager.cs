@@ -20,9 +20,13 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             OnPressedSkill(0, Input.mousePosition);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OnPressedSkill(1, Input.mousePosition);
         }
         if (Input.GetKeyDown(KeyCode.Y))
         {

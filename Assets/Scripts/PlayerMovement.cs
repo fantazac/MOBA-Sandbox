@@ -6,13 +6,16 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
     private GameObject moveTo;
-
+    [HideInInspector]
     public TerrainCollider terrainCollider;
     private Camera childCamera;
 
     private GameObject moveToPoint;
 
+    [HideInInspector]
     public Vector3 halfHeight;
+    [HideInInspector]
+    public Vector3 halfWidth;
 
     private Vector3 rotationAmountLastFrame;
     private Vector3 rotationAmount;
@@ -22,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private InputManager inputManager;
     public List<PlayerSkill> skills;
     private bool isDashing = false;
+    [HideInInspector]
+    public bool isShootingProjectile = false;
 
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
@@ -33,8 +38,9 @@ public class PlayerMovement : MonoBehaviour
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         childCamera = transform.parent.GetComponentInChildren<Camera>();
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
+        halfWidth = Vector3.forward * transform.localScale.z * 0.5f;
 
-        foreach(PlayerSkill ps in GetComponents<PlayerSkill>())
+        foreach (PlayerSkill ps in GetComponents<PlayerSkill>())
         {
             ps.SkillActivated += SkillActivated;
             ps.SkillFinished += SkillFinished;
@@ -63,11 +69,14 @@ public class PlayerMovement : MonoBehaviour
         return childCamera.ScreenPointToRay(mousePosition);
     }
 
-    private void SkillActivated(int skillId)
+    private void SkillActivated(int skillId, Vector3 mousePositionOnTerrain)
     {
         switch (skillId)
         {
             case 0:
+                ShootingProjectile(mousePositionOnTerrain);
+                break;
+            case 1:
                 Dashing();
                 break;
         }
@@ -78,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
         switch (skillId)
         {
             case 0:
+                DoneShootingProjectile();
+                break;
+            case 1:
                 DashingFinished();
                 break;
         }
@@ -92,7 +104,24 @@ public class PlayerMovement : MonoBehaviour
     private void DashingFinished()
     {
         isDashing = false;
-        if(target != Vector3.zero)
+        if(target != Vector3.zero && !isShootingProjectile)
+        {
+            StopAllCoroutines();
+            StartCoroutine(MoveTowardsWherePlayerClicked(target));
+            StartCoroutine(RotateTowardsWherePlayerClicked(target));
+        }
+    }
+
+    private void ShootingProjectile(Vector3 mousePositionOnTerrain)
+    {
+        isShootingProjectile = true;
+        RotateTowardsTargetInstantly(mousePositionOnTerrain);
+    }
+
+    private void DoneShootingProjectile()
+    {
+        isShootingProjectile = false;
+        if (target != Vector3.zero)
         {
             StopAllCoroutines();
             StartCoroutine(MoveTowardsWherePlayerClicked(target));
@@ -109,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
     {
         while(transform.position != wherePlayerClickedToMove)
         {
-            if (!isDashing)
+            if (!isDashing && !isShootingProjectile)
             {
                 transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * 10);
 
@@ -120,6 +149,13 @@ public class PlayerMovement : MonoBehaviour
         }
         target = Vector3.zero;
         Destroy(moveToPoint);
+    }
+
+    private void RotateTowardsTargetInstantly(Vector3 wherePlayerClickedToMove)
+    {
+        rotationAmount = (wherePlayerClickedToMove - transform.position).normalized;
+
+        transform.rotation = Quaternion.LookRotation(rotationAmount);
     }
 
     private IEnumerator RotateTowardsWherePlayerClicked(Vector3 wherePlayerClickedToMove)

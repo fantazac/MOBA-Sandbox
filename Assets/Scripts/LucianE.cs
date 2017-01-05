@@ -12,19 +12,19 @@ public class LucianE : PlayerSkill
 
     protected override void Start()
     {
-        skillId = 0;
+        skillId = 1;
         base.Start();
     }
 
     public override void ActivateSkill()
     {
-        SkillBeingUsed(skillId);
+        SkillBeingUsed(skillId, hit.point + playerMovement.halfHeight);
         StartCoroutine(SkillEffect(hit.point + playerMovement.halfHeight));
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
+        return !playerMovement.isShootingProjectile && playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
     }
 
     private Vector3 FindPointToDashTo(Vector3 mousePositionOnTerrain, Vector3 currentPosition)

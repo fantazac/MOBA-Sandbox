@@ -228,6 +228,7 @@
     <Compile Include="Assets\Scripts\CharacterMotor.cs" />
     <Compile Include="Assets\Scripts\CharacterScripts.cs" />
     <Compile Include="Assets\Scripts\Equipment.cs" />
+    <Compile Include="Assets\Scripts\EzrealQ.cs" />
     <Compile Include="Assets\Scripts\FPSInputController.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\InputManager.cs" />
@@ -236,6 +237,7 @@
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerSkill.cs" />
+    <Compile Include="Assets\Scripts\ProjectileMovement.cs" />
     <Compile Include="Assets\Scripts\RotateSpawner.cs" />
     <Compile Include="Assets\Scripts\SkillCooldown.cs" />
   </ItemGroup>
