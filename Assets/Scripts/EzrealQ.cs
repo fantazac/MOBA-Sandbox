@@ -11,6 +11,8 @@ public class EzrealQ : PlayerSkill
 
     RaycastHit hit;
 
+    //private bool activated = false;
+
     protected override void Start()
     {
         skillId = 0;
@@ -20,6 +22,7 @@ public class EzrealQ : PlayerSkill
 
     public override void ActivateSkill()
     {
+        //activated = true;
         SkillBeingUsed(skillId, hit.point + playerMovement.halfHeight);
         StartCoroutine(SkillCastTime());
     }
@@ -32,10 +35,31 @@ public class EzrealQ : PlayerSkill
     protected override IEnumerator SkillCastTime()
     {
         yield return delayCastTime;
-        
+
         GameObject projectileToShoot = PhotonNetwork.Instantiate("EzrealQ", transform.position, transform.rotation, 0);
         projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range);
 
         SkillDone(skillId);
     }
+
+    /*private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (activated)
+        {
+            if (stream.isWriting)
+            {
+                activated = false;
+                stream.SendNext(420);
+            }
+        }
+        else
+        {
+            if ((int)stream.ReceiveNext() == 420)
+            {
+                SkillBeingUsed(skillId, hit.point + playerMovement.halfHeight);
+                StartCoroutine(SkillCastTime());
+            }
+        }
+
+    }*/
 }
