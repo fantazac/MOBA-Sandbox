@@ -3,6 +3,11 @@ using System.Collections;
 
 public class NetworkCharacterMovement : Photon.MonoBehaviour
 {
+    [SerializeField]
+    private float positionTransitionSpeed;
+    [SerializeField]
+    private float rotationTransitionSpeed;
+
     Vector3 realPosition;
     Quaternion realRotation;
 
@@ -16,8 +21,8 @@ public class NetworkCharacterMovement : Photon.MonoBehaviour
     {
         if (!photonView.isMine)
         {
-            transform.position = Vector3.Lerp(transform.position, realPosition, Time.deltaTime * 9);
-            transform.rotation = Quaternion.Lerp(transform.rotation, realRotation, Time.deltaTime * 15);
+            transform.position = Vector3.Lerp(transform.position, realPosition, Time.deltaTime * positionTransitionSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, realRotation, Time.deltaTime * rotationTransitionSpeed);
         }
     }
 

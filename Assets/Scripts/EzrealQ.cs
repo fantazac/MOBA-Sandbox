@@ -33,7 +33,7 @@ public class EzrealQ : PlayerSkill
     {
         yield return delayCastTime;
         
-        GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
+        GameObject projectileToShoot = PhotonNetwork.Instantiate("EzrealQ", transform.position, transform.rotation, 0);
         projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range);
 
         SkillDone(skillId);

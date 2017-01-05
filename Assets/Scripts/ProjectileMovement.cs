@@ -24,6 +24,6 @@ public class ProjectileMovement : MonoBehaviour
 
             yield return null;
         }
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 }
