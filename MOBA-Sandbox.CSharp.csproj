@@ -235,7 +235,14 @@
     <Compile Include="Assets\Scripts\LucianE.cs" />
     <Compile Include="Assets\Scripts\NetworkCharacterMovement.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
-    <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerOrientation.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerProjectileCollision.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerShootProjectile.cs" />
+    <Compile Include="Assets\Scripts\Player\Team.cs" />
     <Compile Include="Assets\Scripts\PlayerSkill.cs" />
     <Compile Include="Assets\Scripts\ProjectileMovement.cs" />
     <Compile Include="Assets\Scripts\RotateSpawner.cs" />

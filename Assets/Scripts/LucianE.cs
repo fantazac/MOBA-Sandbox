@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class LucianE : PlayerSkill
@@ -24,7 +24,7 @@ public class LucianE : PlayerSkill
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return !playerMovement.isShootingProjectile && playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
     }
 
     private Vector3 FindPointToDashTo(Vector3 mousePositionOnTerrain, Vector3 currentPosition)

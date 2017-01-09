@@ -17,7 +17,7 @@ public class NetworkCharacterMovement : Photon.MonoBehaviour
         realRotation = Quaternion.identity;
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (!photonView.isMine)
         {
@@ -38,5 +38,5 @@ public class NetworkCharacterMovement : Photon.MonoBehaviour
             realPosition = (Vector3)stream.ReceiveNext();
             realRotation = (Quaternion)stream.ReceiveNext();
         }
-    }
+    }*/
 }

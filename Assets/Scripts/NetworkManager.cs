@@ -30,6 +30,7 @@ public class NetworkManager : MonoBehaviour
     private void OnGUI()
     {
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+        GUILayout.Label(PhotonNetwork.GetPing().ToString());
     }
 
     private void OnJoinedLobby()
@@ -61,7 +62,10 @@ public class NetworkManager : MonoBehaviour
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
         player.transform.parent.gameObject.GetComponentInChildren<SkillCooldown>().player = player;
 
-        player.GetComponent<PlayerMovement>().enabled = true;
+        foreach(PlayerBase pb in player.GetComponents<PlayerBase>())
+        {
+            pb.enabled = true;
+        }
         foreach(PlayerSkill ps in player.GetComponents<PlayerSkill>())
         {
             ps.enabled = true;
