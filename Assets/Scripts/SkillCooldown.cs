@@ -5,26 +5,27 @@ using UnityEngine.UI;
 
 public class SkillCooldown : MonoBehaviour
 {
-    [HideInInspector]
-    public GameObject player;
+    private Player player;
 
     [SerializeField]
     private List<UISkill> skills;
 
-    private InputManager inputManager;
     private List<PlayerSkill> playerSkills;
 
     private void Start()
     {
-        inputManager = player.GetComponent<InputManager>();
-        inputManager.OnPressedSkill += ActivateSkill;
+        player = transform.parent.parent.GetChild(2).gameObject.GetComponent<Player>();
+        player.PlayerInput.OnPressedSkill += ActivateSkill;
         
         playerSkills = player.GetComponent<PlayerMovement>().skills;
-        for(int i = 0; i < skills.Count; i++)
+        for(int i = 0; i < playerSkills.Count; i++)
         {
-            skills[i].cooldown = playerSkills[i].cooldown;
-            skills[i].skillIcon.sprite = playerSkills[i].skillImage;
-            skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
+            if(playerSkills[i] != null)
+            {
+                skills[i].cooldown = playerSkills[i].cooldown;
+                skills[i].skillIcon.sprite = playerSkills[i].skillImage;
+                skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
+            }
         }
     }
 

@@ -231,9 +231,7 @@
     <Compile Include="Assets\Scripts\EzrealQ.cs" />
     <Compile Include="Assets\Scripts\FPSInputController.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\InputManager.cs" />
     <Compile Include="Assets\Scripts\LucianE.cs" />
-    <Compile Include="Assets\Scripts\NetworkCharacterMovement.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />

@@ -3,8 +3,7 @@ using System.Collections;
 
 public class CameraPlayerMovement : MonoBehaviour
 {
-    private GameObject player;
-    private InputManager inputManager;
+    private Player player;
 
     private bool cameraLockedOnPlayer = true;
     private bool cameraFollowsPlayer = false;
@@ -13,11 +12,10 @@ public class CameraPlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        player = transform.parent.GetChild(2).gameObject;
-        inputManager = player.GetComponent<InputManager>();
-        inputManager.OnPressedY += SetCameraLock;
-        inputManager.OnPressedSpace += SetCameraOnPlayer;
-        inputManager.OnReleasedSpace += SetCameraFree;
+        player = transform.parent.GetChild(2).gameObject.GetComponent<Player>();
+        player.PlayerInput.OnPressedY += SetCameraLock;
+        player.PlayerInput.OnPressedSpace += SetCameraOnPlayer;
+        player.PlayerInput.OnReleasedSpace += SetCameraFree;
         initialPosition = transform.position;
         transform.position += player.transform.position;
         player.GetComponent<PlayerMovement>().PlayerMoved += FollowPlayer;

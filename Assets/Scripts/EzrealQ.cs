@@ -11,8 +11,6 @@ public class EzrealQ : PlayerSkill
 
     RaycastHit hit;
 
-    //private bool activated = false;
-
     protected override void Start()
     {
         skillId = 0;
@@ -20,46 +18,32 @@ public class EzrealQ : PlayerSkill
         base.Start();
     }
 
+    [PunRPC]
+    protected void UseEzrealQFromServer(Vector3 mousePositionOnCast)
+    {
+        skillActive = true;
+        StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
+    }
+
     public override void ActivateSkill()
     {
-        //activated = true;
-        SkillBeingUsed(skillId, hit.point + playerMovement.halfHeight);
-        StartCoroutine(SkillCastTime());
+        playerMovement.PhotonView.RPC("UseEzrealQFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell();
     }
 
-    protected override IEnumerator SkillCastTime()
+    protected override IEnumerator SkillEffectWithCastTime(Vector3 mousePositionOnTerrain)
     {
+        playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnTerrain);
+
         yield return delayCastTime;
 
-        GameObject projectileToShoot = PhotonNetwork.Instantiate("EzrealQ", transform.position, transform.rotation, 0);
+        GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
         projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range);
-
-        SkillDone(skillId);
+        
+        SkillDone();
     }
-
-    /*private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (activated)
-        {
-            if (stream.isWriting)
-            {
-                activated = false;
-                stream.SendNext(420);
-            }
-        }
-        else
-        {
-            if ((int)stream.ReceiveNext() == 420)
-            {
-                SkillBeingUsed(skillId, hit.point + playerMovement.halfHeight);
-                StartCoroutine(SkillCastTime());
-            }
-        }
-
-    }*/
 }

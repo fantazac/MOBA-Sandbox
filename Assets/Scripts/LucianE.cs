@@ -12,19 +12,25 @@ public class LucianE : PlayerSkill
 
     protected override void Start()
     {
-        skillId = 1;
+        skillId = 2;
         base.Start();
     }
 
     public override void ActivateSkill()
     {
-        SkillBeingUsed(skillId, hit.point + playerMovement.halfHeight);
-        StartCoroutine(SkillEffect(hit.point + playerMovement.halfHeight));
+        playerMovement.PhotonView.RPC("UseLucianEFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
+    }
+
+    [PunRPC]
+    protected void UseLucianEFromServer(Vector3 mousePositionOnCast)
+    {
+        skillActive = true;
+        StartCoroutine(SkillEffect(mousePositionOnCast));
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell();
     }
 
     private Vector3 FindPointToDashTo(Vector3 mousePositionOnTerrain, Vector3 currentPosition)
@@ -41,15 +47,18 @@ public class LucianE : PlayerSkill
     protected override IEnumerator SkillEffect(Vector3 mousePositionOnTerrain)
     {
         Vector3 target = FindPointToDashTo(mousePositionOnTerrain, transform.position);
-
         while (transform.position != target)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * dashSpeed);
 
-            playerMovement.PlayerDashing();
+            if(playerMovement != null)
+            {
+                playerMovement.PlayerDashing();
+            }
 
             yield return null;
         }
-        SkillDone(skillId);
+
+        SkillDone();
     }
 }

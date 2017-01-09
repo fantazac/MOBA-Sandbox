@@ -12,6 +12,8 @@ public class NetworkManager : MonoBehaviour
     [SerializeField]
     private GameObject[] spawners;
 
+    private bool inChampSelect = false;
+
     private void Start()
     {
         Connect();
@@ -31,6 +33,19 @@ public class NetworkManager : MonoBehaviour
     {
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
         GUILayout.Label(PhotonNetwork.GetPing().ToString());
+        if (inChampSelect)
+        {
+            if (GUILayout.Button("Ezreal"))
+            {
+                SpawnMyPlayer("Ezreal");
+                inChampSelect = false;
+            }
+            if (GUILayout.Button("Lucian"))
+            {
+                SpawnMyPlayer("Lucian");
+                inChampSelect = false;
+            }
+        }
     }
 
     private void OnJoinedLobby()
@@ -49,18 +64,17 @@ public class NetworkManager : MonoBehaviour
     {
         Debug.Log("OnJoinedRoom");
 
-        SpawnMyPlayer();
+        inChampSelect = true;
     }
 
-    private void SpawnMyPlayer()
+    private void SpawnMyPlayer(string champName)
     {
         Vector3 spawner = spawners[Random.Range(0, spawners.Length)].transform.position;
         GameObject playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
-        GameObject player = PhotonNetwork.Instantiate("Player", spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
+        GameObject player = PhotonNetwork.Instantiate(champName, spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
-        player.transform.parent.gameObject.GetComponentInChildren<SkillCooldown>().player = player;
 
         foreach(PlayerBase pb in player.GetComponents<PlayerBase>())
         {
@@ -70,7 +84,6 @@ public class NetworkManager : MonoBehaviour
         {
             ps.enabled = true;
         }
-        player.GetComponent<InputManager>().enabled = true;
         
         menuCamera.SetActive(false);
     }
