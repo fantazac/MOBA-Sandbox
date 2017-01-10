@@ -35,6 +35,11 @@ public class NetworkManager : MonoBehaviour
         GUILayout.Label(PhotonNetwork.GetPing().ToString());
         if (inChampSelect)
         {
+            if (GUILayout.Button("Test"))
+            {
+                SpawnMyPlayer("Player");
+                inChampSelect = false;
+            }
             if (GUILayout.Button("Ezreal"))
             {
                 SpawnMyPlayer("Ezreal");

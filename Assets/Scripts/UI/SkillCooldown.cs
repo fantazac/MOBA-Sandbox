@@ -25,24 +25,44 @@ public class SkillCooldown : MonoBehaviour
                 skills[i].cooldown = playerSkills[i].cooldown;
                 skills[i].skillIcon.sprite = playerSkills[i].skillImage;
                 skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
+                if (playerSkills[i].canBeCancelled)
+                {
+                    playerSkills[i].SetCooldown += SetCooldown;
+                }
             }
         }
     }
 
+    private void SetCooldown(int skillId)
+    {
+        skills[skillId].cooldownLeft = skills[skillId].cooldown;
+        skills[skillId].skillIcon.fillAmount = 0;
+        StartCoroutine(SetSkillOffCooldown(skills[skillId]));
+    }
+
     private void ActivateSkill(int skillId, Vector3 mousePosition)
     {
-        if (skills[skillId].canUseSkill && playerSkills[skillId].CanUseSkill(mousePosition))
+        if ((skills[skillId].canUseSkill || playerSkills[skillId].canBeCancelled) && playerSkills[skillId].CanUseSkill(mousePosition))
         {
-            skills[skillId].canUseSkill = false;
-            playerSkills[skillId].ActivateSkill();
-            skills[skillId].cooldownLeft = skills[skillId].cooldown;
-            skills[skillId].skillIcon.fillAmount = 0;
-            StartCoroutine(SetSkillOffCooldown(skills[skillId]));
+            if (skills[skillId].canUseSkill)
+            {
+                skills[skillId].canUseSkill = false;
+                playerSkills[skillId].ActivateSkill();
+                if (playerSkills[skillId].cooldownStartsOnCast)
+                {
+                    SetCooldown(skillId);
+                }
+            }
+            else
+            {
+                playerSkills[skillId].CancelSkill();
+            }
         }
     }
 
     private IEnumerator SetSkillOffCooldown(UISkill s)
     {
+        s.skillIcon.color = Color.gray + (Color.white * 0.15f);
         while (s.cooldownLeft > 0)
         {
             s.cooldownLeft -= Time.deltaTime;
@@ -62,6 +82,7 @@ public class SkillCooldown : MonoBehaviour
 
             yield return null;
         }
+        s.skillIcon.color = Color.white;
         s.canUseSkill = true;
     }
 }

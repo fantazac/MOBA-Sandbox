@@ -34,6 +34,18 @@ public class PlayerOrientation : PlayerBase
         }
     }
 
+    private bool CanRotate()
+    {
+        foreach (PlayerSkill ps in PlayerMovement.skills)
+        {
+            if (ps != null && !ps.canRotateWhileCasting && ps.skillActive)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void RotatePlayer(Vector3 clickedPosition)
     {
         StopAllCoroutines();
@@ -42,9 +54,8 @@ public class PlayerOrientation : PlayerBase
 
     public void RotatePlayerInstantly(Vector3 clickedPosition)
     {
-        rotationAmount = (clickedPosition - transform.position).normalized;
-
-        transform.rotation = Quaternion.LookRotation(rotationAmount);
+        //doesnt work very well
+        transform.rotation = Quaternion.LookRotation((clickedPosition - transform.position).normalized);
     }
 
     private IEnumerator Rotate(Vector3 clickedPosition)
@@ -53,11 +64,14 @@ public class PlayerOrientation : PlayerBase
         rotationAmountLastFrame = Vector3.zero;
         while (rotationAmountLastFrame != rotationAmount)
         {
-            rotationAmountLastFrame = rotationAmount;
+            if (CanRotate())
+            {
+                rotationAmountLastFrame = rotationAmount;
 
-            rotationAmount = Vector3.RotateTowards(transform.forward, clickedPosition - transform.position, Time.deltaTime * rotationSpeed, 0);
+                rotationAmount = Vector3.RotateTowards(transform.forward, clickedPosition - transform.position, Time.deltaTime * rotationSpeed, 0);
 
-            transform.rotation = Quaternion.LookRotation(rotationAmount);
+                transform.rotation = Quaternion.LookRotation(rotationAmount);
+            }
 
             yield return null;
         }

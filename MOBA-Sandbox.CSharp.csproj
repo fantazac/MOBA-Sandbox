@@ -223,16 +223,17 @@
     <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
     <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
     <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
-    <Compile Include="Assets\Scripts\Ability.cs" />
-    <Compile Include="Assets\Scripts\CameraPlayerMovement.cs" />
-    <Compile Include="Assets\Scripts\CharacterMotor.cs" />
-    <Compile Include="Assets\Scripts\CharacterScripts.cs" />
-    <Compile Include="Assets\Scripts\Equipment.cs" />
-    <Compile Include="Assets\Scripts\EzrealQ.cs" />
-    <Compile Include="Assets\Scripts\FPSInputController.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\LucianE.cs" />
-    <Compile Include="Assets\Scripts\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealQ.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianE.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\Ability.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\CharacterMotor.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\CharacterScripts.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\Equipment.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\FPSInputController.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Network\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
@@ -240,11 +241,11 @@
     <Compile Include="Assets\Scripts\Player\PlayerOrientation.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerProjectileCollision.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerShootProjectile.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerSkill.cs" />
     <Compile Include="Assets\Scripts\Player\Team.cs" />
-    <Compile Include="Assets\Scripts\PlayerSkill.cs" />
-    <Compile Include="Assets\Scripts\ProjectileMovement.cs" />
-    <Compile Include="Assets\Scripts\RotateSpawner.cs" />
-    <Compile Include="Assets\Scripts\SkillCooldown.cs" />
+    <Compile Include="Assets\Scripts\Projectiles\ProjectileMovement.cs" />
+    <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
+    <Compile Include="Assets\Scripts\UI\SkillCooldown.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />
