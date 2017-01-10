@@ -81,15 +81,11 @@ public class NetworkManager : MonoBehaviour
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
-        player.transform.parent.GetChild(2).gameObject.SetActive(true);
+        //player.transform.parent.GetChild(2).gameObject.SetActive(true);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())
         {
             pb.enabled = true;
-        }
-        foreach(PlayerSkill ps in player.GetComponents<PlayerSkill>())
-        {
-            ps.enabled = true;
         }
         
         menuCamera.SetActive(false);
