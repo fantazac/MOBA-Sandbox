@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class SkillCooldown : MonoBehaviour
 {
@@ -14,22 +15,32 @@ public class SkillCooldown : MonoBehaviour
 
     private void Start()
     {
-        player = transform.parent.parent.GetChild(2).gameObject.GetComponent<Player>();
-        player.PlayerInput.OnPressedSkill += ActivateSkill;
-        
-        playerSkills = player.GetComponent<PlayerMovement>().skills;
-        for(int i = 0; i < playerSkills.Count; i++)
+        foreach (Transform child in transform.parent.parent.transform)
         {
-            if(playerSkills[i] != null)
+            player = child.gameObject.GetComponent<Player>();
+        }
+        if (player != null)
+        {
+            player.PlayerInput.OnPressedSkill += ActivateSkill;
+
+            playerSkills = player.GetComponent<PlayerMovement>().skills;
+            for (int i = 0; i < playerSkills.Count; i++)
             {
-                skills[i].cooldown = playerSkills[i].cooldown;
-                skills[i].skillIcon.sprite = playerSkills[i].skillImage;
-                skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
-                if (playerSkills[i].canBeCancelled)
+                if (playerSkills[i] != null)
                 {
-                    playerSkills[i].SetCooldown += SetCooldown;
+                    skills[i].cooldown = playerSkills[i].cooldown;
+                    skills[i].skillIcon.sprite = playerSkills[i].skillImage;
+                    skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
+                    if (playerSkills[i].canBeCancelled)
+                    {
+                        playerSkills[i].SetCooldown += SetCooldown;
+                    }
                 }
             }
+        }
+        else
+        {
+            throw new Exception("Player set to null reference");
         }
     }
 
