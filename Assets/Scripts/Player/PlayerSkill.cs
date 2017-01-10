@@ -13,6 +13,7 @@ public abstract class PlayerSkill : MonoBehaviour
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
+    public bool continueMovementAfterCast = true;
     public List<PlayerSkill> castableSpellsWhileActive;
     [HideInInspector]
     public bool skillActive = false;
@@ -21,6 +22,9 @@ public abstract class PlayerSkill : MonoBehaviour
 
     protected PlayerMovement playerMovement;
     protected int skillId;
+
+    public delegate void SkillStartedHandler();
+    public event SkillStartedHandler SkillStarted;
 
     public delegate void SkillFinishedHandler();
     public event SkillFinishedHandler SkillFinished;
@@ -31,6 +35,15 @@ public abstract class PlayerSkill : MonoBehaviour
     protected virtual void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+    }
+
+    protected void SkillBegin()
+    {
+        skillActive = true;
+        if (SkillStarted != null)
+        {
+            SkillStarted();
+        }
     }
 
     protected void SkillDone()

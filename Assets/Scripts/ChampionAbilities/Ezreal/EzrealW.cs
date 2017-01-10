@@ -22,7 +22,7 @@ public class EzrealW : PlayerSkill
     [PunRPC]
     protected void UseEzrealWFromServer(Vector3 mousePositionOnCast)
     {
-        skillActive = true;
+        SkillBegin();
         StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
     }
 

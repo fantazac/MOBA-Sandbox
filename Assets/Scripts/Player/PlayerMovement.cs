@@ -43,7 +43,14 @@ public class PlayerMovement : PlayerBase
         {
             if(ps != null)
             {
-                ps.SkillFinished += ContinueMovementAfterSkill;
+                if (ps.continueMovementAfterCast)
+                {
+                    ps.SkillFinished += ContinueMovementAfterSkill;
+                }
+                else
+                {
+                    ps.SkillStarted += StopMovementOnSkillCast;
+                }
             }
         }
 
@@ -103,12 +110,18 @@ public class PlayerMovement : PlayerBase
         }
     }
 
+    private void StopMovementOnSkillCast()
+    {
+        StopAllCoroutines();
+        StartCoroutine(MakeCapsuleDisapear());
+    }
+
     public Ray GetRay(Vector3 mousePosition)
     {
         return childCamera.ScreenPointToRay(mousePosition);
     }
 
-    public void PlayerDashing()
+    public void PlayerMovingWithSkill()
     {
         if(PlayerMoved != null)
         {

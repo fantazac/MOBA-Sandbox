@@ -34,7 +34,7 @@ public class LucianR : PlayerSkill
     [PunRPC]
     protected void UseLucianRFromServer(Vector3 mousePositionOnCast)
     {
-        skillActive = true;
+        SkillBegin();
         StartCoroutine(SkillEffect(mousePositionOnCast));
     }
 

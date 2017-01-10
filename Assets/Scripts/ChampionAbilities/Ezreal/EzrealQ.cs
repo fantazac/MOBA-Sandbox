@@ -21,7 +21,7 @@ public class EzrealQ : PlayerSkill
     [PunRPC]
     protected void UseEzrealQFromServer(Vector3 mousePositionOnCast)
     {
-        skillActive = true;
+        SkillBegin();
         StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
     }
 
