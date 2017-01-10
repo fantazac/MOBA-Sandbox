@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.4.1f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -240,12 +238,29 @@
     <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
     <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
     <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
-    <Compile Include="Assets\Scripts\Ability.cs" />
-    <Compile Include="Assets\Scripts\CharacterMotor.cs" />
-    <Compile Include="Assets\Scripts\CharacterScripts.cs" />
-    <Compile Include="Assets\Scripts\Equipment.cs" />
-    <Compile Include="Assets\Scripts\FPSInputController.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealQ.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianE.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\Ability.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\CharacterMotor.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\CharacterScripts.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\Equipment.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\FPSInputController.cs" />
+    <Compile Include="Assets\Scripts\Daniel Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Network\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerOrientation.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerProjectileCollision.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerShootProjectile.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerSkill.cs" />
+    <Compile Include="Assets\Scripts\Player\Team.cs" />
+    <Compile Include="Assets\Scripts\Projectiles\ProjectileMovement.cs" />
+    <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
+    <Compile Include="Assets\Scripts\UI\SkillCooldown.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />

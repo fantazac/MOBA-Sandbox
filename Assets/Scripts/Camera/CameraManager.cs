@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class CameraManager : MonoBehaviour
 {
@@ -12,13 +13,23 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
-        player = transform.parent.GetChild(2).gameObject.GetComponent<Player>();
-        player.PlayerInput.OnPressedY += SetCameraLock;
-        player.PlayerInput.OnPressedSpace += SetCameraOnPlayer;
-        player.PlayerInput.OnReleasedSpace += SetCameraFree;
-        initialPosition = transform.position;
-        transform.position += player.transform.position;
-        player.GetComponent<PlayerMovement>().PlayerMoved += FollowPlayer;
+        foreach(Transform child in transform.parent.transform)
+        {
+            player = child.gameObject.GetComponent<Player>();
+        }
+        if (player != null)
+        {
+
+            player.PlayerInput.OnPressedY += SetCameraLock;
+            player.PlayerInput.OnPressedSpace += SetCameraOnPlayer;
+            player.PlayerInput.OnReleasedSpace += SetCameraFree;
+            initialPosition = transform.position;
+            transform.position += player.transform.position;
+            player.GetComponent<PlayerMovement>().PlayerMoved += FollowPlayer;
+        }else
+        {
+            throw new Exception("Player set to null reference");
+        }
     }
 
     private void SetCameraOnPlayer()
