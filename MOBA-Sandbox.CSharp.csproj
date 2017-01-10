@@ -225,6 +225,7 @@
     <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealQ.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealW.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianE.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianW.cs" />
