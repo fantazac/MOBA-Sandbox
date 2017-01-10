@@ -10,7 +10,6 @@ public abstract class PlayerSkill : MonoBehaviour
     public Sprite skillImage;
     public float castTime;
     public bool canMoveWhileCasting = false;
-    //public bool canCastOtherSpellsWhileCasting = false;
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
