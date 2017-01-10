@@ -61,6 +61,7 @@ public class PlayerMovement : PlayerBase
             if (CanUseMovement())
             {
                 StopAllCoroutines();
+                StartCoroutine(MakeCapsuleDisapear());
                 StartCoroutine(Move(targetCapsulePosition));
                 PlayerOrientation.RotatePlayer(targetCapsulePosition);
             }
@@ -96,6 +97,7 @@ public class PlayerMovement : PlayerBase
         if (((!PhotonView.isMine && lastNetworkMove != Vector3.zero) || targetCapsulePosition != Vector3.zero) && CanUseMovement())
         {
             StopAllCoroutines();
+            StartCoroutine(MakeCapsuleDisapear());
             StartCoroutine(Move(PhotonView.isMine ? targetCapsulePosition : lastNetworkMove));
             PlayerOrientation.RotatePlayer(PhotonView.isMine ? targetCapsulePosition : lastNetworkMove);
         }
@@ -128,6 +130,7 @@ public class PlayerMovement : PlayerBase
             {
                 lastNetworkMove = networkMove;
                 StopAllCoroutines();
+                StartCoroutine(MakeCapsuleDisapear());
                 StartCoroutine(Move(networkMove));
                 PlayerOrientation.RotatePlayer(networkMove);
             }
@@ -153,6 +156,20 @@ public class PlayerMovement : PlayerBase
         }
         lastNetworkMove = Vector3.zero;
         targetCapsulePosition = Vector3.zero;
-        Destroy(capsule);
+    }
+
+    private IEnumerator MakeCapsuleDisapear()
+    {
+        if(capsule != null)
+        {
+            while (capsule.transform.position.y > -1)
+            {
+                capsule.transform.position += Vector3.down * 0.06f;
+
+                yield return null;
+            }
+
+            Destroy(capsule);
+        }
     }
 }

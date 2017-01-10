@@ -54,7 +54,6 @@ public class PlayerOrientation : PlayerBase
 
     public void RotatePlayerInstantly(Vector3 clickedPosition)
     {
-        //doesnt work very well
         transform.rotation = Quaternion.LookRotation((clickedPosition - transform.position).normalized);
     }
 
