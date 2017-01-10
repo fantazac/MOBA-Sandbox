@@ -19,10 +19,11 @@ public class NetworkManager : MonoBehaviour
         Connect();
     }
 
-    private void Update()
+    //shows connected players
+    /*private void Update()
     {
         Debug.Log(PhotonNetwork.playerList.Length);
-    }
+    }*/
 
     private void Connect()
     {
