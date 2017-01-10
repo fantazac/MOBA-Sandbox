@@ -28,7 +28,7 @@ public class LucianW : PlayerSkill
     [PunRPC]
     protected void UseLucianWFromServer(Vector3 mousePositionOnCast)
     {
-        skillActive = true;
+        SkillBegin();
         StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
     }
 

@@ -24,7 +24,7 @@ public class LucianE : PlayerSkill
     [PunRPC]
     protected void UseLucianEFromServer(Vector3 mousePositionOnCast)
     {
-        skillActive = true;
+        SkillBegin();
         StartCoroutine(SkillEffect(mousePositionOnCast));
     }
 
@@ -53,7 +53,7 @@ public class LucianE : PlayerSkill
 
             if(playerMovement != null)
             {
-                playerMovement.PlayerDashing();
+                playerMovement.PlayerMovingWithSkill();
             }
 
             yield return null;
