@@ -32,7 +32,7 @@ public class EzrealQ : PlayerSkill
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell();
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell(this);
     }
 
     protected override IEnumerator SkillEffectWithCastTime(Vector3 mousePositionOnTerrain)

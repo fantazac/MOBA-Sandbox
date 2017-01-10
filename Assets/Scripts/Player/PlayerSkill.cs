@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public abstract class PlayerSkill : MonoBehaviour
 {
@@ -9,17 +10,18 @@ public abstract class PlayerSkill : MonoBehaviour
     public Sprite skillImage;
     public float castTime;
     public bool canMoveWhileCasting = false;
-    public bool canCastOtherSpellsWhileCasting = false;
+    //public bool canCastOtherSpellsWhileCasting = false;
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
+    public List<PlayerSkill> castableSpellsWhileActive;
     [HideInInspector]
     public bool skillActive = false;
 
     protected WaitForSeconds delayCastTime;
 
     protected PlayerMovement playerMovement;
-    public int skillId;
+    protected int skillId;
 
     public delegate void SkillFinishedHandler();
     public event SkillFinishedHandler SkillFinished;
