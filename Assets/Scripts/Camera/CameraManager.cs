@@ -13,10 +13,7 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
-        foreach(Transform child in transform.parent.transform)
-        {
-            player = child.gameObject.GetComponent<Player>();
-        }
+        player = transform.parent.GetChild(3).gameObject.GetComponent<Player>();
         if (player != null)
         {
 
@@ -26,7 +23,8 @@ public class CameraManager : MonoBehaviour
             initialPosition = transform.position;
             transform.position += player.transform.position;
             player.GetComponent<PlayerMovement>().PlayerMoved += FollowPlayer;
-        }else
+        }
+        else
         {
             throw new Exception("Player set to null reference");
         }
