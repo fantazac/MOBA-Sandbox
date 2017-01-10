@@ -227,6 +227,7 @@
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealQ.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianE.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianW.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\Ability.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\CharacterMotor.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\CharacterScripts.cs" />

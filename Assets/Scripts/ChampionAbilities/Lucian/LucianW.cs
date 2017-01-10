@@ -1,25 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EzrealQ : PlayerSkill
+public class LucianW : PlayerSkill
 {
+
     [SerializeField]
     private GameObject projectile;
 
-    private float range = 25;
-    private float speed = 50;
+    [SerializeField]
+    private GameObject projectileAfterHit;
+
+    [SerializeField]
+    private float projectileAfterHitDuration = 0.5f;
+
+    private float range = 22;
+    private float speed = 36;
 
     RaycastHit hit;
 
     protected override void Start()
     {
-        skillId = 0;
+        skillId = 1;
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }
 
     [PunRPC]
-    protected void UseEzrealQFromServer(Vector3 mousePositionOnCast)
+    protected void UseLucianWFromServer(Vector3 mousePositionOnCast)
     {
         skillActive = true;
         StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
@@ -27,7 +34,7 @@ public class EzrealQ : PlayerSkill
 
     public override void ActivateSkill()
     {
-        playerMovement.PhotonView.RPC("UseEzrealQFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
+        playerMovement.PhotonView.RPC("UseLucianWFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)
@@ -42,8 +49,8 @@ public class EzrealQ : PlayerSkill
         yield return delayCastTime;
 
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
-        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range);
-        
+        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range, projectileAfterHit, projectileAfterHitDuration);
+
         SkillDone();
     }
 }

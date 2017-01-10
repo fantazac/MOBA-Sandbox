@@ -80,11 +80,11 @@ public class PlayerMovement : PlayerBase
         return true;
     }
 
-    public bool CanCastSpell()
+    public bool CanCastSpell(PlayerSkill skill)
     {
         foreach (PlayerSkill ps in skills)
         {
-            if (ps != null && ps.skillActive && !ps.canCastOtherSpellsWhileCasting)
+            if (ps != null && ps.skillActive && !ps.castableSpellsWhileActive.Contains(skill))
             {
                 return false;
             }
