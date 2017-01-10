@@ -113,6 +113,7 @@ public class PlayerMovement : PlayerBase
     private void StopMovementOnSkillCast()
     {
         StopAllCoroutines();
+        StartCoroutine(MakeCapsuleDisapear());
     }
 
     public Ray GetRay(Vector3 mousePosition)
