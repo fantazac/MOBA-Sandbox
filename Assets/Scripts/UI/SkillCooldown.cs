@@ -53,21 +53,18 @@ public class SkillCooldown : MonoBehaviour
 
     private void ActivateSkill(int skillId, Vector3 mousePosition)
     {
-        if ((skills[skillId].canUseSkill || playerSkills[skillId].canBeCancelled) && playerSkills[skillId].CanUseSkill(mousePosition))
+        if (skills[skillId].canUseSkill && playerSkills[skillId].CanUseSkill(mousePosition))
         {
-            if (skills[skillId].canUseSkill)
+            skills[skillId].canUseSkill = false;
+            playerSkills[skillId].ActivateSkill();
+            if (playerSkills[skillId].cooldownStartsOnCast)
             {
-                skills[skillId].canUseSkill = false;
-                playerSkills[skillId].ActivateSkill();
-                if (playerSkills[skillId].cooldownStartsOnCast)
-                {
-                    SetCooldown(skillId);
-                }
+                SetCooldown(skillId);
             }
-            else
-            {
-                playerSkills[skillId].CancelSkill();
-            }
+        }
+        else if (playerSkills[skillId].canBeCancelled && playerSkills[skillId].skillActive && !skills[skillId].canUseSkill)
+        {
+            playerSkills[skillId].CancelSkill();
         }
     }
 

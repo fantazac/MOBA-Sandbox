@@ -13,6 +13,7 @@ public class NetworkManager : MonoBehaviour
     private GameObject[] spawners;
 
     private PlayerMovement playerMovement;
+    private GameObject playerTemplate;
 
     private bool inChampSelect = false;
 
@@ -21,11 +22,18 @@ public class NetworkManager : MonoBehaviour
         Connect();
     }
 
-    //shows connected players
-    /*private void Update()
+    private void Update()
     {
-        Debug.Log(PhotonNetwork.playerList.Length);
-    }*/
+        //shows connected players
+        //Debug.Log(PhotonNetwork.playerList.Length);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Destroy(playerTemplate);
+            menuCamera.SetActive(true);
+            PhotonNetwork.LeaveRoom();
+        }
+    }
 
     private void Connect()
     {
@@ -38,9 +46,9 @@ public class NetworkManager : MonoBehaviour
         GUILayout.Label(PhotonNetwork.GetPing().ToString());
         /*if(playerMovement != null)
         {
-            GUILayout.Label(playerMovement.totalTimePassed.ToString());
+            GUILayout.Label(playerMovement.timeStoppedMoving.ToString());
         }*/
-        
+
         if (inChampSelect)
         {
             if (GUILayout.Button("Test"))
@@ -63,39 +71,39 @@ public class NetworkManager : MonoBehaviour
 
     private void OnJoinedLobby()
     {
-        Debug.Log("OnJoinedLobby");
         PhotonNetwork.JoinRandomRoom();
     }
 
     private void OnPhotonRandomJoinFailed()
     {
-        Debug.Log("OnPhotonRandomJoinFailed");
         PhotonNetwork.CreateRoom(null);
     }
 
     private void OnJoinedRoom()
     {
-        Debug.Log("OnJoinedRoom");
-
         inChampSelect = true;
     }
 
     private void SpawnMyPlayer(string champName)
     {
-        Vector3 spawner = spawners[Random.Range(0, spawners.Length)].transform.position;
-        GameObject playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
+        //int random = Random.Range(0, spawners.Length);
+        //Vector3 spawner = spawners[random].transform.position;
+        Vector3 spawner = spawners[(PhotonNetwork.playerList.Length - 1) % 2].transform.position;
+        playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
         GameObject player = PhotonNetwork.Instantiate(champName, spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
         playerMovement = player.GetComponent<PlayerMovement>();
+        //player.GetComponent<Player>().team = (Team)random;
+        playerMovement.Player.SetTeam((Team)((PhotonNetwork.playerList.Length - 1) % 2));
         //player.transform.parent.GetChild(2).gameObject.SetActive(true);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())
         {
             pb.enabled = true;
         }
-        
+
         menuCamera.SetActive(false);
     }
 }

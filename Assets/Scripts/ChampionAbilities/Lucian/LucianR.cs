@@ -80,9 +80,10 @@ public class LucianR : PlayerSkill
 
     private void Shoot()
     {
+        //bugged, shoot correctly only if looking up
         GameObject projectileToShoot = (GameObject)Instantiate(projectile,
                 transform.position + (bulletsShot % 2 == 0 ? offsetBetweenProjectiles : -offsetBetweenProjectiles), transform.rotation);
-        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range);
+        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player.team, speed, range);
 
         bulletsShot++;
     }

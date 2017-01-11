@@ -42,7 +42,7 @@ public class EzrealQ : PlayerSkill
         yield return delayCastTime;
 
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
-        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range);
+        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player.team, speed, range);
         
         SkillDone();
     }

@@ -26,6 +26,7 @@ public class PlayerMovement : PlayerBase
     public float totalTimePassed;
     private float pingInSeconds;
     private float timeSinceLastUpdate;
+    private WaitForSeconds delayPing;
 
     public List<PlayerSkill> skills;
 
@@ -71,10 +72,8 @@ public class PlayerMovement : PlayerBase
             targetCapsulePosition = hit.point + halfHeight;
             if (CanUseMovement())
             {
-                StopAllCoroutines();
-                StartCoroutine(MakeCapsuleDisapear());
-                StartCoroutine(Move(targetCapsulePosition));
-                PlayerOrientation.RotatePlayer(targetCapsulePosition);
+                delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
+                StartCoroutine(MoveDelay(targetCapsulePosition));
             }
         }
     }
@@ -147,10 +146,10 @@ public class PlayerMovement : PlayerBase
             {
                 lastNetworkMove = networkMove;
 
-                pingInSeconds = (float)PhotonNetwork.GetPing() * 0.001f;
+                /*pingInSeconds = (float)PhotonNetwork.GetPing() * 0.001f;
                 //timeSinceLastUpdate = (float)(PhotonNetwork.time - lastNetworkDataReceivedTime);
                 lastNetworkDataReceivedTime = (float)PhotonNetwork.time;
-                totalTimePassed = pingInSeconds; //+ timeSinceLastUpdate;
+                totalTimePassed = pingInSeconds; //+ timeSinceLastUpdate;*/
 
                 StopAllCoroutines();
                 //StartCoroutine(MakeCapsuleDisapear());
@@ -160,18 +159,34 @@ public class PlayerMovement : PlayerBase
         }
     }
 
+    private IEnumerator MoveDelay(Vector3 wherePlayerClickedToMove)
+    {
+        yield return delayPing;
+
+        SetMove(wherePlayerClickedToMove);
+    }
+
+    private void SetMove(Vector3 wherePlayerClickedToMove)
+    {
+        StopAllCoroutines();
+        StartCoroutine(MakeCapsuleDisapear());
+        StartCoroutine(Move(targetCapsulePosition));
+        PlayerOrientation.RotatePlayer(targetCapsulePosition);
+    }
+
     private IEnumerator Move(Vector3 wherePlayerClickedToMove)
     {
         wherePlayerClicked = wherePlayerClickedToMove;
+
         while (transform.position != wherePlayerClickedToMove)
         {
             if (CanUseMovement())
             {
-                if (totalTimePassed != 0)
+                /*if (totalTimePassed != 0)
                 {
                     transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, totalTimePassed * 10);
                     totalTimePassed = 0;
-                }
+                }*/
                 transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * 10);
 
                 if (PlayerMoved != null)
@@ -199,5 +214,10 @@ public class PlayerMovement : PlayerBase
 
             Destroy(capsule);
         }
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(capsule);
     }
 }

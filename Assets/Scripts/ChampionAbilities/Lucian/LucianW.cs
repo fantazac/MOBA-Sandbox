@@ -49,7 +49,7 @@ public class LucianW : PlayerSkill
         yield return delayCastTime;
 
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
-        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(speed, range, projectileAfterHit, projectileAfterHitDuration);
+        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player.team, speed, range, projectileAfterHit, projectileAfterHitDuration);
 
         SkillDone();
     }
