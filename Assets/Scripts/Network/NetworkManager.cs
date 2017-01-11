@@ -12,6 +12,8 @@ public class NetworkManager : MonoBehaviour
     [SerializeField]
     private GameObject[] spawners;
 
+    private PlayerMovement playerMovement;
+
     private bool inChampSelect = false;
 
     private void Start()
@@ -34,6 +36,11 @@ public class NetworkManager : MonoBehaviour
     {
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
         GUILayout.Label(PhotonNetwork.GetPing().ToString());
+        /*if(playerMovement != null)
+        {
+            GUILayout.Label(playerMovement.totalTimePassed.ToString());
+        }*/
+        
         if (inChampSelect)
         {
             if (GUILayout.Button("Test"))
@@ -81,6 +88,7 @@ public class NetworkManager : MonoBehaviour
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
+        playerMovement = player.GetComponent<PlayerMovement>();
         //player.transform.parent.GetChild(2).gameObject.SetActive(true);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())

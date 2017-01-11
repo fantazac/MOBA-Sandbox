@@ -22,6 +22,10 @@ public class PlayerMovement : PlayerBase
 
     private Vector3 networkMove;
     private Vector3 lastNetworkMove;
+    private float lastNetworkDataReceivedTime;
+    public float totalTimePassed;
+    private float pingInSeconds;
+    private float timeSinceLastUpdate;
 
     public List<PlayerSkill> skills;
 
@@ -142,8 +146,14 @@ public class PlayerMovement : PlayerBase
             if (lastNetworkMove != networkMove && !PhotonView.isMine)
             {
                 lastNetworkMove = networkMove;
+
+                pingInSeconds = (float)PhotonNetwork.GetPing() * 0.001f;
+                //timeSinceLastUpdate = (float)(PhotonNetwork.time - lastNetworkDataReceivedTime);
+                lastNetworkDataReceivedTime = (float)PhotonNetwork.time;
+                totalTimePassed = pingInSeconds; //+ timeSinceLastUpdate;
+
                 StopAllCoroutines();
-                StartCoroutine(MakeCapsuleDisapear());
+                //StartCoroutine(MakeCapsuleDisapear());
                 StartCoroutine(Move(networkMove));
                 PlayerOrientation.RotatePlayer(networkMove);
             }
@@ -157,6 +167,11 @@ public class PlayerMovement : PlayerBase
         {
             if (CanUseMovement())
             {
+                if (totalTimePassed != 0)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, totalTimePassed * 10);
+                    totalTimePassed = 0;
+                }
                 transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * 10);
 
                 if (PlayerMoved != null)
