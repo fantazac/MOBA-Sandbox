@@ -1,42 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LucianR : PlayerSkill
+public class LucianR : Skillshot
 {
-
-    [SerializeField]
-    private GameObject projectile;
-
     [SerializeField]
     private int amountOfBullets = 20;
 
+    [SerializeField]
+    private float durationOfActive = 2.5f;
+
     private int bulletsShot = 0;
 
-    [SerializeField]
-    private float durationOfSkill = 2.5f;
-
+    //to change, only works when facing up
     private Vector3 offsetBetweenProjectiles = Vector3.right * 0.4f;
 
     private WaitForSeconds delayBetweenBullets;
 
-    private float range = 22;
-    private float speed = 32;
-
-    RaycastHit hit;
-
     protected override void Start()
     {
-        skillId = 3;
-        delayBetweenBullets = new WaitForSeconds(durationOfSkill / (float)amountOfBullets);
+        delayBetweenBullets = new WaitForSeconds(durationOfActive / (float)amountOfBullets);
+
+        range = 22;
+        speed = 32;
+        activateSkillMethodName = "UseLucianRFromServer";
+        cancelSkillMethodName = "CancelLucianRFromServer";
         base.Start();
     }
 
+    //receive skill info from server in Player with skills list from playerMovement (only 1 method)
     [PunRPC]
     protected void UseLucianRFromServer(Vector3 mousePositionOnCast)
     {
-        InfoReceivedFromServer(mousePositionOnCast);
+        this.mousePositionOnCast = mousePositionOnCast;
+        InfoReceivedFromServerToUseSkill();
     }
-
+    // ^
     [PunRPC]
     protected void CancelLucianRFromServer()
     {
@@ -45,48 +43,23 @@ public class LucianR : PlayerSkill
         SkillDone();
     }
 
-    protected override void UseSkill(Vector3 mousePositionOnCast)
+    protected override IEnumerator SkillEffect()
     {
-        SkillBegin();
-        StartCoroutine(SkillEffect(mousePositionOnCast));
-    }
+        ShootOneBullet();
 
-    public override void ActivateSkill()
-    {
-        usingSkillFromThisView = true;
-        playerMovement.PhotonView.RPC("UseLucianRFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
-    }
-
-    public override void CancelSkill()
-    {
-        playerMovement.PhotonView.RPC("CancelLucianRFromServer", PhotonTargets.All);
-    }
-
-    public override bool CanUseSkill(Vector3 mousePosition)
-    {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell(this);
-    }
-
-    protected override IEnumerator SkillEffect(Vector3 mousePositionOnTerrain)
-    {
-        playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnTerrain);
-
-        Shoot();
-
-        while(bulletsShot < amountOfBullets)
+        while (bulletsShot < amountOfBullets)
         {
             yield return delayBetweenBullets;
 
-            Shoot();
+            ShootOneBullet();
         }
 
         bulletsShot = 0;
         SkillDone();
     }
 
-    private void Shoot()
+    private void ShootOneBullet()
     {
-        //bugged, shoot correctly only if looking up
         GameObject projectileToShoot = (GameObject)Instantiate(projectile,
                 transform.position + (bulletsShot % 2 == 0 ? offsetBetweenProjectiles : -offsetBetweenProjectiles), transform.rotation);
         projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player.team, speed, range);

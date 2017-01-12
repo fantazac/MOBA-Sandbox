@@ -224,6 +224,7 @@
     <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
     <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\AbilityType.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealE.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealQ.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealR.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianE.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianW.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Skillshot.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\Ability.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\CharacterMotor.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\CharacterScripts.cs" />

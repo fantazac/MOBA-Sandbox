@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public abstract class PlayerSkill : MonoBehaviour
 {
+    [HideInInspector]
+    public AbilityType AbilityType { get; protected set; }
 
     public float cooldown;
     public Sprite skillImage;
@@ -21,10 +23,15 @@ public abstract class PlayerSkill : MonoBehaviour
     protected bool usingSkillFromThisView = false;
     protected WaitForSeconds delayPing;
 
+    protected string activateSkillMethodName;
+    protected string cancelSkillMethodName;
+
     protected WaitForSeconds delayCastTime;
 
     protected PlayerMovement playerMovement;
     protected int skillId;
+
+    protected Vector3 mousePositionOnCast;
 
     public delegate void SkillStartedHandler();
     public event SkillStartedHandler SkillStarted;
@@ -62,31 +69,36 @@ public abstract class PlayerSkill : MonoBehaviour
         }
     }
 
-    protected IEnumerator PingDelay(Vector3 mousePositionOnCast)
+    protected IEnumerator PingDelay()
     {
         yield return delayPing;
 
-        UseSkill(mousePositionOnCast);
+        UseSkill();
     }
 
-    protected void InfoReceivedFromServer(Vector3 mousePositionOnCast)
+    protected void InfoReceivedFromServerToUseSkill()
     {
         if (usingSkillFromThisView)
         {
             delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
-            StartCoroutine(PingDelay(mousePositionOnCast));
+            StartCoroutine(PingDelay());
         }
         else
         {
-            UseSkill(mousePositionOnCast);
+            UseSkill();
         }
     }
 
+    public void SetSkillId(int skillId)
+    {
+        this.skillId = skillId;
+    }
+
+    public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }
     public virtual void ActivateSkill() { }
     public virtual void CancelSkill() { }
+
+    protected virtual void UseSkill() { }
     protected virtual IEnumerator SkillEffect() { yield return null; }
-    protected virtual IEnumerator SkillEffect(Vector3 mousePositionOnTerrain) { yield return null; }
-    protected virtual IEnumerator SkillEffectWithCastTime(Vector3 mousePositionOnTerrain) { yield return null; }
-    public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }
-    protected virtual void UseSkill(Vector3 mousePositionOnCast) { }
+    protected virtual IEnumerator SkillEffectWithCastTime() { yield return null; }
 }

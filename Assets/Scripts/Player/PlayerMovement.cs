@@ -46,17 +46,18 @@ public class PlayerMovement : PlayerBase
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
         halfWidth = Vector3.forward * transform.localScale.z * 0.5f;
 
-        foreach (PlayerSkill ps in skills)
+        for(int i = 0; i < skills.Count; i++)
         {
-            if(ps != null)
+            if (skills[i] != null)
             {
-                if (ps.continueMovementAfterCast)
+                skills[i].SetSkillId(i);
+                if (skills[i].continueMovementAfterCast)
                 {
-                    ps.SkillFinished += ContinueMovementAfterSkill;
+                    skills[i].SkillFinished += ContinueMovementAfterSkill;
                 }
                 else
                 {
-                    ps.SkillStarted += StopMovementOnSkillCast;
+                    skills[i].SkillStarted += StopMovementOnSkillCast;
                 }
             }
         }

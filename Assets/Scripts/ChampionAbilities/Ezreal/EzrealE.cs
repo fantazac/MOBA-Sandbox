@@ -10,7 +10,6 @@ public class EzrealE : PlayerSkill
 
     protected override void Start()
     {
-        skillId = 2;
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }
@@ -18,7 +17,8 @@ public class EzrealE : PlayerSkill
     [PunRPC]
     protected void UseEzrealEFromServer(Vector3 mousePositionOnCast)
     {
-        InfoReceivedFromServer(mousePositionOnCast);
+        this.mousePositionOnCast = mousePositionOnCast;
+        InfoReceivedFromServerToUseSkill();
     }
 
     public override void ActivateSkill()
@@ -27,10 +27,10 @@ public class EzrealE : PlayerSkill
         playerMovement.PhotonView.RPC("UseEzrealEFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
     }
 
-    protected override void UseSkill(Vector3 mousePositionOnCast)
+    protected override void UseSkill()
     {
         SkillBegin();
-        StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
+        StartCoroutine(SkillEffectWithCastTime());
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)
@@ -38,21 +38,21 @@ public class EzrealE : PlayerSkill
         return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell(this);
     }
 
-    private Vector3 FindPointToTeleportTo(Vector3 mousePositionOnTerrain, Vector3 currentPosition)
+    private Vector3 FindPointToTeleportTo(Vector3 currentPosition)
     {
-        float distanceBetweenBothVectors = Vector3.Distance(mousePositionOnTerrain, currentPosition);
-        Vector3 normalizedVector = Vector3.Normalize(mousePositionOnTerrain - currentPosition);
+        float distanceBetweenBothVectors = Vector3.Distance(mousePositionOnCast, currentPosition);
+        Vector3 normalizedVector = Vector3.Normalize(mousePositionOnCast - currentPosition);
 
         return distanceBetweenBothVectors > maxDistance ?
             (maxDistance * normalizedVector + currentPosition) :
             distanceBetweenBothVectors < minDistance ?
-            (minDistance * normalizedVector + currentPosition) : mousePositionOnTerrain;
+            (minDistance * normalizedVector + currentPosition) : mousePositionOnCast;
     }
 
-    protected override IEnumerator SkillEffectWithCastTime(Vector3 mousePositionOnTerrain)
+    protected override IEnumerator SkillEffectWithCastTime()
     {
-        playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnTerrain);
-        Vector3 target = FindPointToTeleportTo(mousePositionOnTerrain, transform.position);
+        playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnCast);
+        Vector3 target = FindPointToTeleportTo(transform.position);
 
         yield return delayCastTime;
 

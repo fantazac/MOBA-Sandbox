@@ -1,26 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LucianW : PlayerSkill
+public class LucianW : Skillshot
 {
-
-    [SerializeField]
-    private GameObject projectile;
-
     [SerializeField]
     private GameObject projectileAfterHit;
 
     [SerializeField]
     private float projectileAfterHitDuration = 0.5f;
 
-    private float range = 22;
-    private float speed = 36;
-
-    RaycastHit hit;
-
     protected override void Start()
     {
-        skillId = 1;
+        range = 22;
+        speed = 36;
+        activateSkillMethodName = "UseLucianWFromServer";
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }
@@ -28,30 +21,12 @@ public class LucianW : PlayerSkill
     [PunRPC]
     protected void UseLucianWFromServer(Vector3 mousePositionOnCast)
     {
-        InfoReceivedFromServer(mousePositionOnCast);
+        this.mousePositionOnCast = mousePositionOnCast;
+        InfoReceivedFromServerToUseSkill();
     }
 
-    public override void ActivateSkill()
+    protected override IEnumerator SkillEffectWithCastTime()
     {
-        usingSkillFromThisView = true;
-        playerMovement.PhotonView.RPC("UseLucianWFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
-    }
-
-    protected override void UseSkill(Vector3 mousePositionOnCast)
-    {
-        SkillBegin();
-        StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
-    }
-
-    public override bool CanUseSkill(Vector3 mousePosition)
-    {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell(this);
-    }
-
-    protected override IEnumerator SkillEffectWithCastTime(Vector3 mousePositionOnTerrain)
-    {
-        playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnTerrain);
-
         yield return delayCastTime;
 
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
