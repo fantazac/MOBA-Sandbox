@@ -22,13 +22,19 @@ public class EzrealR : PlayerSkill
     [PunRPC]
     protected void UseEzrealRFromServer(Vector3 mousePositionOnCast)
     {
-        SkillBegin();
-        StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
+        InfoReceivedFromServer(mousePositionOnCast);
     }
 
     public override void ActivateSkill()
     {
+        usingSkillFromThisView = true;
         playerMovement.PhotonView.RPC("UseEzrealRFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
+    }
+
+    protected override void UseSkill(Vector3 mousePositionOnCast)
+    {
+        SkillBegin();
+        StartCoroutine(SkillEffectWithCastTime(mousePositionOnCast));
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)

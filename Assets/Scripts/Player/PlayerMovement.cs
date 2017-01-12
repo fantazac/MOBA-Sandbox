@@ -28,6 +28,8 @@ public class PlayerMovement : PlayerBase
     private float timeSinceLastUpdate;
     private WaitForSeconds delayPing;
 
+    private RaycastHit hit;
+
     public List<PlayerSkill> skills;
 
     public delegate void PlayerMovedHandler();
@@ -64,7 +66,6 @@ public class PlayerMovement : PlayerBase
 
     private void PressedRightClick(Vector3 mousePosition)
     {
-        RaycastHit hit;
         if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
         {
             Destroy(capsule);
@@ -72,8 +73,9 @@ public class PlayerMovement : PlayerBase
             targetCapsulePosition = hit.point + halfHeight;
             if (CanUseMovement())
             {
+                wherePlayerClicked = hit.point + halfHeight;
                 delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
-                StartCoroutine(MoveDelay(targetCapsulePosition));
+                StartCoroutine(MoveDelay(hit.point + halfHeight));
             }
         }
     }
@@ -108,8 +110,8 @@ public class PlayerMovement : PlayerBase
         {
             StopAllCoroutines();
             StartCoroutine(MakeCapsuleDisapear());
-            StartCoroutine(Move(PhotonView.isMine ? targetCapsulePosition : lastNetworkMove));
-            PlayerOrientation.RotatePlayer(PhotonView.isMine ? targetCapsulePosition : lastNetworkMove);
+            StartCoroutine(Move(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove));
+            PlayerOrientation.RotatePlayer(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove);
         }
     }
 
@@ -170,14 +172,12 @@ public class PlayerMovement : PlayerBase
     {
         StopAllCoroutines();
         StartCoroutine(MakeCapsuleDisapear());
-        StartCoroutine(Move(targetCapsulePosition));
-        PlayerOrientation.RotatePlayer(targetCapsulePosition);
+        StartCoroutine(Move(wherePlayerClickedToMove));
+        PlayerOrientation.RotatePlayer(wherePlayerClickedToMove);
     }
 
     private IEnumerator Move(Vector3 wherePlayerClickedToMove)
     {
-        wherePlayerClicked = wherePlayerClickedToMove;
-
         while (transform.position != wherePlayerClickedToMove)
         {
             if (CanUseMovement())

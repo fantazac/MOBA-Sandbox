@@ -40,14 +40,12 @@ public class Player : PlayerBase
 
     public void ChangedHealthOnServer(float damage)
     {
-        Debug.Log(1);
         PhotonView.RPC("OnHealthChanged", PhotonTargets.All, damage);
     }
 
     [PunRPC]
     private void OnHealthChanged(float damage)
     {
-        Debug.Log(2);
         currentHealth -= damage;
         if(currentHealth <= 0)
         {

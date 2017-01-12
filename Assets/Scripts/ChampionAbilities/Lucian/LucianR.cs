@@ -34,8 +34,7 @@ public class LucianR : PlayerSkill
     [PunRPC]
     protected void UseLucianRFromServer(Vector3 mousePositionOnCast)
     {
-        SkillBegin();
-        StartCoroutine(SkillEffect(mousePositionOnCast));
+        InfoReceivedFromServer(mousePositionOnCast);
     }
 
     [PunRPC]
@@ -46,8 +45,15 @@ public class LucianR : PlayerSkill
         SkillDone();
     }
 
+    protected override void UseSkill(Vector3 mousePositionOnCast)
+    {
+        SkillBegin();
+        StartCoroutine(SkillEffect(mousePositionOnCast));
+    }
+
     public override void ActivateSkill()
     {
+        usingSkillFromThisView = true;
         playerMovement.PhotonView.RPC("UseLucianRFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
     }
 

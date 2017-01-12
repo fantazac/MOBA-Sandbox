@@ -67,7 +67,6 @@ public class ProjectileMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        Debug.Log(3);
         Player tempPlayer = collider.gameObject.GetComponent<Player>();
         if (tempPlayer != null && tempPlayer.team != sourceTeam)
         {

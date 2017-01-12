@@ -18,6 +18,9 @@ public abstract class PlayerSkill : MonoBehaviour
     [HideInInspector]
     public bool skillActive = false;
 
+    protected bool usingSkillFromThisView = false;
+    protected WaitForSeconds delayPing;
+
     protected WaitForSeconds delayCastTime;
 
     protected PlayerMovement playerMovement;
@@ -59,10 +62,31 @@ public abstract class PlayerSkill : MonoBehaviour
         }
     }
 
+    protected IEnumerator PingDelay(Vector3 mousePositionOnCast)
+    {
+        yield return delayPing;
+
+        UseSkill(mousePositionOnCast);
+    }
+
+    protected void InfoReceivedFromServer(Vector3 mousePositionOnCast)
+    {
+        if (usingSkillFromThisView)
+        {
+            delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
+            StartCoroutine(PingDelay(mousePositionOnCast));
+        }
+        else
+        {
+            UseSkill(mousePositionOnCast);
+        }
+    }
+
     public virtual void ActivateSkill() { }
     public virtual void CancelSkill() { }
     protected virtual IEnumerator SkillEffect() { yield return null; }
     protected virtual IEnumerator SkillEffect(Vector3 mousePositionOnTerrain) { yield return null; }
     protected virtual IEnumerator SkillEffectWithCastTime(Vector3 mousePositionOnTerrain) { yield return null; }
     public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }
+    protected virtual void UseSkill(Vector3 mousePositionOnCast) { }
 }

@@ -18,11 +18,17 @@ public class LucianE : PlayerSkill
 
     public override void ActivateSkill()
     {
+        usingSkillFromThisView = true;
         playerMovement.PhotonView.RPC("UseLucianEFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
     }
 
     [PunRPC]
     protected void UseLucianEFromServer(Vector3 mousePositionOnCast)
+    {
+        InfoReceivedFromServer(mousePositionOnCast);
+    }
+
+    protected override void UseSkill(Vector3 mousePositionOnCast)
     {
         SkillBegin();
         StartCoroutine(SkillEffect(mousePositionOnCast));
