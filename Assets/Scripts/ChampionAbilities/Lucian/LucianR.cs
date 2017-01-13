@@ -22,21 +22,10 @@ public class LucianR : Skillshot
 
         range = 22;
         speed = 32;
-        activateSkillMethodName = "UseLucianRFromServer";
-        cancelSkillMethodName = "CancelLucianRFromServer";
         base.Start();
     }
 
-    //receive skill info from server in Player with skills list from playerMovement (only 1 method)
-    [PunRPC]
-    protected void UseLucianRFromServer(Vector3 mousePositionOnCast)
-    {
-        this.mousePositionOnCast = mousePositionOnCast;
-        InfoReceivedFromServerToUseSkill();
-    }
-    // ^
-    [PunRPC]
-    protected void CancelLucianRFromServer()
+    protected override void CancelSkillFromServer()
     {
         StopAllCoroutines();
         bulletsShot = 0;

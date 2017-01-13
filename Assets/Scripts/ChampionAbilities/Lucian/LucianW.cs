@@ -13,16 +13,8 @@ public class LucianW : Skillshot
     {
         range = 22;
         speed = 36;
-        activateSkillMethodName = "UseLucianWFromServer";
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
-    }
-
-    [PunRPC]
-    protected void UseLucianWFromServer(Vector3 mousePositionOnCast)
-    {
-        this.mousePositionOnCast = mousePositionOnCast;
-        InfoReceivedFromServerToUseSkill();
     }
 
     protected override IEnumerator SkillEffectWithCastTime()

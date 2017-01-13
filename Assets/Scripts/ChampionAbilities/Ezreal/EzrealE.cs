@@ -6,28 +6,13 @@ public class EzrealE : PlayerSkill
     private float maxDistance = 8;
     private float minDistance = 0;
 
-    RaycastHit hit;
-
     protected override void Start()
     {
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }
 
-    [PunRPC]
-    protected void UseEzrealEFromServer(Vector3 mousePositionOnCast)
-    {
-        this.mousePositionOnCast = mousePositionOnCast;
-        InfoReceivedFromServerToUseSkill();
-    }
-
-    public override void ActivateSkill()
-    {
-        usingSkillFromThisView = true;
-        playerMovement.PhotonView.RPC("UseEzrealEFromServer", PhotonTargets.All, hit.point + playerMovement.halfHeight);
-    }
-
-    protected override void UseSkill()
+    protected override void UseSkillFromServer()
     {
         SkillBegin();
         StartCoroutine(SkillEffectWithCastTime());
@@ -35,7 +20,7 @@ public class EzrealE : PlayerSkill
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell(this);
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.Player.CanCastSpell(this);
     }
 
     private Vector3 FindPointToTeleportTo(Vector3 currentPosition)

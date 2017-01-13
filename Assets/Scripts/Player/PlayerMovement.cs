@@ -17,20 +17,16 @@ public class PlayerMovement : PlayerBase
     [HideInInspector]
     public Vector3 halfWidth;
 
+    [HideInInspector]
     public Vector3 targetCapsulePosition;
+    [HideInInspector]
     public Vector3 wherePlayerClicked;
 
     private Vector3 networkMove;
     private Vector3 lastNetworkMove;
-    private float lastNetworkDataReceivedTime;
-    public float totalTimePassed;
-    private float pingInSeconds;
-    private float timeSinceLastUpdate;
     private WaitForSeconds delayPing;
 
     private RaycastHit hit;
-
-    public List<PlayerSkill> skills;
 
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
@@ -46,18 +42,18 @@ public class PlayerMovement : PlayerBase
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
         halfWidth = Vector3.forward * transform.localScale.z * 0.5f;
 
-        for(int i = 0; i < skills.Count; i++)
+        for(int i = 0; i < Player.skills.Count; i++)
         {
-            if (skills[i] != null)
+            if (Player.skills[i] != null)
             {
-                skills[i].SetSkillId(i);
-                if (skills[i].continueMovementAfterCast)
+                Player.skills[i].SetSkillId(i);
+                if (Player.skills[i].continueMovementAfterCast)
                 {
-                    skills[i].SkillFinished += ContinueMovementAfterSkill;
+                    Player.skills[i].SkillFinished += ContinueMovementAfterSkill;
                 }
                 else
                 {
-                    skills[i].SkillStarted += StopMovementOnSkillCast;
+                    Player.skills[i].SkillStarted += StopMovementOnSkillCast;
                 }
             }
         }
@@ -83,21 +79,9 @@ public class PlayerMovement : PlayerBase
 
     private bool CanUseMovement()
     {
-        foreach(PlayerSkill ps in skills)
+        foreach(PlayerSkill ps in Player.skills)
         {
             if(ps != null && !ps.canMoveWhileCasting && ps.skillActive)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public bool CanCastSpell(PlayerSkill skill)
-    {
-        foreach (PlayerSkill ps in skills)
-        {
-            if (ps != null && ps.skillActive && !ps.castableSpellsWhileActive.Contains(skill))
             {
                 return false;
             }
@@ -149,13 +133,7 @@ public class PlayerMovement : PlayerBase
             {
                 lastNetworkMove = networkMove;
 
-                /*pingInSeconds = (float)PhotonNetwork.GetPing() * 0.001f;
-                //timeSinceLastUpdate = (float)(PhotonNetwork.time - lastNetworkDataReceivedTime);
-                lastNetworkDataReceivedTime = (float)PhotonNetwork.time;
-                totalTimePassed = pingInSeconds; //+ timeSinceLastUpdate;*/
-
                 StopAllCoroutines();
-                //StartCoroutine(MakeCapsuleDisapear());
                 StartCoroutine(Move(networkMove));
                 PlayerOrientation.RotatePlayer(networkMove);
             }
@@ -183,11 +161,6 @@ public class PlayerMovement : PlayerBase
         {
             if (CanUseMovement())
             {
-                /*if (totalTimePassed != 0)
-                {
-                    transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, totalTimePassed * 10);
-                    totalTimePassed = 0;
-                }*/
                 transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * 10);
 
                 if (PlayerMoved != null)

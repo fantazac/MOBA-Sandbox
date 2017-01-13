@@ -6,10 +6,6 @@ public abstract class Skillshot : PlayerSkill
     [SerializeField]
     protected GameObject projectile;
 
-    protected RaycastHit hit;
-
-    //protected Vector3 mousePositionOnCast;
-
     protected float range;
     protected float speed;
 
@@ -21,21 +17,10 @@ public abstract class Skillshot : PlayerSkill
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.CanCastSpell(this);
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.Player.CanCastSpell(this);
     }
 
-    public override void ActivateSkill()
-    {
-        usingSkillFromThisView = true;
-        playerMovement.PhotonView.RPC(activateSkillMethodName, PhotonTargets.All, hit.point + playerMovement.halfHeight);
-    }
-
-    public override void CancelSkill()
-    {
-        playerMovement.PhotonView.RPC(cancelSkillMethodName, PhotonTargets.All);
-    }
-
-    protected override void UseSkill()
+    protected override void UseSkillFromServer()
     {
         SkillBegin();
         playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnCast);

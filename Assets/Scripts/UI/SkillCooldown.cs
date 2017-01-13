@@ -23,7 +23,7 @@ public class SkillCooldown : MonoBehaviour
         {
             player.PlayerInput.OnPressedSkill += ActivateSkill;
 
-            playerSkills = player.GetComponent<PlayerMovement>().skills;
+            playerSkills = player.skills;
             for (int i = 0; i < playerSkills.Count; i++)
             {
                 if (playerSkills[i] != null)

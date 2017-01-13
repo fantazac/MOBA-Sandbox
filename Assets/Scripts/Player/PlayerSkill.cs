@@ -23,14 +23,12 @@ public abstract class PlayerSkill : MonoBehaviour
     protected bool usingSkillFromThisView = false;
     protected WaitForSeconds delayPing;
 
-    protected string activateSkillMethodName;
-    protected string cancelSkillMethodName;
-
     protected WaitForSeconds delayCastTime;
 
     protected PlayerMovement playerMovement;
     protected int skillId;
 
+    protected RaycastHit hit;
     protected Vector3 mousePositionOnCast;
 
     public delegate void SkillStartedHandler();
@@ -69,15 +67,27 @@ public abstract class PlayerSkill : MonoBehaviour
         }
     }
 
+    public void ActivateSkill()
+    {
+        usingSkillFromThisView = true;
+        playerMovement.PhotonView.RPC("UseSkillFromServer", PhotonTargets.All, skillId, hit.point + playerMovement.halfHeight);
+    }
+
+    public void CancelSkill()
+    {
+        playerMovement.PhotonView.RPC("CancelSkillFromServer", PhotonTargets.All, skillId);
+    }
+
     protected IEnumerator PingDelay()
     {
         yield return delayPing;
 
-        UseSkill();
+        UseSkillFromServer();
     }
 
-    protected void InfoReceivedFromServerToUseSkill()
+    public void InfoReceivedFromServerToUseSkill(Vector3 mousePositionOnCast)
     {
+        this.mousePositionOnCast = mousePositionOnCast;
         if (usingSkillFromThisView)
         {
             delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
@@ -85,8 +95,13 @@ public abstract class PlayerSkill : MonoBehaviour
         }
         else
         {
-            UseSkill();
+            UseSkillFromServer();
         }
+    }
+
+    public void InfoReceivedFromServerToCancelSkill()
+    {
+        CancelSkillFromServer();
     }
 
     public void SetSkillId(int skillId)
@@ -95,10 +110,9 @@ public abstract class PlayerSkill : MonoBehaviour
     }
 
     public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }
-    public virtual void ActivateSkill() { }
-    public virtual void CancelSkill() { }
 
-    protected virtual void UseSkill() { }
+    protected virtual void UseSkillFromServer() { }
+    protected virtual void CancelSkillFromServer() { }
     protected virtual IEnumerator SkillEffect() { yield return null; }
     protected virtual IEnumerator SkillEffectWithCastTime() { yield return null; }
 }

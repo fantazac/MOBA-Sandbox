@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : PlayerBase
 {
@@ -8,6 +9,8 @@ public class Player : PlayerBase
     public float currentHealth;
     public Team team;
     public float respawnTime = 5;
+
+    public List<PlayerSkill> skills;
 
     private WaitForSeconds delayDeath;
 
@@ -38,9 +41,33 @@ public class Player : PlayerBase
         PlayerMovement.SerializeState(stream, info);
     }
 
+    [PunRPC]
+    protected void UseSkillFromServer(int skillId, Vector3 mousePositionOnCast)
+    {
+        skills[skillId].InfoReceivedFromServerToUseSkill(mousePositionOnCast);
+    }
+
+    [PunRPC]
+    protected void CancelSkillFromServer(int skillId)
+    {
+        skills[skillId].InfoReceivedFromServerToCancelSkill();
+    }
+
     public void ChangedHealthOnServer(float damage)
     {
         PhotonView.RPC("OnHealthChanged", PhotonTargets.All, damage);
+    }
+
+    public bool CanCastSpell(PlayerSkill skill)
+    {
+        foreach (PlayerSkill ps in skills)
+        {
+            if (ps != null && ps.skillActive && !ps.castableSpellsWhileActive.Contains(skill))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     [PunRPC]

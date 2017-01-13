@@ -36,7 +36,7 @@ public class PlayerOrientation : PlayerBase
 
     private bool CanRotate()
     {
-        foreach (PlayerSkill ps in PlayerMovement.skills)
+        foreach (PlayerSkill ps in Player.skills)
         {
             if (ps != null && !ps.canRotateWhileCasting && ps.skillActive)
             {

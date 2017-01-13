@@ -25,19 +25,19 @@ public class PlayerInput : PlayerBase
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && PlayerMovement.skills[0] != null)
+        if (Input.GetKeyDown(KeyCode.Q) && Player.skills[0] != null)
         {
             OnPressedSkill(0, Input.mousePosition);
         }
-        if (Input.GetKeyDown(KeyCode.W) && PlayerMovement.skills[1] != null)
+        if (Input.GetKeyDown(KeyCode.W) && Player.skills[1] != null)
         {
             OnPressedSkill(1, Input.mousePosition);
         }
-        if (Input.GetKeyDown(KeyCode.E) && PlayerMovement.skills[2] != null)
+        if (Input.GetKeyDown(KeyCode.E) && Player.skills[2] != null)
         {
             OnPressedSkill(2, Input.mousePosition);
         }
-        if (Input.GetKeyDown(KeyCode.R) && PlayerMovement.skills[3] != null)
+        if (Input.GetKeyDown(KeyCode.R) && Player.skills[3] != null)
         {
             OnPressedSkill(3, Input.mousePosition);
         }

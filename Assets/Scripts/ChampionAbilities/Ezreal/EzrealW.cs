@@ -7,15 +7,7 @@ public class EzrealW : Skillshot
     {
         range = 22;
         speed = 35;
-        activateSkillMethodName = "UseEzrealWFromServer";
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
-    }
-
-    [PunRPC]
-    protected void UseEzrealWFromServer(Vector3 mousePositionOnCast)
-    {
-        this.mousePositionOnCast = mousePositionOnCast;
-        InfoReceivedFromServerToUseSkill();
     }
 }
