@@ -28,7 +28,7 @@ public class CameraManager : MonoBehaviour
         player.PlayerInput.OnPressedY += SetCameraLock;
         player.PlayerInput.OnPressedSpace += SetCameraOnPlayer;
         player.PlayerInput.OnReleasedSpace += SetCameraFree;
-        
+        Debug.Log(Screen.width + " " + Screen.height);
         screenWidth = Screen.width;
         screenHeight = Screen.height;
 

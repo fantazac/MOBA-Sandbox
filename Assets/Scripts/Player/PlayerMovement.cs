@@ -167,7 +167,7 @@ public class PlayerMovement : PlayerBase
         {
             if (CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * Player.movementSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * (Player.movementSpeed / 100f));
 
                 if (PlayerMoved != null)
                 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Player : PlayerBase
 {
-    public int movementSpeed = 8;
+    public float movementSpeed = 325;
     public float maxHealth = 100;
     public float currentHealth;
     public Team team;
