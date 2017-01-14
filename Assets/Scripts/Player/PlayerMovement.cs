@@ -6,21 +6,17 @@ public class PlayerMovement : PlayerBase
 {
     [SerializeField]
     private GameObject moveToCapsule;
+
     [HideInInspector]
     public TerrainCollider terrainCollider;
     private Camera childCamera;
 
-    private GameObject capsule;
-
     [HideInInspector]
     public Vector3 halfHeight;
-    [HideInInspector]
-    public Vector3 halfWidth;
 
     [HideInInspector]
-    public Vector3 targetCapsulePosition;
-    [HideInInspector]
     public Vector3 wherePlayerClicked;
+    private Vector3 targetCapsulePosition;
 
     private Vector3 networkMove;
     private Vector3 lastNetworkMove;
@@ -41,7 +37,6 @@ public class PlayerMovement : PlayerBase
             childCamera = transform.parent.GetComponentInChildren<Camera>();
         }
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
-        halfWidth = Vector3.forward * transform.localScale.z * 0.5f;
 
         for(int i = 0; i < Player.skills.Count; i++)
         {
@@ -66,8 +61,7 @@ public class PlayerMovement : PlayerBase
     {
         if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
         {
-            Destroy(capsule);
-            capsule = (GameObject)Instantiate(moveToCapsule, hit.point + halfHeight, new Quaternion());
+            Instantiate(moveToCapsule, hit.point, new Quaternion());
             targetCapsulePosition = hit.point + halfHeight;
             if (CanUseMovement())
             {
@@ -82,7 +76,6 @@ public class PlayerMovement : PlayerBase
     {
         targetCapsulePosition = Vector3.zero;
         StopAllCoroutines();
-        StartCoroutine(MakeCapsuleDisapear());
     }
 
     private bool CanUseMovement()
@@ -101,6 +94,7 @@ public class PlayerMovement : PlayerBase
     {
         if (((!PhotonView.isMine && lastNetworkMove != Vector3.zero) || targetCapsulePosition != Vector3.zero) && CanUseMovement())
         {
+            StopAllCoroutines();
             StartCoroutine(Move(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove));
             PlayerOrientation.RotatePlayer(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove);
         }
@@ -109,7 +103,6 @@ public class PlayerMovement : PlayerBase
     private void StopMovementOnSkillCast()
     {
         StopAllCoroutines();
-        StartCoroutine(MakeCapsuleDisapear());
     }
 
     public Ray GetRay(Vector3 mousePosition)
@@ -156,7 +149,6 @@ public class PlayerMovement : PlayerBase
     private void SetMove(Vector3 wherePlayerClickedToMove)
     {
         StopAllCoroutines();
-        StartCoroutine(MakeCapsuleDisapear());
         StartCoroutine(Move(wherePlayerClickedToMove));
         PlayerOrientation.RotatePlayer(wherePlayerClickedToMove);
     }
@@ -179,25 +171,5 @@ public class PlayerMovement : PlayerBase
         }
         lastNetworkMove = Vector3.zero;
         targetCapsulePosition = Vector3.zero;
-    }
-
-    private IEnumerator MakeCapsuleDisapear()
-    {
-        if(capsule != null)
-        {
-            while (capsule.transform.position.y > -1)
-            {
-                capsule.transform.position += Vector3.down * 0.06f;
-
-                yield return null;
-            }
-
-            Destroy(capsule);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        Destroy(capsule);
     }
 }
