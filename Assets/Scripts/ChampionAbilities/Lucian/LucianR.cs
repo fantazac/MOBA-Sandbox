@@ -3,16 +3,14 @@ using System.Collections;
 
 public class LucianR : Skillshot
 {
-    [SerializeField]
     private int amountOfBullets = 20;
 
-    [SerializeField]
-    private float durationOfActive = 2.5f;
+    private float durationOfActive = 3f;
 
     private int bulletsShot = 0;
 
-    //to change, only works when facing up
-    private Vector3 offsetBetweenProjectiles = Vector3.right * 0.4f;
+    //to change, only works when facing up, right now shoots a line
+    private Vector3 offsetBetweenProjectiles = Vector3.zero;//Vector3.right * 0.4f;
 
     private WaitForSeconds delayBetweenBullets;
 
@@ -20,8 +18,8 @@ public class LucianR : Skillshot
     {
         delayBetweenBullets = new WaitForSeconds(durationOfActive / (float)amountOfBullets);
 
-        range = 22;
-        speed = 32;
+        range = 1200;
+        speed = 2000;
         base.Start();
     }
 

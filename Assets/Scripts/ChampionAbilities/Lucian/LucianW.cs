@@ -8,8 +8,8 @@ public class LucianW : Skillshot
 
     protected override void Start()
     {
-        range = 22;
-        speed = 36;
+        range = 900;
+        speed = 1550;
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }

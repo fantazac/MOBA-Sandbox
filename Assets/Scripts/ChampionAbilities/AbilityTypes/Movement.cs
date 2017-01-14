@@ -6,6 +6,18 @@ public class Movement : PlayerSkill
     protected float maxDistance;
     protected float minDistance;
 
+    protected override void Start()
+    {
+        ModifyValues();
+        base.Start();
+    }
+
+    protected override void ModifyValues()
+    {
+        maxDistance /= DIVISION_FACTOR;
+        minDistance /= DIVISION_FACTOR;
+    }
+
     public override bool CanUseSkill(Vector3 mousePosition)
     {
         return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.Player.CanCastSpell(this);

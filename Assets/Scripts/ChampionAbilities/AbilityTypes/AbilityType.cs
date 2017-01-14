@@ -12,3 +12,8 @@ public enum AbilityType
     TARGET_SKILLSHOT,
     SUMMON
 }
+
+public enum Range
+{
+    GLOBAL = 25000
+}

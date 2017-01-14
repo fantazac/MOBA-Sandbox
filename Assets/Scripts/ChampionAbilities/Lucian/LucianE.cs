@@ -5,8 +5,8 @@ public class LucianE : Dash
 {
     protected override void Start()
     {
-        maxDistance = 6;
-        minDistance = 2;
+        maxDistance = 425;
+        minDistance = 100;
         dashSpeed = 32;
         base.Start();
     }

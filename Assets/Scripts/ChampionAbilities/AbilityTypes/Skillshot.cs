@@ -12,7 +12,14 @@ public abstract class Skillshot : PlayerSkill
     protected override void Start()
     {
         AbilityType = AbilityType.SKILLSHOT;
+        ModifyValues();
         base.Start();
+    }
+
+    protected override void ModifyValues()
+    {
+        range /= DIVISION_FACTOR;
+        speed /= DIVISION_FACTOR;
     }
 
     public override bool CanUseSkill(Vector3 mousePosition)

@@ -5,7 +5,7 @@ public class EzrealE : Blink
 {
     protected override void Start()
     {
-        maxDistance = 8;
+        maxDistance = 475;
         minDistance = 0;
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();

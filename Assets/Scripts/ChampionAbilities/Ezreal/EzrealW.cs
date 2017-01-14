@@ -5,8 +5,8 @@ public class EzrealW : Skillshot
 {
     protected override void Start()
     {
-        range = 22;
-        speed = 35;
+        range = 1000;
+        speed = 1550;
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }

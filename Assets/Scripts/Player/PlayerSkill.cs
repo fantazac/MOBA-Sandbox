@@ -8,6 +8,8 @@ public abstract class PlayerSkill : MonoBehaviour
     [HideInInspector]
     public AbilityType AbilityType { get; protected set; }
 
+    protected const float DIVISION_FACTOR = 100f;
+
     public float cooldown;
     public Sprite skillImage;
     public float castTime;
@@ -111,6 +113,7 @@ public abstract class PlayerSkill : MonoBehaviour
 
     public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }
 
+    protected virtual void ModifyValues() { }
     protected virtual void UseSkillFromServer() { }
     protected virtual void CancelSkillFromServer() { }
     protected virtual IEnumerator SkillEffect() { yield return null; }
