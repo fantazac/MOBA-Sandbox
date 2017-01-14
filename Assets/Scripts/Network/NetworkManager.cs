@@ -86,8 +86,6 @@ public class NetworkManager : MonoBehaviour
 
     private void SpawnMyPlayer(string champName)
     {
-        //int random = Random.Range(0, spawners.Length);
-        //Vector3 spawner = spawners[random].transform.position;
         Vector3 spawner = spawners[(PhotonNetwork.playerList.Length - 1) % 2].transform.position;
         playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
         GameObject player = PhotonNetwork.Instantiate(champName, spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
@@ -95,8 +93,7 @@ public class NetworkManager : MonoBehaviour
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
         playerMovement = player.GetComponent<PlayerMovement>();
-        //player.GetComponent<Player>().team = (Team)random;
-        playerMovement.Player.SetTeam((Team)((PhotonNetwork.playerList.Length - 1) % 2));
+        playerMovement.EntityTeam.SetTeam((Team)((PhotonNetwork.playerList.Length - 1) % 2));
         //player.transform.parent.GetChild(2).gameObject.SetActive(true);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())

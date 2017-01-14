@@ -242,6 +242,7 @@
     <Compile Include="Assets\Scripts\Daniel Scripts\Equipment.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\FPSInputController.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\EntityTeam.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\MovementPoint\MovementCapsule.cs" />
     <Compile Include="Assets\Scripts\Network\NetworkManager.cs" />

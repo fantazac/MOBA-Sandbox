@@ -61,6 +61,10 @@ public class ProjectileMovement : MonoBehaviour
         {
             StartCoroutine(ShootProjectileAfterHit());
         }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private IEnumerator ShootProjectileAfterHit()
@@ -82,14 +86,15 @@ public class ProjectileMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        Player tempPlayer = collider.gameObject.GetComponent<Player>();
+        Health targetHealth = collider.gameObject.GetComponent<Health>();
         
-        if (tempPlayer != null && tempPlayer.team != sourceTeam && CanHitPlayer(collider.gameObject))
+        if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().Team != sourceTeam && CanHitTarget(collider.gameObject))
         {
             targetsAlreadyHit.Add(collider.gameObject);
             if (photonView.isMine)
             {
-                tempPlayer.ChangedHealthOnServer(damage);
+                //if the projectile gives a stat/heals (ex. EzrealW gives AS), changed this
+                targetHealth.DamageTargetOnServer(damage);
             }
             
             if (deleteOnHit)
@@ -104,7 +109,7 @@ public class ProjectileMovement : MonoBehaviour
         }
     }
 
-    private bool CanHitPlayer(GameObject target)
+    private bool CanHitTarget(GameObject target)
     {
         foreach(GameObject targetAlreadyHit in targetsAlreadyHit)
         {

@@ -73,6 +73,16 @@ public abstract class PlayerBase : MonoBehaviour {
         }
     }
 
+    private EntityTeam _entityTeam;
+    public EntityTeam EntityTeam
+    {
+        get
+        {
+            InitializeEntityTeam();
+            return _entityTeam;
+        }
+    }
+
     protected virtual void Start()
     {
         InitializePlayer();
@@ -83,6 +93,7 @@ public abstract class PlayerBase : MonoBehaviour {
         InitializePlayerShootProjectile();
 
         InitializePhotonView();
+        InitializeEntityTeam();
     }
 
     private void InitializePlayer()
@@ -139,6 +150,19 @@ public abstract class PlayerBase : MonoBehaviour {
         {
             _photonView = GetComponent<PhotonView>();
         }
+    }
+
+    private void InitializeEntityTeam()
+    {
+        if (_entityTeam == null)
+        {
+            _entityTeam = GetComponent<EntityTeam>();
+        }
+        if(_photonView == null)
+        {
+            InitializePhotonView();
+        }
+        _entityTeam.SetPhotonView(_photonView);
     }
 
     public virtual void SerializeState(PhotonStream stream, PhotonMessageInfo info) { }
