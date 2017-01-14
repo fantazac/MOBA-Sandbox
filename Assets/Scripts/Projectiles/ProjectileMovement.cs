@@ -11,7 +11,7 @@ public class ProjectileMovement : MonoBehaviour
     private PhotonView photonView;
     [HideInInspector]
     public Team sourceTeam;
-    private bool projectileHit = false;
+    private bool projectileAfterHit = false;
 
     private List<GameObject> targetsAlreadyHit = new List<GameObject>();
 
@@ -35,6 +35,7 @@ public class ProjectileMovement : MonoBehaviour
         this.range = range;
         this.photonView = photonView;
         this.sourceTeam = sourceTeam;
+        projectileAfterHit = true;
         delayProjectileAfterHit = new WaitForSeconds(projectileAfterHitDuration);
         initialPosition = transform.position;
         StartCoroutine(Shoot());
@@ -49,14 +50,22 @@ public class ProjectileMovement : MonoBehaviour
 
     private IEnumerator Shoot()
     {
-        while (Vector3.Distance(transform.position, initialPosition) < range && !projectileHit)
+        while (Vector3.Distance(transform.position, initialPosition) < range)
         {
             transform.position += transform.forward * Time.deltaTime * speed;
 
             yield return null;
         }
 
-        if(delayProjectileAfterHit != null)
+        if (projectileAfterHit)
+        {
+            StartCoroutine(ShootProjectileAfterHit());
+        }
+    }
+
+    private IEnumerator ShootProjectileAfterHit()
+    {
+        if (delayProjectileAfterHit != null)
         {
             GameObject shotProjectileAfterHit = (GameObject)Instantiate(transform.GetChild(0).gameObject, transform.position, transform.rotation);
             shotProjectileAfterHit.SetActive(true);
@@ -87,9 +96,10 @@ public class ProjectileMovement : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-            else
+            else if(projectileAfterHit)
             {
-                projectileHit = true;
+                StopAllCoroutines();
+                StartCoroutine(ShootProjectileAfterHit());
             }
         }
     }
