@@ -120,6 +120,9 @@ public class PlayerMovement : PlayerBase
     [PunRPC]
     private void MoveFromServer(Vector3 wherePlayerClicked)
     {
+        //If a traget is moving and you connect, this is called, which works as intented.
+        //But, the target will start moving from its spawn instead of "where it's supposed to be at the current time"
+        //Fix this
         SetMove(wherePlayerClicked);
     }
 
