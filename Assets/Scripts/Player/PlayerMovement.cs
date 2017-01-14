@@ -34,6 +34,7 @@ public class PlayerMovement : PlayerBase
     protected override void Start()
     {
         PlayerInput.OnRightClick += PressedRightClick;
+        PlayerInput.OnPressedS += StopMovement;
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         if (PhotonView.isMine)
         {
@@ -77,6 +78,13 @@ public class PlayerMovement : PlayerBase
         }
     }
 
+    private void StopMovement()
+    {
+        targetCapsulePosition = Vector3.zero;
+        StopAllCoroutines();
+        StartCoroutine(MakeCapsuleDisapear());
+    }
+
     private bool CanUseMovement()
     {
         foreach(PlayerSkill ps in Player.skills)
@@ -93,8 +101,6 @@ public class PlayerMovement : PlayerBase
     {
         if (((!PhotonView.isMine && lastNetworkMove != Vector3.zero) || targetCapsulePosition != Vector3.zero) && CanUseMovement())
         {
-            StopAllCoroutines();
-            StartCoroutine(MakeCapsuleDisapear());
             StartCoroutine(Move(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove));
             PlayerOrientation.RotatePlayer(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove);
         }
@@ -161,7 +167,7 @@ public class PlayerMovement : PlayerBase
         {
             if (CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * 10);
+                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * Player.movementSpeed);
 
                 if (PlayerMoved != null)
                 {
