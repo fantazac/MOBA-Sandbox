@@ -22,9 +22,6 @@ public abstract class PlayerSkill : MonoBehaviour
     [HideInInspector]
     public bool skillActive = false;
 
-    protected bool usingSkillFromThisView = false;
-    protected WaitForSeconds delayPing;
-
     protected WaitForSeconds delayCastTime;
 
     protected PlayerMovement playerMovement;
@@ -71,34 +68,19 @@ public abstract class PlayerSkill : MonoBehaviour
 
     public void ActivateSkill()
     {
-        usingSkillFromThisView = true;
-        playerMovement.PhotonView.RPC("UseSkillFromServer", PhotonTargets.All, skillId, hit.point + playerMovement.halfHeight);
+        //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
+        playerMovement.PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, hit.point + playerMovement.halfHeight);
     }
 
     public void CancelSkill()
     {
-        playerMovement.PhotonView.RPC("CancelSkillFromServer", PhotonTargets.All, skillId);
-    }
-
-    protected IEnumerator PingDelay()
-    {
-        yield return delayPing;
-
-        UseSkillFromServer();
+        playerMovement.PhotonView.RPC("CancelSkillFromServer", PhotonTargets.AllViaServer, skillId);
     }
 
     public void InfoReceivedFromServerToUseSkill(Vector3 mousePositionOnCast)
     {
         this.mousePositionOnCast = mousePositionOnCast;
-        if (usingSkillFromThisView)
-        {
-            delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
-            StartCoroutine(PingDelay());
-        }
-        else
-        {
-            UseSkillFromServer();
-        }
+        UseSkillFromServer();
     }
 
     public void InfoReceivedFromServerToCancelSkill()

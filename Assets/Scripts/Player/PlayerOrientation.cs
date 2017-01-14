@@ -16,24 +16,6 @@ public class PlayerOrientation : PlayerBase
         base.Start();
     }
 
-    public override void SerializeState(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.isWriting)
-        {
-            stream.SendNext(PlayerMovement.wherePlayerClicked);
-        }
-        else
-        {
-            networkMove = (Vector3)stream.ReceiveNext();
-
-            if (!PhotonView.isMine && networkMove != PlayerMovement.wherePlayerClicked)
-            {
-                StopAllCoroutines();
-                StartCoroutine(Rotate(networkMove));
-            }
-        }
-    }
-
     private bool CanRotate()
     {
         foreach (PlayerSkill ps in Player.skills)

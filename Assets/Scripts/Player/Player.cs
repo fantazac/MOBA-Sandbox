@@ -5,8 +5,6 @@ using System.Collections.Generic;
 public class Player : PlayerBase
 {
     public float movementSpeed = 325;
-    public float maxHealth = 100;
-    public float currentHealth;
     public Team team;
     public float respawnTime = 5;
 
@@ -17,28 +15,18 @@ public class Player : PlayerBase
     protected override void Start()
     {
         delayDeath = new WaitForSeconds(respawnTime);
-        currentHealth = maxHealth;
-        PhotonNetwork.sendRate = 30;
-        PhotonNetwork.sendRateOnSerialize = 15;
         base.Start();
     }
 
     public void SetTeam(Team team)
     {
-        this.team = team;
-        PhotonView.RPC("SetTeamOnNetwork", PhotonTargets.OthersBuffered, team);
+        PhotonView.RPC("SetTeamOnNetwork", PhotonTargets.AllBufferedViaServer, team);
     }
 
     [PunRPC]
     private void SetTeamOnNetwork(Team team)
     {
         this.team = team;
-    }
-
-    private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        //SerializeState(stream, info);
-        PlayerMovement.SerializeState(stream, info);
     }
 
     [PunRPC]
@@ -55,7 +43,7 @@ public class Player : PlayerBase
 
     public void ChangedHealthOnServer(float damage)
     {
-        PhotonView.RPC("OnHealthChanged", PhotonTargets.All, damage);
+        //PhotonView.RPC("OnHealthChanged", PhotonTargets.AllBufferedViaServer, damage);
     }
 
     public bool CanCastSpell(PlayerSkill skill)
@@ -73,14 +61,14 @@ public class Player : PlayerBase
     [PunRPC]
     private void OnHealthChanged(float damage)
     {
-        currentHealth -= damage;
+        /*currentHealth -= damage;
         if(currentHealth <= 0)
         {
             currentHealth = maxHealth;
             transform.position = PlayerMovement.halfHeight;
             PlayerMovement.PlayerMovingWithSkill();
             //StartCoroutine(RespawnAfterDeath());
-        }
+        }*/
     }
 
     /*private IEnumerator RespawnAfterDeath()

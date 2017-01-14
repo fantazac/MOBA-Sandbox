@@ -14,13 +14,9 @@ public class PlayerMovement : PlayerBase
     [HideInInspector]
     public Vector3 halfHeight;
 
-    [HideInInspector]
-    public Vector3 wherePlayerClicked;
     private Vector3 targetCapsulePosition;
 
-    private Vector3 networkMove;
     private Vector3 lastNetworkMove;
-    private WaitForSeconds delayPing;
 
     private RaycastHit hit;
 
@@ -63,11 +59,9 @@ public class PlayerMovement : PlayerBase
         {
             Instantiate(moveToCapsule, hit.point, new Quaternion());
             targetCapsulePosition = hit.point + halfHeight;
-            if (CanUseMovement())
-            {
-                wherePlayerClicked = hit.point + halfHeight;
-                delayPing = new WaitForSeconds((float)PhotonNetwork.GetPing() * 0.001f);
-                StartCoroutine(MoveDelay(hit.point + halfHeight));
+            if (CanUseMovement())   //check if in league you can move after doing: 
+            {                       //move -> ezreal q (stops movement) -> click while casting -> move?
+                ActivateMovement(); //if yes, change how this works
             }
         }
     }
@@ -118,36 +112,20 @@ public class PlayerMovement : PlayerBase
         }
     }
 
-    public override void SerializeState(PhotonStream stream, PhotonMessageInfo info)
+    private void ActivateMovement()
     {
-        if (stream.isWriting)
-        {
-            stream.SendNext(wherePlayerClicked);
-        }
-        else
-        {
-            networkMove = (Vector3)stream.ReceiveNext();
-
-            if (lastNetworkMove != networkMove && !PhotonView.isMine)
-            {
-                lastNetworkMove = networkMove;
-
-                StopAllCoroutines();
-                StartCoroutine(Move(networkMove));
-                PlayerOrientation.RotatePlayer(networkMove);
-            }
-        }
+        PhotonView.RPC("MoveFromServer", PhotonTargets.AllBufferedViaServer, hit.point + halfHeight);
     }
 
-    private IEnumerator MoveDelay(Vector3 wherePlayerClickedToMove)
+    [PunRPC]
+    private void MoveFromServer(Vector3 wherePlayerClicked)
     {
-        yield return delayPing;
-
-        SetMove(wherePlayerClickedToMove);
+        SetMove(wherePlayerClicked);
     }
 
     private void SetMove(Vector3 wherePlayerClickedToMove)
     {
+        lastNetworkMove = wherePlayerClickedToMove;
         StopAllCoroutines();
         StartCoroutine(Move(wherePlayerClickedToMove));
         PlayerOrientation.RotatePlayer(wherePlayerClickedToMove);
