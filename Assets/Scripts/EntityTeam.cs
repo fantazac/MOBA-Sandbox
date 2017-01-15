@@ -25,4 +25,14 @@ public class EntityTeam : MonoBehaviour
     {
         this.team = team;
     }
+
+    public bool IsAlly(Team team)
+    {
+        return this.team == team;
+    }
+
+    public bool IsEnemy(Team team)
+    {
+        return this.team != team;
+    }
 }

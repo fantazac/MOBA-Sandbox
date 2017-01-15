@@ -24,7 +24,7 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
-        player = transform.parent.GetChild(3).gameObject.GetComponent<Player>();
+        player = transform.parent.GetChild(2).gameObject.GetComponent<Player>();
         player.PlayerInput.OnPressedY += SetCameraLock;
         player.PlayerInput.OnPressedSpace += SetCameraOnPlayer;
         player.PlayerInput.OnReleasedSpace += SetCameraFree;

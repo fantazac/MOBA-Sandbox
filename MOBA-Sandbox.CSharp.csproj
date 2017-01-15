@@ -244,11 +244,13 @@
     <Compile Include="Assets\Scripts\Daniel Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\EntityTeam.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
+    <Compile Include="Assets\Scripts\MouseHover.cs" />
     <Compile Include="Assets\Scripts\MovementPoint\MovementCapsule.cs" />
     <Compile Include="Assets\Scripts\Network\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerBase.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerInput.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerMouseSelection.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerOrientation.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerProjectileCollision.cs" />
@@ -257,6 +259,7 @@
     <Compile Include="Assets\Scripts\Player\Team.cs" />
     <Compile Include="Assets\Scripts\Projectiles\ProjectileMovement.cs" />
     <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
+    <Compile Include="Assets\Scripts\StaticObjects.cs" />
     <Compile Include="Assets\Scripts\UI\SkillCooldown.cs" />
   </ItemGroup>
   <ItemGroup>

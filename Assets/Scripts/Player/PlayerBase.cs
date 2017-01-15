@@ -63,6 +63,16 @@ public abstract class PlayerBase : MonoBehaviour {
         }
     }
 
+    private PlayerMouseSelection _playerMouseSelection;
+    public PlayerMouseSelection PlayerMouseSelection
+    {
+        get
+        {
+            InitialiseMouseSelection();
+            return _playerMouseSelection;
+        }
+    }
+
     private PhotonView _photonView;
     public PhotonView PhotonView
     {
@@ -91,6 +101,7 @@ public abstract class PlayerBase : MonoBehaviour {
         InitializePlayerInput();
         InitializePlayerProjectileCollision();
         InitializePlayerShootProjectile();
+        InitialiseMouseSelection();
 
         InitializePhotonView();
         InitializeEntityTeam();
@@ -141,6 +152,14 @@ public abstract class PlayerBase : MonoBehaviour {
         if (_playerShootProjectile == null)
         {
             _playerShootProjectile = GetComponent<PlayerShootProjectile>();
+        }
+    }
+
+    private void InitialiseMouseSelection()
+    {
+        if(_playerMouseSelection == null)
+        {
+            _playerMouseSelection = GetComponent<PlayerMouseSelection>();
         }
     }
 

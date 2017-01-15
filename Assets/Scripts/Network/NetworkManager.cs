@@ -29,6 +29,7 @@ public class NetworkManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            StaticObjects.Player = null;
             Destroy(playerTemplate);
             menuCamera.SetActive(true);
             PhotonNetwork.LeaveRoom();
@@ -44,10 +45,6 @@ public class NetworkManager : MonoBehaviour
     {
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
         GUILayout.Label(PhotonNetwork.GetPing().ToString());
-        /*if(playerMovement != null)
-        {
-            GUILayout.Label(playerMovement.timeStoppedMoving.ToString());
-        }*/
 
         if (inChampSelect)
         {
@@ -94,13 +91,12 @@ public class NetworkManager : MonoBehaviour
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
         playerMovement = player.GetComponent<PlayerMovement>();
         playerMovement.EntityTeam.SetTeam((Team)((PhotonNetwork.playerList.Length - 1) % 2));
-        //player.transform.parent.GetChild(2).gameObject.SetActive(true);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())
         {
             pb.enabled = true;
         }
-
+        StaticObjects.Player = playerMovement.Player;
         menuCamera.SetActive(false);
     }
 }
