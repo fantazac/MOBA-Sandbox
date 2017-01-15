@@ -9,7 +9,7 @@ public class LucianR : Skillshot
 
     private int bulletsShot = 0;
 
-    private float offset = 0.4f;
+    private float offset = 0.2f;
 
     private WaitForSeconds delayBetweenBullets;
 

@@ -50,6 +50,7 @@ public class NetworkManager : MonoBehaviour
     {
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
         GUILayout.Label(PhotonNetwork.GetPing().ToString());
+        GUILayout.Label(playerId.ToString());
 
         if (inChampSelect)
         {

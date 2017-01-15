@@ -119,9 +119,27 @@ public class PlayerMovement : PlayerBase
         }
     }
 
+    private GameObject FindEnemyPlayer(int enemyPlayerId)
+    {
+        GameObject enemyPlayer = null;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in players)
+        {
+            if(player.GetComponent<Player>().PlayerId == enemyPlayerId)
+            {
+                enemyPlayer = player;
+                break;
+            }
+        }
+        
+        return enemyPlayer;
+    }
+
     private void ActivateMovementTowardsEnemyPlayer()
     {
-        PhotonView.RPC("MoveTowardsEnemyPlayerFromServer", PhotonTargets.AllBufferedViaServer, PlayerMouseSelection.Player.PlayerId);
+        PhotonView.RPC("MoveTowardsEnemyPlayerFromServer", PhotonTargets.AllBufferedViaServer, 
+            PlayerMouseSelection.HoveredObject.GetComponent<Player>().PlayerId);
     }
 
     private void ActivateMovementTowardsPoint()
@@ -130,12 +148,12 @@ public class PlayerMovement : PlayerBase
     }
 
     [PunRPC]
-    private void MoveTowardsEnemyPlayerFromServer(GameObject enemyPlayer)
+    private void MoveTowardsEnemyPlayerFromServer(int enemyPlayerId)
     {
         //If a traget is moving and you connect, this is called, which works as intented.
         //But, the target will start moving from its spawn instead of "where it's supposed to be at the current time"
         //Fix this
-        SetMoveTowardsObject(enemyPlayer);
+        SetMoveTowardsObject(FindEnemyPlayer(enemyPlayerId));
     }
 
     [PunRPC]
@@ -164,11 +182,12 @@ public class PlayerMovement : PlayerBase
 
     private IEnumerator MoveTowardsObject(GameObject enemyTarget)
     {
-        while (transform.position != enemyTarget.transform.position)
+        while (enemyTarget != null)
         {
             if (CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, enemyTarget.transform.position, Time.deltaTime * (Player.movementSpeed / 100f));
+                transform.position = Vector3.MoveTowards(transform.position, enemyTarget.transform.position, 
+                    Time.deltaTime * (Player.movementSpeed / 100f));
 
                 if (PlayerMoved != null)
                 {
