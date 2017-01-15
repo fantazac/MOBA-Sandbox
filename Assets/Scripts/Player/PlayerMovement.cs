@@ -55,13 +55,20 @@ public class PlayerMovement : PlayerBase
 
     private void PressedRightClick(Vector3 mousePosition)
     {
-        if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
+        if (PlayerMouseSelection.HoveredObjectIsEnemy(EntityTeam.Team))
+        {
+            if (CanUseMovement())
+            {
+                ActivateMovementTowardsEnemyPlayer();
+            }
+        }
+        else if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
         {
             Instantiate(moveToCapsule, hit.point, new Quaternion());
             targetCapsulePosition = hit.point + halfHeight;
             if (CanUseMovement())   //check if in league you can move after doing: 
             {                       //move -> ezreal q (stops movement) -> click while casting -> move?
-                ActivateMovement(); //if yes, change how this works
+                ActivateMovementTowardsPoint(); //if yes, change how this works
             }
         }
     }
@@ -89,7 +96,7 @@ public class PlayerMovement : PlayerBase
         if (((!PhotonView.isMine && lastNetworkMove != Vector3.zero) || targetCapsulePosition != Vector3.zero) && CanUseMovement())
         {
             StopAllCoroutines();
-            StartCoroutine(Move(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove));
+            StartCoroutine(MoveTowardsPoint(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove));
             PlayerOrientation.RotatePlayer(PhotonView.isMine ? hit.point + halfHeight : lastNetworkMove);
         }
     }
@@ -112,29 +119,68 @@ public class PlayerMovement : PlayerBase
         }
     }
 
-    private void ActivateMovement()
+    private void ActivateMovementTowardsEnemyPlayer()
     {
-        PhotonView.RPC("MoveFromServer", PhotonTargets.AllBufferedViaServer, hit.point + halfHeight);
+        PhotonView.RPC("MoveTowardsEnemyPlayerFromServer", PhotonTargets.AllBufferedViaServer, PlayerMouseSelection.Player.PlayerId);
+    }
+
+    private void ActivateMovementTowardsPoint()
+    {
+        PhotonView.RPC("MoveTowardsPointFromServer", PhotonTargets.AllBufferedViaServer, hit.point + halfHeight);
     }
 
     [PunRPC]
-    private void MoveFromServer(Vector3 wherePlayerClicked)
+    private void MoveTowardsEnemyPlayerFromServer(GameObject enemyPlayer)
     {
         //If a traget is moving and you connect, this is called, which works as intented.
         //But, the target will start moving from its spawn instead of "where it's supposed to be at the current time"
         //Fix this
-        SetMove(wherePlayerClicked);
+        SetMoveTowardsObject(enemyPlayer);
     }
 
-    private void SetMove(Vector3 wherePlayerClickedToMove)
+    [PunRPC]
+    private void MoveTowardsPointFromServer(Vector3 wherePlayerClicked)
+    {
+        //If a traget is moving and you connect, this is called, which works as intented.
+        //But, the target will start moving from its spawn instead of "where it's supposed to be at the current time"
+        //Fix this
+        SetMoveTowardsPoint(wherePlayerClicked);
+    }
+
+    private void SetMoveTowardsObject(GameObject enemyTarget)
+    {
+        StopAllCoroutines();
+        StartCoroutine(MoveTowardsObject(enemyTarget));
+        PlayerOrientation.RotatePlayerUntilReachedTarget(enemyTarget);
+    }
+
+    private void SetMoveTowardsPoint(Vector3 wherePlayerClickedToMove)
     {
         lastNetworkMove = wherePlayerClickedToMove;
         StopAllCoroutines();
-        StartCoroutine(Move(wherePlayerClickedToMove));
+        StartCoroutine(MoveTowardsPoint(wherePlayerClickedToMove));
         PlayerOrientation.RotatePlayer(wherePlayerClickedToMove);
     }
 
-    private IEnumerator Move(Vector3 wherePlayerClickedToMove)
+    private IEnumerator MoveTowardsObject(GameObject enemyTarget)
+    {
+        while (transform.position != enemyTarget.transform.position)
+        {
+            if (CanUseMovement())
+            {
+                transform.position = Vector3.MoveTowards(transform.position, enemyTarget.transform.position, Time.deltaTime * (Player.movementSpeed / 100f));
+
+                if (PlayerMoved != null)
+                {
+                    PlayerMoved();
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator MoveTowardsPoint(Vector3 wherePlayerClickedToMove)
     {
         while (transform.position != wherePlayerClickedToMove)
         {

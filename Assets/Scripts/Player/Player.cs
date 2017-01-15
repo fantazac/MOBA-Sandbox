@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class Player : PlayerBase
 {
+    [SerializeField]
+    private int playerId;
+
+    public int PlayerId { get { return playerId; } }
+
     public float movementSpeed = 325;
 
     public List<PlayerSkill> skills;
@@ -11,6 +16,17 @@ public class Player : PlayerBase
     protected override void Start()
     {
         base.Start();
+    }
+
+    public void SetPlayerId(int playerId)
+    {
+        PhotonView.RPC("SetPlayerOnNetwork", PhotonTargets.AllBufferedViaServer, playerId);
+    }
+
+    [PunRPC]
+    private void SetPlayerOnNetwork(int playerId)
+    {
+        this.playerId = playerId;
     }
 
     [PunRPC]

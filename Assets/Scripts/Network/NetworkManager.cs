@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -12,10 +13,14 @@ public class NetworkManager : MonoBehaviour
     [SerializeField]
     private GameObject[] spawners;
 
-    private PlayerMovement playerMovement;
+    [SerializeField]
+    private int maxNumberOfPlayers = 10;
+
     private GameObject playerTemplate;
 
     private bool inChampSelect = false;
+
+    private int playerId = 0;
 
     private void Start()
     {
@@ -78,25 +83,36 @@ public class NetworkManager : MonoBehaviour
 
     private void OnJoinedRoom()
     {
-        inChampSelect = true;
+        //doesnt work if someone disconnects and another person tries to connect
+        playerId = PhotonNetwork.playerList.Length - 1;
+
+        if (playerId >= maxNumberOfPlayers)
+        {
+            Debug.Log("Game is full. Press 'ESCAPE' and try again.");
+        }
+        else
+        {
+            inChampSelect = true;
+        }      
     }
 
     private void SpawnMyPlayer(string champName)
     {
-        Vector3 spawner = spawners[(PhotonNetwork.playerList.Length - 1) % 2].transform.position;
+        Vector3 spawner = spawners[playerId % 2].transform.position;
         playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
         GameObject player = PhotonNetwork.Instantiate(champName, spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
-        playerMovement = player.GetComponent<PlayerMovement>();
-        playerMovement.EntityTeam.SetTeam((Team)((PhotonNetwork.playerList.Length - 1) % 2));
+        StaticObjects.Player = player.GetComponent<Player>();
+        StaticObjects.Player.PlayerMovement.EntityTeam.SetTeam((Team)(playerId % 2));
+        StaticObjects.Player.SetPlayerId(playerId);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())
         {
             pb.enabled = true;
         }
-        StaticObjects.Player = playerMovement.Player;
+
         menuCamera.SetActive(false);
     }
 }

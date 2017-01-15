@@ -39,6 +39,12 @@ public class PlayerOrientation : PlayerBase
         transform.rotation = Quaternion.LookRotation((clickedPosition - transform.position).normalized);
     }
 
+    public void RotatePlayerUntilReachedTarget(GameObject target)
+    {
+        StopAllCoroutines();
+        StartCoroutine(RotateUntilReachedTarget(target));
+    }
+
     private IEnumerator Rotate(Vector3 clickedPosition)
     {
         rotationAmount = Vector3.up;
@@ -50,6 +56,25 @@ public class PlayerOrientation : PlayerBase
                 rotationAmountLastFrame = rotationAmount;
 
                 rotationAmount = Vector3.RotateTowards(transform.forward, clickedPosition - transform.position, Time.deltaTime * rotationSpeed, 0);
+
+                transform.rotation = Quaternion.LookRotation(rotationAmount);
+            }
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator RotateUntilReachedTarget(GameObject target)
+    {
+        rotationAmount = Vector3.up;
+        rotationAmountLastFrame = Vector3.zero;
+        while (true)
+        {
+            if (CanRotate())
+            {
+                rotationAmountLastFrame = rotationAmount;
+
+                rotationAmount = Vector3.RotateTowards(transform.forward, target.transform.position - transform.position, Time.deltaTime * rotationSpeed, 0);
 
                 transform.rotation = Quaternion.LookRotation(rotationAmount);
             }

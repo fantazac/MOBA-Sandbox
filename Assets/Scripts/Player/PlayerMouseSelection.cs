@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PlayerMouseSelection : PlayerBase
 {
-    private GameObject hoveredObject;
-    private GameObject clickedObject;
+    public GameObject HoveredObject { get; private set; }
+    public GameObject ClickedObject { get; private set; }
 
     private EntityTeam hoveredObjectTeam;
     private EntityTeam clickedObjectTeam;
@@ -14,16 +14,16 @@ public class PlayerMouseSelection : PlayerBase
         hoveredObjectTeam = hoveredObject.GetComponent<EntityTeam>();
         if(hoveredObjectTeam != null)
         {
-            this.hoveredObject = hoveredObject;
+            HoveredObject = hoveredObject;
             //Debug.Log("Hovered " + hoveredObject.name);
         }
     }
 
     public void UnhoverObject(GameObject unhoveredObject)
     {
-        if(unhoveredObject == hoveredObject)
+        if(unhoveredObject == HoveredObject)
         {
-            hoveredObject = null;
+            HoveredObject = null;
             hoveredObjectTeam = null;
             //Debug.Log("Unhovered " + unhoveredObject.name);
         }
@@ -31,11 +31,19 @@ public class PlayerMouseSelection : PlayerBase
 
     public bool HoveredObjectIsAlly(Team objectTeam)
     {
+        if(HoveredObject == null)
+        {
+            return false;
+        }
         return hoveredObjectTeam.Team == objectTeam;
     }
 
     public bool HoveredObjectIsEnemy(Team objectTeam)
     {
+        if (HoveredObject == null)
+        {
+            return false;
+        }
         return hoveredObjectTeam.Team != objectTeam;
     }
 
