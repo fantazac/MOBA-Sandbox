@@ -9,8 +9,7 @@ public class LucianR : Skillshot
 
     private int bulletsShot = 0;
 
-    //to change, only works when facing up, right now shoots a line
-    private Vector3 offsetBetweenProjectiles = Vector3.zero;//Vector3.right * 0.4f;
+    private float offset = 0.4f;
 
     private WaitForSeconds delayBetweenBullets;
 
@@ -47,8 +46,9 @@ public class LucianR : Skillshot
 
     private void ShootOneBullet()
     {
-        GameObject projectileToShoot = (GameObject)Instantiate(projectile,
-                transform.position + (bulletsShot % 2 == 0 ? offsetBetweenProjectiles : -offsetBetweenProjectiles), transform.rotation);
+        GameObject projectileToShoot = (GameObject)Instantiate(projectile, 
+            transform.position + (transform.forward * 0.6f) + (transform.right * (bulletsShot % 2 == 0 ? offset : -offset)), 
+            transform.rotation);
         projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.EntityTeam.Team, speed, range);
 
         bulletsShot++;
