@@ -45,4 +45,9 @@ public class Health : MonoBehaviour
             currentHealth = maxHealth;
         }
     }
+
+    public float GetHealthPercent()
+    {
+        return currentHealth / maxHealth;
+    }
 }

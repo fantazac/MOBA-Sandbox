@@ -223,6 +223,7 @@
     <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
     <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
     <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
+    <Compile Include="Assets\Scripts\Billboard.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\AbilityType.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\Blink.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
     <Compile Include="Assets\Scripts\StaticObjects.cs" />
     <Compile Include="Assets\Scripts\UI\SkillCooldown.cs" />
+    <Compile Include="Assets\Scripts\UIHealth.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />
