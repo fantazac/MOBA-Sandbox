@@ -262,6 +262,7 @@
     <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
     <Compile Include="Assets\Scripts\StaticObjects.cs" />
     <Compile Include="Assets\Scripts\UI\SkillCooldown.cs" />
+    <Compile Include="Assets\Scripts\UIFollowPlayer.cs" />
     <Compile Include="Assets\Scripts\UIHealth.cs" />
   </ItemGroup>
   <ItemGroup>

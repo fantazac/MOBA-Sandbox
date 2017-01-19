@@ -3,7 +3,6 @@ using System.Collections;
 
 public class UIHealth : MonoBehaviour
 {
-    [SerializeField]
     private Health health;
 
     private float maxLength;
@@ -13,6 +12,7 @@ public class UIHealth : MonoBehaviour
 
     private void Start()
     {
+        health = transform.parent.parent.GetComponentInChildren<Health>();
         maxLength = transform.localScale.x;
         barHeight = transform.localScale.y;
     }
