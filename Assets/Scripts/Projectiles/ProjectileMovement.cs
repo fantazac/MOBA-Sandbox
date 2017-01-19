@@ -72,9 +72,9 @@ public class ProjectileMovement : MonoBehaviour
         if (delayProjectileAfterHit != null)
         {
             GameObject shotProjectileAfterHit = (GameObject)Instantiate(transform.GetChild(0).gameObject, transform.position, transform.rotation);
-            shotProjectileAfterHit.SetActive(true);
             shotProjectileAfterHit.GetComponentInChildren<ProjectileMovement>().SetupProjectileAfterHit(photonView, sourceTeam, targetsAlreadyHit);
-
+            shotProjectileAfterHit.SetActive(true);
+            
             transform.position = Vector3.down * 5;
 
             yield return delayProjectileAfterHit;

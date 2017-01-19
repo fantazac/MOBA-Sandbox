@@ -3,23 +3,23 @@ using System.Collections;
 
 public class UIHealth : MonoBehaviour
 {
+    [SerializeField]
     private Health health;
-
-    private RectTransform rectTransform;
 
     private float maxLength;
     private float currentLength;
 
+    private float barHeight;
+
     private void Start()
     {
-        health = transform.parent.parent.parent.GetComponentInChildren<Health>();
-        rectTransform = GetComponent<RectTransform>();
-        maxLength = rectTransform.rect.width;
+        maxLength = transform.localScale.x;
+        barHeight = transform.localScale.y;
     }
 
     private void Update()
     {
-        rectTransform.sizeDelta.Set(maxLength * health.GetHealthPercent(), rectTransform.rect.height);
+        transform.localScale = (Vector3.up * barHeight) + (Vector3.right * health.GetHealthPercent());
     }
 
 }

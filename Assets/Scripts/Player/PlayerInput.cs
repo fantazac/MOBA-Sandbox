@@ -21,6 +21,12 @@ public class PlayerInput : PlayerBase
     public delegate void OnRightClickHandler(Vector3 mousePosition);
     public event OnRightClickHandler OnRightClick;
 
+    public delegate void OnPressedDHandler();
+    public event OnPressedDHandler OnPressedD;
+
+    public delegate void OnPressedFHandler();
+    public event OnPressedFHandler OnPressedF;
+
     protected override void Start()
     {
         base.Start();
@@ -45,6 +51,14 @@ public class PlayerInput : PlayerBase
             OnPressedSkill(3, Input.mousePosition);
         }
 
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            OnPressedD();
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            OnPressedF();
+        }
         if (Input.GetKeyDown(KeyCode.S))
         {
             OnPressedS();

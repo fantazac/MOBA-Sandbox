@@ -9,13 +9,30 @@ public class Player : PlayerBase
 
     public int PlayerId { get { return playerId; } }
 
+    private Health health;
+
     public float movementSpeed = 325;
 
     public List<PlayerSkill> skills;
 
     protected override void Start()
     {
+        health = GetComponent<Health>();
+
+        PlayerInput.OnPressedD += DoDamageToPlayer;
+        PlayerInput.OnPressedF += DoHealToPlayer;
+
         base.Start();
+    }
+
+    private void DoDamageToPlayer()
+    {
+        health.DamageTargetOnServer(10);
+    }
+
+    private void DoHealToPlayer()
+    {
+        health.HealTargetOnServer(10);
     }
 
     public void SetPlayerId(int playerId)
