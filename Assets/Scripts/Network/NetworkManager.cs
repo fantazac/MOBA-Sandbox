@@ -11,6 +11,9 @@ public class NetworkManager : MonoBehaviour
     private GameObject playerParent;
 
     [SerializeField]
+    private GameObject playerHealthBar;
+
+    [SerializeField]
     private GameObject[] spawners;
 
     [SerializeField]
@@ -101,6 +104,8 @@ public class NetworkManager : MonoBehaviour
     {
         Vector3 spawner = spawners[playerId % 2].transform.position;
         playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
+        GameObject healthBar = PhotonNetwork.Instantiate("HealthBar", new Vector3(), new Quaternion(), 0);
+        healthBar.transform.SetParent(playerTemplate.transform);
         GameObject player = PhotonNetwork.Instantiate(champName, spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
         player.transform.parent = playerTemplate.transform;
         player.transform.parent.GetChild(0).gameObject.SetActive(true);
@@ -109,10 +114,25 @@ public class NetworkManager : MonoBehaviour
         StaticObjects.Player = player.GetComponent<Player>();
         StaticObjects.Player.PlayerMovement.EntityTeam.SetTeam((Team)(playerId % 2));
         StaticObjects.Player.SetPlayerId(playerId);
+        healthBar.GetComponent<UIFollowPlayer>().SetPlayerToHealthBar(StaticObjects.Player, playerId);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())
         {
             pb.enabled = true;
+        }
+
+        Camera playerCamera = player.transform.parent.GetChild(0).gameObject.GetComponent<Camera>();
+
+        healthBar.GetComponent<Billboard>().SetCamera(playerCamera);
+
+        //not called if already in game
+        GameObject[] gg = GameObject.FindGameObjectsWithTag("HealthBar");
+        foreach (GameObject healthb in gg)
+        {
+            if(healthb != healthBar)
+            {
+                healthb.GetComponent<Billboard>().SetCamera(healthBar.GetComponent<Billboard>());
+            }
         }
 
         menuCamera.SetActive(false);

@@ -3,11 +3,17 @@ using System.Collections;
 
 public class Billboard : MonoBehaviour
 {
-    private Camera playerCamera;
+    public Camera playerCamera;
 
-    private void Start()
+    public void SetCamera(Camera camera)
     {
-        playerCamera = transform.parent.GetComponentInChildren<Camera>();
+        playerCamera = camera;
         transform.LookAt(playerCamera.transform);
+    }
+
+    public void SetCamera(Billboard localBillboard)
+    {
+        playerCamera = localBillboard.playerCamera;
+        transform.rotation = localBillboard.transform.rotation;
     }
 }
