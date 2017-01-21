@@ -23,6 +23,20 @@ public class PlayerMovement : PlayerBase
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
 
+    //Make it so after casting a spell, you have 3 options:
+    //1. continue where you were heading/stay immobile cause you didnt click before casting
+    //2. click to move while casting -> go there after skill done
+    //3. do another spell while casting another, which will go through when the other is done
+
+    //Basically, riot stores next action "somewhere" if there's an input during cast time, whether skill or movement
+
+    //LUCIAN
+    //Q: if moving --> q, stops movement. if moving --> q + rightclick, move after spell
+    //W: if moving --> w, move after spell
+    //E: does not count as a skill, aka no cast time. if e while culling and not rightclick during e, stop moving
+    //R: counts as a skill even if has no cast time.
+    
+
     protected override void Start()
     {
         PlayerInput.OnRightClick += PressedRightClick;
