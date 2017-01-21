@@ -38,6 +38,7 @@ public class NetworkManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             StaticObjects.Player = null;
+            StaticObjects.PlayerCamera = null;
             Destroy(playerTemplate);
             menuCamera.SetActive(true);
             PhotonNetwork.LeaveRoom();
@@ -104,7 +105,7 @@ public class NetworkManager : MonoBehaviour
     {
         Vector3 spawner = spawners[playerId % 2].transform.position;
         playerTemplate = (GameObject)Instantiate(playerParent, new Vector3(), new Quaternion());
-        GameObject healthBar = PhotonNetwork.Instantiate("HealthBar", new Vector3(), new Quaternion(), 0);
+        GameObject healthBar = PhotonNetwork.Instantiate("HealthBar", new Vector3(), playerHealthBar.transform.rotation, 0);
         healthBar.transform.SetParent(playerTemplate.transform);
         GameObject player = PhotonNetwork.Instantiate(champName, spawner - (Vector3.up * 1.5f), new Quaternion(), 0);
         player.transform.parent = playerTemplate.transform;
@@ -114,25 +115,12 @@ public class NetworkManager : MonoBehaviour
         StaticObjects.Player = player.GetComponent<Player>();
         StaticObjects.Player.PlayerMovement.EntityTeam.SetTeam((Team)(playerId % 2));
         StaticObjects.Player.SetPlayerId(playerId);
+        StaticObjects.PlayerCamera = player.transform.parent.GetChild(0).gameObject.GetComponent<Camera>();
         healthBar.GetComponent<UIFollowPlayer>().SetPlayerToHealthBar(StaticObjects.Player, playerId);
 
         foreach (PlayerBase pb in player.GetComponents<PlayerBase>())
         {
             pb.enabled = true;
-        }
-
-        Camera playerCamera = player.transform.parent.GetChild(0).gameObject.GetComponent<Camera>();
-
-        healthBar.GetComponent<Billboard>().SetCamera(playerCamera);
-
-        //not called if already in game
-        GameObject[] gg = GameObject.FindGameObjectsWithTag("HealthBar");
-        foreach (GameObject healthb in gg)
-        {
-            if(healthb != healthBar)
-            {
-                healthb.GetComponent<Billboard>().SetCamera(healthBar.GetComponent<Billboard>());
-            }
         }
 
         menuCamera.SetActive(false);

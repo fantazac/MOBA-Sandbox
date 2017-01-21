@@ -3,17 +3,24 @@ using System.Collections;
 
 public class Billboard : MonoBehaviour
 {
-    public Camera playerCamera;
+    [SerializeField]
+    private UIFollowPlayer uiFollowPlayer;
 
-    public void SetCamera(Camera camera)
+    private void Start()
     {
-        playerCamera = camera;
-        transform.LookAt(playerCamera.transform);
+        uiFollowPlayer.photonView.RPC("SetOrientation", PhotonTargets.AllBufferedViaServer);
     }
 
-    public void SetCamera(Billboard localBillboard)
+    [PunRPC]
+    private void SetOrientation()
     {
-        playerCamera = localBillboard.playerCamera;
-        transform.rotation = localBillboard.transform.rotation;
+        if (uiFollowPlayer.photonView.isMine)
+        {
+            transform.LookAt(StaticObjects.PlayerCamera.transform);
+        }
+        else
+        {
+            //transform.rotation = StaticObjects.Billboard.transform.rotation;
+        }
     }
 }
