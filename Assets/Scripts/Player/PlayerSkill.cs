@@ -8,6 +8,8 @@ public abstract class PlayerSkill : MonoBehaviour
     [HideInInspector]
     public AbilityType AbilityType { get; protected set; }
 
+    private CastTimeBarManager castTimeBar;
+
     protected const float DIVISION_FACTOR = 100f;
 
     public float cooldown;
@@ -21,6 +23,7 @@ public abstract class PlayerSkill : MonoBehaviour
     public List<PlayerSkill> castableSpellsWhileActive;
     [HideInInspector]
     public bool skillActive = false;
+    protected string skillName = "TEMPORARY";
 
     protected WaitForSeconds delayCastTime;
 
@@ -42,6 +45,7 @@ public abstract class PlayerSkill : MonoBehaviour
     protected virtual void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        castTimeBar = transform.parent.GetChild(1).gameObject.GetComponentInChildren<CastTimeBarManager>();
     }
 
     protected void SkillBegin()
@@ -81,6 +85,11 @@ public abstract class PlayerSkill : MonoBehaviour
     {
         this.mousePositionOnCast = mousePositionOnCast;
         UseSkillFromServer();
+        if(castTime > 0)
+        {
+            castTimeBar.gameObject.SetActive(true);
+            castTimeBar.SetCastTimeBar(skillName, castTime);
+        }
     }
 
     public void InfoReceivedFromServerToCancelSkill()
