@@ -30,9 +30,12 @@ public class PlayerMovement : PlayerBase
 
     //Basically, riot stores next action "somewhere" if there's an input during cast time, whether skill or movement
 
+    //pressing s "empties" the action line, aka cancels either next skillcast or movement
+    //there are 2 "events": currentlyCasting and nextCast. can be a skill that has a cast time or a move/basic attack
+
     //LUCIAN
-    //Q: if moving --> q, stops movement. if moving --> q + rightclick, move after spell
-    //W: if moving --> w, move after spell
+    //Q: if moving --> q, stops movement. if moving --> q + rightclick, move after spell, cannot buffer e with q (its cancelled/gray)
+    //W: if moving --> w, move after spell. W and R have same interaction with e, can cast E while cast time/cast other 2 while Eing
     //E: does not count as a skill, aka no cast time. if e while culling and not rightclick during e, stop moving
     //R: counts as a skill even if has no cast time.
     
