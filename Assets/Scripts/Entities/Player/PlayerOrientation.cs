@@ -20,7 +20,7 @@ public class PlayerOrientation : PlayerBase
     {
         foreach (PlayerSkill ps in Player.skills)
         {
-            if (ps != null && !ps.canRotateWhileCasting && ps.skillActive)
+            if (ps != null && !ps.canRotateWhileCasting && ps.skillIsActive)
             {
                 return false;
             }

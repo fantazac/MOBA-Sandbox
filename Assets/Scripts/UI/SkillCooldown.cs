@@ -13,64 +13,63 @@ public class SkillCooldown : MonoBehaviour
 
     private List<PlayerSkill> playerSkills;
 
+    private Color skillUnavailableColor;
+
     private void Start()
     {
-        foreach (Transform child in transform.parent.parent.transform)
-        {
-            player = child.gameObject.GetComponent<Player>();
-        }
-        if (player != null)
-        {
-            player.PlayerInput.OnPressedSkill += ActivateSkill;
+        player = StaticObjects.Player;
+        playerSkills = player.skills;
+        player.PlayerInput.OnPressedSkill += SkillInputReceived;
 
-            playerSkills = player.skills;
-            for (int i = 0; i < playerSkills.Count; i++)
+        skillUnavailableColor = Color.gray + (Color.white * 0.15f);
+
+        for (int i = 0; i < playerSkills.Count; i++)
+        {
+            if (playerSkills[i] != null) //remove when all champs have skills from start
             {
-                if (playerSkills[i] != null)
+                skills[i].cooldown = playerSkills[i].cooldown;
+                skills[i].skillIcon.sprite = playerSkills[i].skillImage; //remove when we get image dynamically from folder
+                skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
+                if (playerSkills[i].cooldownStartsOnCast)
                 {
-                    skills[i].cooldown = playerSkills[i].cooldown;
-                    skills[i].skillIcon.sprite = playerSkills[i].skillImage;
-                    skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
-                    if (playerSkills[i].canBeCancelled)
-                    {
-                        playerSkills[i].SetCooldown += SetCooldown;
-                    }
+                    playerSkills[i].SetCooldownOnSkillStarted += SetCooldown;
+                }
+                else
+                {
+                    playerSkills[i].SetCooldownOnSkillFinished += SetCooldown;
                 }
             }
-        }
-        else
-        {
-            throw new Exception("Player set to null reference");
         }
     }
 
     private void SetCooldown(int skillId)
     {
+        skills[skillId].isOffCooldown = false;
         skills[skillId].cooldownLeft = skills[skillId].cooldown;
         skills[skillId].skillIcon.fillAmount = 0;
         StartCoroutine(SetSkillOffCooldown(skills[skillId]));
     }
 
-    private void ActivateSkill(int skillId, Vector3 mousePosition)
+    private void SkillInputReceived(int skillId, Vector3 mousePosition)
     {
-        if (skills[skillId].canUseSkill && playerSkills[skillId].CanUseSkill(mousePosition))
+        if (CanUseSkill(skillId, mousePosition))
         {
-            skills[skillId].canUseSkill = false;
             playerSkills[skillId].ActivateSkill();
-            if (playerSkills[skillId].cooldownStartsOnCast)
-            {
-                SetCooldown(skillId);
-            }
         }
-        else if (playerSkills[skillId].canBeCancelled && playerSkills[skillId].skillActive && !skills[skillId].canUseSkill)
+        else if (playerSkills[skillId].canBeCancelled && playerSkills[skillId].skillIsActive)
         {
             playerSkills[skillId].CancelSkill();
         }
     }
 
+    private bool CanUseSkill(int skillId, Vector3 mousePosition)
+    {
+        return skills[skillId].CanUseSkill() && !playerSkills[skillId].skillIsActive && playerSkills[skillId].CanUseSkill(mousePosition);
+    }
+
     private IEnumerator SetSkillOffCooldown(UISkill s)
     {
-        s.skillIcon.color = Color.gray + (Color.white * 0.15f);
+        s.skillIcon.color = skillUnavailableColor;
         while (s.cooldownLeft > 0)
         {
             s.cooldownLeft -= Time.deltaTime;
@@ -91,7 +90,7 @@ public class SkillCooldown : MonoBehaviour
             yield return null;
         }
         s.skillIcon.color = Color.white;
-        s.canUseSkill = true;
+        s.isOffCooldown = true;
     }
 }
 
@@ -105,6 +104,12 @@ public class UISkill
     [HideInInspector]
     public float cooldownLeft;
     [HideInInspector]
-    public bool canUseSkill = true;
+    public bool isOffCooldown = true;
+    [HideInInspector]
+    public bool isAvailable = true;
 
+    public bool CanUseSkill()
+    {
+        return isOffCooldown && isAvailable;
+    }
 }

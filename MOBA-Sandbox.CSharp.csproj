@@ -223,6 +223,7 @@
     <Compile Include="Assets\PhotonChatApi\ChatState.cs" />
     <Compile Include="Assets\PhotonChatApi\ChatUserStatus.cs" />
     <Compile Include="Assets\PhotonChatApi\IChatClientListener.cs" />
+    <Compile Include="Assets\Scripts\Actions.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraManager.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\AbilityType.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\Blink.cs" />

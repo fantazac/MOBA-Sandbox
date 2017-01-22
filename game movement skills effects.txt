@@ -1,0 +1,32 @@
+No cast time (ex. Summoners, Lucian E, Syndra Q):
+
+-Can be used while doing anything both ways (ex. Lucian W while using E, Lucian E while casting W). 
+-Does not go in the "stored action" after completing current one" and is used instantly.
+
+With cast time (ex. Lucian Q, Ezreal QWER, Syndra E):
+
+-Can input buffer the skill and it will do its effect after the current one is finished ("stored action").
+
+
+Skills variables:
+
+Ability type (ex. Skillshot, Dash, Target enemy)
+Cooldown (time until skill can be used again)
+CastTime (time between pressing the key and using the skill)
+Cancellable (ex. Lucian R, Anivia R, Kennen E, Jax E)
+MoveWhileCasting (if CastTime > 0, can you move. ex. Kat R)
+CooldownStartOnCast (Lux R before and after)
+RotateWhileCasting (if MoveWC, can you rotate. ex. Lucian R)
+BlockedSpellsWhileCasting (ex. Lucian Q blocks E, R -> W)
+SkillName (ex. Ezreal Q -> Mystic Shot)
+SkillActive (ex. Lucain E to not move, Lucian Q to block E)
+(^ could replace by calling a function when skill is done)
+SkillId (ex. 0 for Q, 1 for W)
+
+press input
+skill exists?
+get mouse position on terrain
+can use skill?
+set as current action
+
+

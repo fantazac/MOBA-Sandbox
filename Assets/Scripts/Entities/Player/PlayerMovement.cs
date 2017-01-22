@@ -83,9 +83,9 @@ public class PlayerMovement : PlayerBase
         {
             Instantiate(moveToCapsule, hit.point, new Quaternion());
             targetCapsulePosition = hit.point + halfHeight;
-            if (CanUseMovement())   //check if in league you can move after doing: 
-            {                       //move -> ezreal q (stops movement) -> click while casting -> move?
-                ActivateMovementTowardsPoint(); //if yes, change how this works
+            if (CanUseMovement())   
+            {                       
+                ActivateMovementTowardsPoint(); 
             }
         }
     }
@@ -100,7 +100,7 @@ public class PlayerMovement : PlayerBase
     {
         foreach(PlayerSkill ps in Player.skills)
         {
-            if(ps != null && !ps.canMoveWhileCasting && ps.skillActive)
+            if(ps != null && ps.skillIsActive && !ps.canMoveWhileCasting)
             {
                 return false;
             }

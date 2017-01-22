@@ -12,17 +12,18 @@ public abstract class PlayerSkill : MonoBehaviour
 
     protected const float DIVISION_FACTOR = 100f;
 
-    public float cooldown;
     public Sprite skillImage;
+
+    public float cooldown;
     public float castTime;
     public bool canMoveWhileCasting = false;
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
     public bool continueMovementAfterCast = true;
-    public List<PlayerSkill> castableSpellsWhileActive;
+    public List<PlayerSkill> uncastableSpellsWhileActive;
     [HideInInspector]
-    public bool skillActive = false;
+    public bool skillIsActive = false;
     protected string skillName = "TEMPORARY";
 
     protected WaitForSeconds delayCastTime;
@@ -39,8 +40,11 @@ public abstract class PlayerSkill : MonoBehaviour
     public delegate void SkillFinishedHandler();
     public event SkillFinishedHandler SkillFinished;
 
-    public delegate void SetCooldownHandler(int skillId);
-    public event SetCooldownHandler SetCooldown;
+    public delegate void SetCooldownOnSkillStartedHandler(int skillId);
+    public event SetCooldownOnSkillStartedHandler SetCooldownOnSkillStarted;
+
+    public delegate void SetCooldownOnSkillFinishedHandler(int skillId);
+    public event SetCooldownOnSkillFinishedHandler SetCooldownOnSkillFinished;
 
     protected virtual void Start()
     {
@@ -48,32 +52,40 @@ public abstract class PlayerSkill : MonoBehaviour
         castTimeBar = transform.parent.GetChild(1).gameObject.GetComponentInChildren<CastTimeBarManager>();
     }
 
+    public bool HasCastTime()
+    {
+        return castTime > 0;
+    }
+
     protected void SkillBegin()
     {
-        skillActive = true;
+        skillIsActive = true;
         if (SkillStarted != null)
         {
             SkillStarted();
+        }
+        if (SetCooldownOnSkillStarted != null)
+        {
+            SetCooldownOnSkillStarted(skillId);
         }
     }
 
     protected void SkillDone()
     {
-        skillActive = false;
-        if (SkillFinished != null && !canMoveWhileCasting)
+        skillIsActive = false;
+        if (SkillFinished != null) //&& !canMoveWhileCasting) culling only?
         {
             SkillFinished();
         }
-        if(SetCooldown != null)
+        if(SetCooldownOnSkillFinished != null)
         {
-            SetCooldown(skillId);
+            SetCooldownOnSkillFinished(skillId);
         }
     }
 
     public void ActivateSkill()
     {
-        //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
-        playerMovement.PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, hit.point + playerMovement.halfHeight);
+        playerMovement.Player.SendActionToServer("UseSkillFromServer", skillId, hit.point + playerMovement.halfHeight);
     }
 
     public void CancelSkill()
@@ -100,6 +112,11 @@ public abstract class PlayerSkill : MonoBehaviour
     public void SetSkillId(int skillId)
     {
         this.skillId = skillId;
+    }
+
+    protected bool MouseIsOnTerrain(Vector3 mousePosition)
+    {
+        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
     }
 
     public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }

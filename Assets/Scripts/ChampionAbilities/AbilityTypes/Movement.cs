@@ -20,7 +20,7 @@ public class Movement : PlayerSkill
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity) && playerMovement.Player.CanCastSpell(this);
+        return MouseIsOnTerrain(mousePosition); //&& playerMovement.Player.CanCastSpell(this);
     }
 
     protected override void UseSkillFromServer()
