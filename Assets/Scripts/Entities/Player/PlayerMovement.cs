@@ -22,23 +22,6 @@ public class PlayerMovement : PlayerBase
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
 
-    //Make it so after casting a spell, you have 3 options:
-    //1. continue where you were heading/stay immobile cause you didnt click before casting
-    //2. click to move while casting -> go there after skill done
-    //3. do another spell while casting another, which will go through when the other is done
-
-    //Basically, riot stores next action "somewhere" if there's an input during cast time, whether skill or movement
-
-    //pressing s "empties" the action line, aka cancels either next skillcast or movement
-    //there are 2 "events": currentlyCasting and nextCast. can be a skill that has a cast time or a move/basic attack
-
-    //LUCIAN
-    //Q: if moving --> q, stops movement. if moving --> q + rightclick, move after spell, cannot buffer e with q (its cancelled/gray)
-    //W: if moving --> w, move after spell. W and R have same interaction with e, can cast E while cast time/cast other 2 while Eing
-    //E: does not count as a skill, aka no cast time. if e while culling and not rightclick during e, stop moving
-    //R: counts as a skill even if has no cast time.
-    
-
     protected override void Start()
     {
         PlayerInput.OnRightClick += PressedRightClick;
@@ -139,7 +122,11 @@ public class PlayerMovement : PlayerBase
 
     public void ActivateMovementTowardsEnemyPlayer()
     {
-        if(lastNetworkTarget != -1 && CanUseMovement())
+        if(Player.nextAction == "UseSkillFromServer" || Player.nextAction == "Move")
+        {
+            Player.nextAction = "Attack";
+        }
+        else if(lastNetworkTarget != -1 && CanUseMovement())
         {
             lastNetworkMove = Vector3.zero;
             PhotonView.RPC("MoveTowardsEnemyPlayerFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkTarget);
@@ -148,7 +135,11 @@ public class PlayerMovement : PlayerBase
 
     public void ActivateMovementTowardsPoint()
     {
-        if(lastNetworkMove != Vector3.zero && CanUseMovement())
+        if (Player.nextAction == "UseSkillFromServer" || Player.nextAction == "Attack")
+        {
+            Player.nextAction = "Move";
+        }
+        else if(lastNetworkMove != Vector3.zero && CanUseMovement())
         {
             lastNetworkTarget = -1;
             PhotonView.RPC("MoveTowardsPointFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkMove);
