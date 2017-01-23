@@ -20,7 +20,6 @@ public abstract class PlayerSkill : MonoBehaviour
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
-    public bool continueMovementAfterCast = true;
     public List<PlayerSkill> uncastableSpellsWhileActive;
     [HideInInspector]
     public bool skillIsActive = false;
@@ -49,7 +48,10 @@ public abstract class PlayerSkill : MonoBehaviour
     protected virtual void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
-        castTimeBar = transform.parent.GetChild(1).gameObject.GetComponentInChildren<CastTimeBarManager>();
+        if (playerMovement.PhotonView.isMine)
+        {
+            castTimeBar = transform.parent.GetChild(1).gameObject.GetComponentInChildren<CastTimeBarManager>();
+        }
     }
 
     public bool HasCastTime()
@@ -73,7 +75,7 @@ public abstract class PlayerSkill : MonoBehaviour
     protected void SkillDone()
     {
         skillIsActive = false;
-        if (SkillFinished != null) //&& !canMoveWhileCasting) culling only?
+        if (SkillFinished != null)
         {
             SkillFinished();
         }
@@ -97,7 +99,7 @@ public abstract class PlayerSkill : MonoBehaviour
     {
         this.mousePositionOnCast = mousePositionOnCast;
         UseSkillFromServer();
-        if(castTime > 0)
+        if(castTimeBar != null && castTime > 0)
         {
             castTimeBar.gameObject.SetActive(true);
             castTimeBar.SetCastTimeBar(skillName, castTime);

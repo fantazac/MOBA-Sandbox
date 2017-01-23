@@ -15,7 +15,7 @@ public class Player : PlayerBase
 
     public List<PlayerSkill> skills;
 
-    private string nextAction = "";
+    public string nextAction = "";
     private int nextSkillId;
     private Vector3 nextMousePosition;
 
@@ -62,10 +62,17 @@ public class Player : PlayerBase
 
     private void UseNextAction()
     {
-        if (nextAction != "")
+        if (nextAction == "UseSkillFromServer")
         {
             SendActionToServer(nextAction, nextSkillId, nextMousePosition);
-            nextAction = "";
+        }
+        else if(nextAction == "Attack")
+        {
+            PlayerMovement.ActivateMovementTowardsEnemyPlayer();
+        }
+        else if(nextAction == "Move")
+        {
+            PlayerMovement.ActivateMovementTowardsPoint();
         }
     }
 
@@ -77,16 +84,33 @@ public class Player : PlayerBase
 
     public void SendActionToServer(string actionName, int skillId, Vector3 mousePosition)
     {
-        // use Actions
+        //if use 2 spells + move command, it will do all 3 actions instead of skill#1 + move
 
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
+            if (skills[skillId].HasCastTime())
+            {
+                if (PlayerMovement.lastNetworkMove != Vector3.zero)
+                {
+                    nextAction = "Move";
+                }
+                else if (PlayerMovement.lastNetworkTarget != -1)
+                {
+                    nextAction = "Attack";
+                }
+                else
+                {
+                    nextAction = "";
+                }
+            }
+            
             infoSent = true;
             //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
             PhotonView.RPC(actionName, PhotonTargets.AllViaServer, skillId, mousePosition);
         }
         else
         {
+            PlayerMovement.CancelMovement();
             SetNextAction(actionName, skillId, mousePosition);
         }
     }
