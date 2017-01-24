@@ -61,8 +61,8 @@ public class PlayerMovement : PlayerBase
 
     private void StopMovement()
     {
-        StopAllCoroutines();
-        PlayerOrientation.StopAllCoroutines();
+        CancelMovement();
+        Player.nextAction = "";
     }
 
     private bool CanUseMovement()
@@ -125,6 +125,8 @@ public class PlayerMovement : PlayerBase
         if(Player.nextAction == "UseSkillFromServer" || Player.nextAction == "Move")
         {
             Player.nextAction = "Attack";
+            StopAllCoroutines();
+            PlayerOrientation.StopAllCoroutines();
         }
         else if(lastNetworkTarget != -1 && CanUseMovement())
         {
@@ -138,11 +140,20 @@ public class PlayerMovement : PlayerBase
         if (Player.nextAction == "UseSkillFromServer" || Player.nextAction == "Attack")
         {
             Player.nextAction = "Move";
+            StopAllCoroutines();
+            PlayerOrientation.StopAllCoroutines();
         }
-        else if(lastNetworkMove != Vector3.zero && CanUseMovement())
+        else if(lastNetworkMove != Vector3.zero)
         {
-            lastNetworkTarget = -1;
-            PhotonView.RPC("MoveTowardsPointFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkMove);
+            if (CanUseMovement())
+            {
+                lastNetworkTarget = -1;
+                PhotonView.RPC("MoveTowardsPointFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkMove);
+            }
+            else
+            {
+                Player.nextAction = "Move";
+            }
         }
     }
 

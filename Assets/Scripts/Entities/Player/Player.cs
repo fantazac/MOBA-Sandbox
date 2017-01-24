@@ -38,6 +38,14 @@ public class Player : PlayerBase
         base.Start();
     }
 
+    private void Update()
+    {
+        if (PhotonView.isMine)
+        {
+            Debug.Log(nextAction);
+        }
+    }
+
     private void DoDamageToPlayer()
     {
         health.DamageTargetOnServer(10);
@@ -62,16 +70,19 @@ public class Player : PlayerBase
 
     private void UseNextAction()
     {
+        Debug.Log(3);
         if (nextAction == "UseSkillFromServer")
         {
             SendActionToServer(nextAction, nextSkillId, nextMousePosition);
         }
         else if(nextAction == "Attack")
         {
+            nextAction = "";
             PlayerMovement.ActivateMovementTowardsEnemyPlayer();
         }
         else if(nextAction == "Move")
         {
+            nextAction = "";
             PlayerMovement.ActivateMovementTowardsPoint();
         }
     }
