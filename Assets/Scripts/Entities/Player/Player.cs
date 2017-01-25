@@ -12,9 +12,11 @@ public class Player : PlayerBase
     private Health health;
 
     public float movementSpeed = 325;
+    public float range;
 
     public List<PlayerSkill> skills;
 
+    [HideInInspector]
     public string nextAction = "";
     private int nextSkillId;
     private Vector3 nextMousePosition;
@@ -38,13 +40,13 @@ public class Player : PlayerBase
         base.Start();
     }
 
-    private void Update()
+    /*private void Update()
     {
         if (PhotonView.isMine)
         {
             Debug.Log(nextAction);
         }
-    }
+    }*/
 
     private void DoDamageToPlayer()
     {
@@ -70,7 +72,6 @@ public class Player : PlayerBase
 
     private void UseNextAction()
     {
-        Debug.Log(3);
         if (nextAction == "UseSkillFromServer")
         {
             SendActionToServer(nextAction, nextSkillId, nextMousePosition);

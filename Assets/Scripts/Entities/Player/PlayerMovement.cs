@@ -16,7 +16,9 @@ public class PlayerMovement : PlayerBase
 
     private RaycastHit hit;
 
+    [HideInInspector]
     public Vector3 lastNetworkMove;
+    [HideInInspector]
     public int lastNetworkTarget;
 
     public delegate void PlayerMovedHandler();
@@ -33,7 +35,7 @@ public class PlayerMovement : PlayerBase
         }
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
 
-        for(int i = 0; i < Player.skills.Count; i++)
+        for (int i = 0; i < Player.skills.Count; i++)
         {
             if (Player.skills[i] != null)
             {
@@ -67,9 +69,9 @@ public class PlayerMovement : PlayerBase
 
     private bool CanUseMovement()
     {
-        foreach(PlayerSkill ps in Player.skills)
+        foreach (PlayerSkill ps in Player.skills)
         {
-            if(ps != null && ps.skillIsActive && !ps.canMoveWhileCasting)
+            if (ps != null && ps.skillIsActive && !ps.canMoveWhileCasting)
             {
                 return false;
             }
@@ -89,7 +91,7 @@ public class PlayerMovement : PlayerBase
 
     public void PlayerMovingWithSkill()
     {
-        if(PlayerMoved != null)
+        if (PlayerMoved != null)
         {
             PlayerMoved();
         }
@@ -102,13 +104,13 @@ public class PlayerMovement : PlayerBase
 
         foreach (GameObject player in players)
         {
-            if(player.GetComponent<Player>().PlayerId == enemyPlayerId)
+            if (player.GetComponent<Player>().PlayerId == enemyPlayerId)
             {
                 enemyPlayer = player;
                 break;
             }
         }
-        
+
         return enemyPlayer.transform;
     }
 
@@ -122,13 +124,13 @@ public class PlayerMovement : PlayerBase
 
     public void ActivateMovementTowardsEnemyPlayer()
     {
-        if(Player.nextAction == "UseSkillFromServer" || Player.nextAction == "Move")
+        if (Player.nextAction == "UseSkillFromServer" || Player.nextAction == "Move")
         {
             Player.nextAction = "Attack";
             StopAllCoroutines();
             PlayerOrientation.StopAllCoroutines();
         }
-        else if(lastNetworkTarget != -1 && CanUseMovement())
+        else if (lastNetworkTarget != -1 && CanUseMovement())
         {
             lastNetworkMove = Vector3.zero;
             PhotonView.RPC("MoveTowardsEnemyPlayerFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkTarget);
@@ -143,7 +145,7 @@ public class PlayerMovement : PlayerBase
             StopAllCoroutines();
             PlayerOrientation.StopAllCoroutines();
         }
-        else if(lastNetworkMove != Vector3.zero)
+        else if (lastNetworkMove != Vector3.zero)
         {
             if (CanUseMovement())
             {
@@ -191,11 +193,11 @@ public class PlayerMovement : PlayerBase
 
     private IEnumerator MoveTowardsObject(Transform enemyTarget)
     {
-        while (enemyTarget != null)
+        while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > (Player.range / 100f))
         {
             if (CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, enemyTarget.position, 
+                transform.position = Vector3.MoveTowards(transform.position, enemyTarget.position,
                     Time.deltaTime * (Player.movementSpeed / 100f));
 
                 if (PlayerMoved != null)
@@ -206,6 +208,7 @@ public class PlayerMovement : PlayerBase
 
             yield return null;
         }
+        lastNetworkTarget = -1;
     }
 
     private IEnumerator MoveTowardsPoint(Vector3 wherePlayerClickedToMove)
