@@ -11,6 +11,12 @@ public class Dash : Movement
         base.Start();
     }
 
+    protected override void SkillDone()
+    {
+        playerMovement.Player.SetBackMovementAfterDash();
+        base.SkillDone();
+    }
+
     protected override IEnumerator SkillEffect()
     {
         Vector3 target = FindPointToMoveTo(transform.position);

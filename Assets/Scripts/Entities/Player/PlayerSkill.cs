@@ -20,10 +20,14 @@ public abstract class PlayerSkill : MonoBehaviour
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
+    //doesnt work
     public List<PlayerSkill> uncastableSpellsWhileActive;
     [HideInInspector]
     public bool skillIsActive = false;
     protected string skillName = "TEMPORARY";
+
+    [HideInInspector]
+    public UISkill uiSkill;
 
     protected WaitForSeconds delayCastTime;
 
@@ -72,9 +76,13 @@ public abstract class PlayerSkill : MonoBehaviour
         }
     }
 
-    protected void SkillDone()
+    protected virtual void SkillDone()
     {
         skillIsActive = false;
+        foreach (PlayerSkill uncastableSkill in uncastableSpellsWhileActive)
+        {
+            uncastableSkill.uiSkill.SetCastable();
+        }
         if (SkillFinished != null)
         {
             SkillFinished();
@@ -99,6 +107,11 @@ public abstract class PlayerSkill : MonoBehaviour
     {
         this.mousePositionOnCast = mousePositionOnCast;
         UseSkillFromServer();
+        foreach(PlayerSkill uncastableSkill in uncastableSpellsWhileActive)
+        {
+            uncastableSkill.uiSkill.SetUncastable();
+            playerMovement.Player.CancelSkillIfUncastable(uncastableSkill.skillId);
+        }
         if(castTimeBar != null && castTime > 0)
         {
             castTimeBar.gameObject.SetActive(true);

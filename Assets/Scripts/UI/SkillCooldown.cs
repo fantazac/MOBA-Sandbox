@@ -13,20 +13,17 @@ public class SkillCooldown : MonoBehaviour
 
     private List<PlayerSkill> playerSkills;
 
-    private Color skillUnavailableColor;
-
     private void Start()
     {
         player = StaticObjects.Player;
         playerSkills = player.skills;
         player.PlayerInput.OnPressedSkill += SkillInputReceived;
 
-        skillUnavailableColor = Color.gray + (Color.white * 0.15f);
-
         for (int i = 0; i < playerSkills.Count; i++)
         {
             if (playerSkills[i] != null) //remove when all champs have skills from start
             {
+                playerSkills[i].uiSkill = skills[i];
                 skills[i].cooldown = playerSkills[i].cooldown;
                 skills[i].skillIcon.sprite = playerSkills[i].skillImage; //remove when we get image dynamically from folder
                 skills[i].skillIcon.transform.parent.gameObject.GetComponent<Image>().sprite = playerSkills[i].skillImage;
@@ -64,12 +61,13 @@ public class SkillCooldown : MonoBehaviour
 
     private bool CanUseSkill(int skillId, Vector3 mousePosition)
     {
-        return skills[skillId].CanUseSkill() && !playerSkills[skillId].skillIsActive && playerSkills[skillId].CanUseSkill(mousePosition);
+        return !StaticObjects.Player.PlayerMovement.playerHealth.IsDead() && 
+            skills[skillId].CanUseSkill() && !playerSkills[skillId].skillIsActive && playerSkills[skillId].CanUseSkill(mousePosition);
     }
 
     private IEnumerator SetSkillOffCooldown(UISkill s)
     {
-        s.skillIcon.color = skillUnavailableColor;
+        s.skillIcon.color = s.skillUnavailableColor;
         while (s.cooldownLeft > 0)
         {
             s.cooldownLeft -= Time.deltaTime;
@@ -107,9 +105,23 @@ public class UISkill
     public bool isOffCooldown = true;
     [HideInInspector]
     public bool isAvailable = true;
+    [HideInInspector]
+    public Color skillUnavailableColor = Color.gray + (Color.white * 0.15f);
 
     public bool CanUseSkill()
     {
         return isOffCooldown && isAvailable;
+    }
+
+    public void SetUncastable()
+    {
+        isAvailable = false;
+        skillIcon.color = skillUnavailableColor;
+    }
+
+    public void SetCastable()
+    {
+        isAvailable = true;
+        skillIcon.color = Color.white;
     }
 }

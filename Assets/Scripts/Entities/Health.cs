@@ -8,10 +8,17 @@ public class Health : MonoBehaviour
 
     private PhotonView photonView;
 
+    public delegate void OnDeathHandler();
+    public event OnDeathHandler OnDeath; 
+
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
-        currentHealth = maxHealth;
+        SetToMaxHealthOnSpawn();
+        if(GetComponent<Player>() != null)
+        {
+            GetComponent<PlayerDeath>().RespawnPlayer += SetToMaxHealthOnSpawn;
+        }
     }
 
     public void DamageTargetOnServer(float damage)
@@ -31,8 +38,11 @@ public class Health : MonoBehaviour
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            Debug.Log("Dead target");
-            //Dead
+            if(OnDeath != null)
+            {
+                OnDeath();
+            }
+            
         }
     }
 
@@ -49,5 +59,15 @@ public class Health : MonoBehaviour
     public float GetHealthPercent()
     {
         return currentHealth / maxHealth;
+    }
+
+    public void SetToMaxHealthOnSpawn()
+    {
+        currentHealth = maxHealth;
+    }
+
+    public bool IsDead()
+    {
+        return currentHealth <= 0;
     }
 }

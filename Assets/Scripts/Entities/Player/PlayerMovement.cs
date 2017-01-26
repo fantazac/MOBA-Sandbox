@@ -21,6 +21,12 @@ public class PlayerMovement : PlayerBase
     [HideInInspector]
     public int lastNetworkTarget;
 
+    [HideInInspector]
+    public Vector3 spawnPoint;
+
+    [HideInInspector]
+    public Health playerHealth;
+
     public delegate void PlayerMovedHandler();
     public event PlayerMovedHandler PlayerMoved;
 
@@ -28,6 +34,13 @@ public class PlayerMovement : PlayerBase
     {
         PlayerInput.OnRightClick += PressedRightClick;
         PlayerInput.OnPressedS += StopMovement;
+        PlayerInput.OnPressedM += TeleportMid;
+
+        playerHealth = GetComponent<Health>();
+        playerHealth.OnDeath += StopMovement;
+
+        GetComponent<PlayerDeath>().RespawnPlayer += RespawnPlayerInBase;
+
         terrainCollider = GameObject.Find("Terrain").GetComponent<TerrainCollider>();
         if (PhotonView.isMine)
         {
@@ -48,16 +61,39 @@ public class PlayerMovement : PlayerBase
 
     private void PressedRightClick(Vector3 mousePosition)
     {
-        if (PlayerMouseSelection.HoveredObjectIsEnemy(EntityTeam.Team))
+        if (!playerHealth.IsDead())
         {
-            lastNetworkTarget = PlayerMouseSelection.HoveredObject.GetComponent<Player>().PlayerId;
-            ActivateMovementTowardsEnemyPlayer();
+            if (PlayerMouseSelection.HoveredObjectIsEnemy(EntityTeam.Team))
+            {
+                lastNetworkTarget = PlayerMouseSelection.HoveredObject.GetComponent<Player>().PlayerId;
+                ActivateMovementTowardsEnemyPlayer();
+            }
+            else if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
+            {
+                Instantiate(moveToCapsule, hit.point, new Quaternion());
+                lastNetworkMove = hit.point + halfHeight;
+                ActivateMovementTowardsPoint();
+            }
         }
-        else if (terrainCollider.Raycast(GetRay(mousePosition), out hit, Mathf.Infinity))
+    }
+
+    private void TeleportMid()
+    {
+        transform.position = halfHeight;
+        if(PlayerMoved != null)
         {
-            Instantiate(moveToCapsule, hit.point, new Quaternion());
-            lastNetworkMove = hit.point + halfHeight;
-            ActivateMovementTowardsPoint();
+            PlayerMoved();
+        }
+        StopMovement();
+    }
+
+    private void RespawnPlayerInBase()
+    {
+        transform.position = spawnPoint;
+        transform.rotation = Quaternion.identity;
+        if (PlayerMoved != null)
+        {
+            PlayerMoved();
         }
     }
 
@@ -180,6 +216,7 @@ public class PlayerMovement : PlayerBase
     private void SetMoveTowardsObject(Transform enemyTarget)
     {
         StopAllCoroutines();
+        PlayerOrientation.StopAllCoroutines();
         StartCoroutine(MoveTowardsObject(enemyTarget));
         PlayerOrientation.RotatePlayerUntilReachedTarget(enemyTarget);
     }
@@ -187,6 +224,7 @@ public class PlayerMovement : PlayerBase
     private void SetMoveTowardsPoint(Vector3 wherePlayerClickedToMove)
     {
         StopAllCoroutines();
+        PlayerOrientation.StopAllCoroutines();
         StartCoroutine(MoveTowardsPoint(wherePlayerClickedToMove));
         PlayerOrientation.RotatePlayer(wherePlayerClickedToMove);
     }

@@ -113,6 +113,7 @@ public class NetworkManager : MonoBehaviour
         player.transform.parent.GetChild(1).gameObject.SetActive(true);
         player.transform.parent.GetChild(2).gameObject.SetActive(true);
         StaticObjects.Player = player.GetComponent<Player>();
+        StaticObjects.Player.PlayerMovement.spawnPoint = spawner - (Vector3.up * 1.5f);
         StaticObjects.Player.PlayerMovement.EntityTeam.SetTeam((Team)(playerId % 2));
         StaticObjects.Player.SetPlayerId(playerId);
         StaticObjects.PlayerCamera = player.transform.parent.GetChild(0).gameObject.GetComponent<Camera>();

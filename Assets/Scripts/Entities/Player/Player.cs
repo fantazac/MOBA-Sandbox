@@ -88,6 +88,26 @@ public class Player : PlayerBase
         }
     }
 
+    public void SetBackMovementAfterDash()
+    {
+        if (PlayerMovement.lastNetworkMove != Vector3.zero)
+        {
+            PlayerMovement.ActivateMovementTowardsPoint();
+        }
+        else if (PlayerMovement.lastNetworkTarget != -1)
+        {
+            PlayerMovement.ActivateMovementTowardsEnemyPlayer();
+        }
+    }
+
+    public void CancelSkillIfUncastable(int skillId)
+    {
+        if(nextAction == "UseSkillFromServer" && nextSkillId == skillId)
+        {
+            nextAction = "";
+        }
+    }
+
     [PunRPC]
     private void SetPlayerOnNetwork(int playerId)
     {

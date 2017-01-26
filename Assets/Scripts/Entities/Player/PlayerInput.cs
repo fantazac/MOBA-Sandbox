@@ -6,6 +6,9 @@ public class PlayerInput : PlayerBase
     public delegate void OnPressedSkillHandler(int skillId, Vector3 mousePosition);
     public event OnPressedSkillHandler OnPressedSkill;
 
+    public delegate void OnPressedMHandler();
+    public event OnPressedMHandler OnPressedM;
+
     public delegate void OnPressedSHandler();
     public event OnPressedSHandler OnPressedS;
 
@@ -58,6 +61,10 @@ public class PlayerInput : PlayerBase
         if (Input.GetKeyDown(KeyCode.F))
         {
             OnPressedF();
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            OnPressedM();
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
