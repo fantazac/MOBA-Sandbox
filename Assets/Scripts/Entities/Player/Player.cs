@@ -90,13 +90,16 @@ public class Player : PlayerBase
 
     public void SetBackMovementAfterDash()
     {
-        if (PlayerMovement.lastNetworkMove != Vector3.zero)
+        if(nextAction == "")
         {
-            PlayerMovement.ActivateMovementTowardsPoint();
-        }
-        else if (PlayerMovement.lastNetworkTarget != -1)
-        {
-            PlayerMovement.ActivateMovementTowardsEnemyPlayer();
+            if (PlayerMovement.lastNetworkMove != Vector3.zero)
+            {
+                PlayerMovement.ActivateMovementTowardsPoint();
+            }
+            else if (PlayerMovement.lastNetworkTarget != -1)
+            {
+                PlayerMovement.ActivateMovementTowardsEnemyPlayer();
+            }
         }
     }
 
@@ -134,9 +137,9 @@ public class Player : PlayerBase
                 {
                     nextAction = "";
                 }
+                infoSent = true;
             }
             
-            infoSent = true;
             //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
             PhotonView.RPC(actionName, PhotonTargets.AllViaServer, skillId, mousePosition);
         }
