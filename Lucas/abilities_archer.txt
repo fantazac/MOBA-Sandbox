@@ -1,0 +1,45 @@
+IDÉES COUPÉES
+
+Activate: Up to the next 5 attacks apply bombs
+
+2nd activate: If target has 3+ stacks it roots the target and damages+slows others around him, else it slows the target
+
+--------
+
+Place traps that root the target 
+
+--------
+
+Passive: Basic attacks apply stacks
+
+Active: If target has 4+ stacks, it roots the target and damages+slows others around him, else it slows the target
+
+--------
+
+CONCEPT (Passive + QWER)
+
+
+Passive: When out of combat, he actives the passive.
+
+Effect: 15% movement speed over 1.5 seconds. The first basic attack he does ignores 40% of the target's armor. If he gets in combat before using a basic attack, he has 1.5 seconds to use it before the effect disapears.
+
+--------
+
+Active: Shoots 3 arrows in a cone. Arrows stop at the first target hit. If an arrow kills a target, it reduces the cooldown of this skill by 30%.
+
+--------
+
+Tactical backup: Call a care-package that will arrive 8 seconds later. It will drop 10 units from you between you and your base. Package will stay on the ground until you either walk on it to pick it up, go out of combat for more than 8 seconds or get too far away from it. 
+
+Effects: Your next basic ability has an extra effect. Can be used for 15 seconds after picking up the package.
+
+--------
+
+Active: Shoot multiple explosive arrows in a line (kog e) that damage everything they hit. After 4 seconds, the arrows explode and deal 50% more damage than on cast to everyone in the area. 
+
+He can detonate the explosive early by reactivating the skill. Though, it will only deal +10% extra damage per second since the cast.
+
+--------
+
+Active: Passive is activated for the duration. Each basic attack fires 2 arrows. If the target is alone, the second shot deals 60% damage. If there is another enemy next to the target, the second shot will target it instead and will do full damage.
+
