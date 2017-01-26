@@ -25,19 +25,25 @@ Effect: 15% movement speed over 1.5 seconds. The first basic attack he does igno
 
 --------
 
-Active: Shoots 3 arrows in a cone. Arrows stop at the first target hit. If an arrow kills a target, it reduces the cooldown of this skill by 30%.
+Active: Shoots 3 arrows in a cone. Arrows stop at the first target hit unless they kill the target. If an arrow does kill a target, it reduces the cooldown of this skill by 30%. Targets can be hit by multiple arrows but take only 30% damage from them.
 
 --------
 
 Tactical backup: Call a care-package that will arrive 8 seconds later. It will drop 10 units from you between you and your base. Package will stay on the ground until you either walk on it to pick it up, go out of combat for more than 8 seconds or get too far away from it. 
 
-Effects: Your next basic ability has an extra effect. Can be used for 15 seconds after picking up the package.
+Effects: Your next ability applies the passive armor break on the first target hit and has an extra effect. Can be used for 15 seconds after picking up the package.
+
+Q: The cone size is 50% bigger and he shoots 6 arrows instead of 3. 
+
+E: If enemies walk over the explosive arrows, they detonate automatically and apply the full damage and slow.
+
+R: If out of combat, the movement speed bonus is doubled.
 
 --------
 
 Active: Shoot multiple explosive arrows in a line (kog e) that damage everything they hit. After 4 seconds, the arrows explode and deal 50% more damage than on cast to everyone in the area. 
 
-He can detonate the explosive early by reactivating the skill. Though, it will only deal +10% extra damage per second since the cast.
+He can detonate the explosive early by reactivating the skill. Though, it will only deal +10% extra damage per second since the cast. The detonation applies a 30% slow + 10% per second since cast that decays over 1 second.
 
 --------
 
