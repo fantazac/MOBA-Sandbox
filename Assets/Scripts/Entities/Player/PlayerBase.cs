@@ -23,6 +23,26 @@ public abstract class PlayerBase : MonoBehaviour {
         }
     }
 
+    private PlayerNormalMovement _playerNormalMovement;
+    public PlayerNormalMovement PlayerNormalMovement
+    {
+        get
+        {
+            InitializePlayerNormalMovement();
+            return _playerNormalMovement;
+        }
+    }
+
+    private PlayerAttackMovement _playerAttackMovement;
+    public PlayerAttackMovement PlayerAttackMovement
+    {
+        get
+        {
+            InitializePlayerAttackMovement();
+            return _playerAttackMovement;
+        }
+    }
+
     private PlayerOrientation _playerOrientation;
     public PlayerOrientation PlayerOrientation
     {
@@ -97,6 +117,8 @@ public abstract class PlayerBase : MonoBehaviour {
     {
         InitializePlayer();
         InitializePlayerMovement();
+        InitializePlayerNormalMovement();
+        InitializePlayerAttackMovement();
         InitializePlayerOrientation();
         InitializePlayerInput();
         InitializePlayerProjectileCollision();
@@ -120,6 +142,22 @@ public abstract class PlayerBase : MonoBehaviour {
         if (_playerMovement == null)
         {
             _playerMovement = GetComponent<PlayerMovement>();
+        }
+    }
+
+    private void InitializePlayerNormalMovement()
+    {
+        if (_playerNormalMovement == null)
+        {
+            _playerNormalMovement = GetComponent<PlayerNormalMovement>();
+        }
+    }
+
+    private void InitializePlayerAttackMovement()
+    {
+        if (_playerAttackMovement == null)
+        {
+            _playerAttackMovement = GetComponent<PlayerAttackMovement>();
         }
     }
 

@@ -247,11 +247,13 @@
     <Compile Include="Assets\Scripts\Entities\Health.cs" />
     <Compile Include="Assets\Scripts\Entities\MouseHover.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\Player.cs" />
+    <Compile Include="Assets\Scripts\Entities\Player\PlayerAttackMovement.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerBase.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerDeath.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerMouseSelection.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Entities\Player\PlayerNormalMovement.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerOrientation.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerProjectileCollision.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerShootProjectile.cs" />

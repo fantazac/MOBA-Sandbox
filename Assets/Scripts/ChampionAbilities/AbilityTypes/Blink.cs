@@ -17,7 +17,7 @@ public class Blink : Movement
 
         //playerMovement.PlayerOrientation.RotatePlayerInstantly(mousePositionOnCast);
         transform.position = target;
-        playerMovement.PlayerMovingWithSkill();
+        playerMovement.NotifyPlayerMoved();
 
         SkillDone();
     }

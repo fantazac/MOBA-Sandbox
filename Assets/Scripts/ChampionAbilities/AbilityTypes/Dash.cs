@@ -26,7 +26,7 @@ public class Dash : Movement
 
             if (playerMovement != null)
             {
-                playerMovement.PlayerMovingWithSkill();
+                playerMovement.NotifyPlayerMoved();
             }
 
             yield return null;

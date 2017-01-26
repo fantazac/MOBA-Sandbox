@@ -95,7 +95,7 @@ public abstract class PlayerSkill : MonoBehaviour
 
     public void ActivateSkill()
     {
-        playerMovement.Player.SendActionToServer("UseSkillFromServer", skillId, hit.point + playerMovement.halfHeight);
+        playerMovement.Player.SendActionToServer(Actions.SKILL, skillId, hit.point + playerMovement.Player.halfHeight);
     }
 
     public void CancelSkill()
