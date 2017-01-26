@@ -148,30 +148,37 @@ public class Player : PlayerBase
 
     public void SendActionToServer(Actions action, int skillId, Vector3 mousePosition)
     {
+        Debug.Log(1);
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
+            Debug.Log(2);
             if (skills[skillId].HasCastTime())
             {
+                Debug.Log(3);
                 if (PlayerNormalMovement.WasMovingBeforeSkill())
                 {
+                    Debug.Log(4);
                     nextAction = Actions.MOVE;
                 }
                 else if (PlayerAttackMovement.WasMovingBeforeSkill())
                 {
+                    Debug.Log(5);
                     nextAction = Actions.ATTACK;
                 }
                 else
                 {
+                    Debug.Log(6);
                     nextAction = Actions.NONE;
                 }
                 infoSent = true;
             }
-            
+            Debug.Log(7);
             //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
             PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, mousePosition);
         }
         else
         {
+            Debug.Log(8);
             PlayerMovement.CancelMovement();
             SetNextAction(action, skillId, mousePosition);
         }
