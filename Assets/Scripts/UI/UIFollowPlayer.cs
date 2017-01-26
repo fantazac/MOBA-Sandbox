@@ -6,6 +6,11 @@ public class UIFollowPlayer : Photon.MonoBehaviour
     [SerializeField]
     private Transform player;
 
+    private void Start()
+    {
+        StaticObjects.Player.healthBar = gameObject;
+    }
+
     public void SetPlayerToHealthBar(Player player, int playerId)
     {
         this.player = player.transform;

@@ -7,6 +7,9 @@ public class Player : PlayerBase
     [SerializeField]
     private int playerId;
 
+    [HideInInspector]
+    public GameObject healthBar;
+
     public int PlayerId { get { return playerId; } }
 
     private Health health;
@@ -72,19 +75,22 @@ public class Player : PlayerBase
 
     private void UseNextAction()
     {
-        if (nextAction == "UseSkillFromServer")
+        if (!PlayerMovement.playerHealth.IsDead())
         {
-            SendActionToServer(nextAction, nextSkillId, nextMousePosition);
-        }
-        else if(nextAction == "Attack")
-        {
-            nextAction = "";
-            PlayerMovement.ActivateMovementTowardsEnemyPlayer();
-        }
-        else if(nextAction == "Move")
-        {
-            nextAction = "";
-            PlayerMovement.ActivateMovementTowardsPoint();
+            if (nextAction == "UseSkillFromServer")
+            {
+                SendActionToServer(nextAction, nextSkillId, nextMousePosition);
+            }
+            else if (nextAction == "Attack")
+            {
+                nextAction = "";
+                PlayerMovement.ActivateMovementTowardsEnemyPlayer();
+            }
+            else if (nextAction == "Move")
+            {
+                nextAction = "";
+                PlayerMovement.ActivateMovementTowardsPoint();
+            }
         }
     }
 

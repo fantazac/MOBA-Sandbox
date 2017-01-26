@@ -37,7 +37,7 @@ public class PlayerMovement : PlayerBase
         PlayerInput.OnPressedM += TeleportMid;
 
         playerHealth = GetComponent<Health>();
-        playerHealth.OnDeath += StopMovement;
+        playerHealth.OnDeath += OnDeath;
 
         GetComponent<PlayerDeath>().RespawnPlayer += RespawnPlayerInBase;
 
@@ -87,13 +87,38 @@ public class PlayerMovement : PlayerBase
         StopMovement();
     }
 
+    private void OnDeath()
+    {
+        Player.healthBar.SetActive(false);
+        //stop all skills (cancel cast time of current skill, stop skills with no cast time), 
+        //then stop movement, then start death animation
+        StopMovement();
+        DeathAnimation();
+    }
+
     private void RespawnPlayerInBase()
     {
+        Player.healthBar.SetActive(true);
         transform.position = spawnPoint;
         transform.rotation = Quaternion.identity;
         if (PlayerMoved != null)
         {
             PlayerMoved();
+        }
+    }
+
+    private void DeathAnimation()
+    {
+        StartCoroutine(SinkThroughFloorOnDeath());
+    }
+
+    private IEnumerator SinkThroughFloorOnDeath()
+    {
+        while(transform.position.y > -1)
+        {
+            transform.position = transform.position - Vector3.up * 0.06f;
+
+            yield return null;
         }
     }
 
