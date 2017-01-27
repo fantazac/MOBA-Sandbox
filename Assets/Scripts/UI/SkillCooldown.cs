@@ -44,7 +44,7 @@ public class SkillCooldown : MonoBehaviour
         skills[skillId].isOffCooldown = false;
         skills[skillId].cooldownLeft = skills[skillId].cooldown;
         skills[skillId].skillIcon.fillAmount = 0;
-        StartCoroutine(SetSkillOffCooldown(skills[skillId]));
+        StartCoroutine(SetSkillOffCooldown(skills[skillId], skillId));
     }
 
     private void SkillInputReceived(int skillId, Vector3 mousePosition)
@@ -65,7 +65,7 @@ public class SkillCooldown : MonoBehaviour
             skills[skillId].CanUseSkill() && !playerSkills[skillId].skillIsActive && playerSkills[skillId].CanUseSkill(mousePosition);
     }
 
-    private IEnumerator SetSkillOffCooldown(UISkill s)
+    private IEnumerator SetSkillOffCooldown(UISkill s, int skillId)
     {
         s.skillIcon.color = s.skillUnavailableColor;
         while (s.cooldownLeft > 0)
@@ -87,7 +87,12 @@ public class SkillCooldown : MonoBehaviour
 
             yield return null;
         }
-        s.skillIcon.color = Color.white;
+
+        if (s.isAvailable)
+        {
+            s.skillIcon.color = Color.white;
+        }
+        
         s.isOffCooldown = true;
     }
 }
