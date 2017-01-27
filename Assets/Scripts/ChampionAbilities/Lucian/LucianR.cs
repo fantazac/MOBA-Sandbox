@@ -29,6 +29,12 @@ public class LucianR : Skillshot
         SkillDone();
     }
 
+    protected override void SkillDone()
+    {
+        StaticObjects.Player.SetBackMovementAfterSkillWithoutCastTime();
+        base.SkillDone();
+    }
+
     protected override IEnumerator SkillEffect()
     {
         ShootOneBullet();

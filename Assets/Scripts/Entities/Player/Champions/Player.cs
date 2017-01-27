@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : PlayerBase
+public abstract class Player : PlayerBase
 {
-    [SerializeField]
-    private int playerId;
+    protected int playerId;
 
     [HideInInspector]
     public GameObject healthBar;
@@ -17,18 +16,19 @@ public class Player : PlayerBase
 
     [HideInInspector]
     public Health health;
-
-    public float movementSpeed = 325;
+    [HideInInspector]
+    public float movementSpeed;
+    [HideInInspector]
     public float range;
 
     public List<PlayerSkill> skills;
 
     [HideInInspector]
     public Actions nextAction = Actions.NONE;
-    private int nextSkillId;
-    private Vector3 nextMousePosition;
+    protected int nextSkillId;
+    protected Vector3 nextMousePosition;
 
-    private bool infoSent = false;
+    protected bool infoSent = false;
 
     protected override void Start()
     {
@@ -41,7 +41,7 @@ public class Player : PlayerBase
         PlayerInput.OnPressedF += DoHealToPlayer;
         foreach (PlayerSkill ps in skills)
         {
-            if(ps != null)
+            if (ps != null)
             {
                 ps.SkillFinished += UseNextAction;
             }
@@ -50,17 +50,20 @@ public class Player : PlayerBase
         base.Start();
     }
 
-    private void DoDamageToPlayer()
+    protected virtual void InitialiseStats() { }
+    protected virtual void AdjustStats() { }
+
+    protected void DoDamageToPlayer()
     {
         health.DamageTargetOnServer(10);
     }
 
-    private void DoHealToPlayer()
+    protected void DoHealToPlayer()
     {
         health.HealTargetOnServer(10);
     }
 
-    private void OnDeath()
+    protected void OnDeath()
     {
         healthBar.SetActive(false);
         //stop all skills (cancel cast time of current skill, stop skills with no cast time), 
@@ -69,12 +72,12 @@ public class Player : PlayerBase
         DeathAnimation();
     }
 
-    private void DeathAnimation()
+    protected void DeathAnimation()
     {
         StartCoroutine(SinkThroughFloorOnDeath());
     }
 
-    private IEnumerator SinkThroughFloorOnDeath()
+    protected IEnumerator SinkThroughFloorOnDeath()
     {
         while (transform.position.y > -1)
         {
@@ -89,14 +92,29 @@ public class Player : PlayerBase
         PhotonView.RPC("SetPlayerOnNetwork", PhotonTargets.AllBufferedViaServer, playerId);
     }
 
-    private void SetNextAction(Actions action, int skillId, Vector3 mousePosition)
+    public virtual void SetBackMovementAfterSkillWithoutCastTime()
+    {
+        if (nextAction == Actions.NONE)
+        {
+            if (PlayerNormalMovement.WasMovingBeforeSkill())
+            {
+                PlayerNormalMovement.ActivateMovementTowardsPoint();
+            }
+            else if (PlayerAttackMovement.WasMovingBeforeSkill())
+            {
+                PlayerAttackMovement.ActivateMovementTowardsUnfriendlyTarget();
+            }
+        }
+    }
+
+    protected void SetNextAction(Actions action, int skillId, Vector3 mousePosition)
     {
         nextAction = action;
         nextSkillId = skillId;
         nextMousePosition = mousePosition;
     }
 
-    private void UseNextAction()
+    protected void UseNextAction()
     {
         if (!Player.health.IsDead())
         {
@@ -117,75 +135,63 @@ public class Player : PlayerBase
         }
     }
 
-    public void SetBackMovementAfterDash()
-    {
-        if(nextAction == Actions.NONE)
-        {
-            if (PlayerNormalMovement.WasMovingBeforeSkill())
-            {
-                PlayerNormalMovement.ActivateMovementTowardsPoint();
-            }
-            else if (PlayerAttackMovement.WasMovingBeforeSkill())
-            {
-                PlayerAttackMovement.ActivateMovementTowardsUnfriendlyTarget();
-            }
-        }
-    }
-
     public void CancelSkillIfUncastable(int skillId)
     {
-        if(nextAction == Actions.SKILL && nextSkillId == skillId)
+        if (nextAction == Actions.SKILL && nextSkillId == skillId)
         {
             nextAction = Actions.NONE;
         }
     }
 
     [PunRPC]
-    private void SetPlayerOnNetwork(int playerId)
+    protected void SetPlayerOnNetwork(int playerId)
     {
         this.playerId = playerId;
     }
 
-    public void SendActionToServer(Actions action, int skillId, Vector3 mousePosition)
+    public virtual void SendActionToServer(Actions action, int skillId, Vector3 mousePosition)
     {
-        Debug.Log(1);
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
-            Debug.Log(2);
-            if (skills[skillId].HasCastTime())
-            {
-                Debug.Log(3);
-                if (PlayerNormalMovement.WasMovingBeforeSkill())
-                {
-                    Debug.Log(4);
-                    nextAction = Actions.MOVE;
-                }
-                else if (PlayerAttackMovement.WasMovingBeforeSkill())
-                {
-                    Debug.Log(5);
-                    nextAction = Actions.ATTACK;
-                }
-                else
-                {
-                    Debug.Log(6);
-                    nextAction = Actions.NONE;
-                }
-                infoSent = true;
-            }
-            Debug.Log(7);
-            //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
-            PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, mousePosition);
+            SetNextActionAfterCastingSkillWithCastTime(skillId);
+            
+            SendSkillInfoToServer(skillId, mousePosition);
         }
         else
         {
-            Debug.Log(8);
             PlayerMovement.CancelMovement();
             SetNextAction(action, skillId, mousePosition);
         }
     }
 
+    protected void SendSkillInfoToServer(int skillId, Vector3 mousePosition)
+    {
+        //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
+        PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, mousePosition);
+    }
+
+    protected void SetNextActionAfterCastingSkillWithCastTime(int skillId)
+    {
+        if (skills[skillId].HasCastTime())
+        {
+            if (PlayerNormalMovement.WasMovingBeforeSkill())
+            {
+                nextAction = Actions.MOVE;
+            }
+            else if (PlayerAttackMovement.WasMovingBeforeSkill())
+            {
+                nextAction = Actions.ATTACK;
+            }
+            else
+            {
+                nextAction = Actions.NONE;
+            }
+            infoSent = true;
+        }
+    }
+
     [PunRPC]
-    protected void UseSkillFromServer(int skillId, Vector3 mousePositionOnCast)
+    protected virtual void UseSkillFromServer(int skillId, Vector3 mousePositionOnCast)
     {
         infoSent = false;
         skills[skillId].InfoReceivedFromServerToUseSkill(mousePositionOnCast);
@@ -197,7 +203,7 @@ public class Player : PlayerBase
         skills[skillId].InfoReceivedFromServerToCancelSkill();
     }
 
-    private bool CanUseSkill(int skillId)
+    protected bool CanUseSkill(int skillId)
     {
         foreach (PlayerSkill ps in skills)
         {

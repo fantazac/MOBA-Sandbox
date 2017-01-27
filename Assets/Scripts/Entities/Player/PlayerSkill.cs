@@ -106,12 +106,14 @@ public abstract class PlayerSkill : MonoBehaviour
     public void InfoReceivedFromServerToUseSkill(Vector3 mousePositionOnCast)
     {
         this.mousePositionOnCast = mousePositionOnCast;
-        //lucian w gets used even if disabled cause the info was sent before disabling it
         UseSkillFromServer();
-        foreach(PlayerSkill uncastableSkill in uncastableSpellsWhileActive)
+        if (playerMovement.PhotonView.isMine)
         {
-            uncastableSkill.uiSkill.SetUncastable();
-            playerMovement.Player.CancelSkillIfUncastable(uncastableSkill.skillId);
+            foreach (PlayerSkill uncastableSkill in uncastableSpellsWhileActive)
+            {
+                uncastableSkill.uiSkill.SetUncastable();
+                playerMovement.Player.CancelSkillIfUncastable(uncastableSkill.skillId);
+            }
         }
         if(castTimeBar != null && castTime > 0)
         {

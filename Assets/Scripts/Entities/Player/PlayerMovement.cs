@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class PlayerMovement : PlayerBase
 {
-    
-
     [HideInInspector]
     public TerrainCollider terrainCollider;
 
@@ -61,8 +59,14 @@ public class PlayerMovement : PlayerBase
 
     private void TeleportMid()
     {
+        PhotonView.RPC("TeleportMidFromServer", PhotonTargets.AllBufferedViaServer);
+    }
+
+    [PunRPC]
+    private void TeleportMidFromServer()
+    {
         transform.position = Player.halfHeight;
-        if(PlayerMoved != null)
+        if (PlayerMoved != null)
         {
             PlayerMoved();
         }
@@ -123,18 +127,5 @@ public class PlayerMovement : PlayerBase
         PlayerNormalMovement.StopMovement();
         PlayerAttackMovement.StopMovement();
     }
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
     
 }

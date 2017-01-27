@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class PlayerDeath : MonoBehaviour
 {
+    private Player player;
+
     private Text respawnText;
 
     private float respawnTime = 8;
@@ -14,9 +16,14 @@ public class PlayerDeath : MonoBehaviour
 
     private void Start()
     {
-        StaticObjects.Player.GetComponent<Health>().OnDeath += PlayerIsDead;
-        respawnText = transform.parent.GetChild(1).GetChild(2).GetComponent<Text>();
-        respawnText.gameObject.SetActive(false);
+        player = StaticObjects.Player;
+
+        if (player == GetComponent<Player>())
+        {
+            player.GetComponent<Health>().OnDeath += PlayerIsDead;
+            respawnText = transform.parent.GetChild(1).GetChild(2).GetComponent<Text>();
+            respawnText.gameObject.SetActive(false);
+        }
     }
 
     private void PlayerIsDead()
@@ -24,7 +31,14 @@ public class PlayerDeath : MonoBehaviour
         if(currentRespawnTimer <= 0)
         {
             currentRespawnTimer = respawnTime;
-            StartCoroutine(Respawn());
+            if (player == GetComponent<Player>())
+            {
+                StartCoroutine(Respawn());
+            }
+            else
+            {
+                StartCoroutine(RespawnWithoutTimer());
+            }
         }
     }
 
@@ -41,6 +55,17 @@ public class PlayerDeath : MonoBehaviour
         }
         respawnText.text = "";
         respawnText.gameObject.SetActive(false);
+        RespawnPlayer();
+    }
+
+    private IEnumerator RespawnWithoutTimer()
+    {
+        while (currentRespawnTimer > 0)
+        {
+            currentRespawnTimer -= Time.deltaTime;
+
+            yield return null;
+        }
         RespawnPlayer();
     }
 

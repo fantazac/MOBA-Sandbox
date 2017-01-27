@@ -54,6 +54,11 @@ public class PlayerNormalMovement : PlayerBase
         return lastNetworkMove != Vector3.zero;
     }
 
+    public Vector3 GetLastMove()
+    {
+        return lastNetworkMove;
+    }
+
     [PunRPC]
     private void MoveTowardsPointFromServer(Vector3 wherePlayerClicked)
     {
@@ -77,7 +82,7 @@ public class PlayerNormalMovement : PlayerBase
         {
             if (PlayerMovement.CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * (Player.movementSpeed / 100f));
+                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * Player.movementSpeed);
 
                 PlayerMovement.NotifyPlayerMoved();
             }

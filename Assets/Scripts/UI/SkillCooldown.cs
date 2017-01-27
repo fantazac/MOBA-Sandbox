@@ -122,6 +122,9 @@ public class UISkill
     public void SetCastable()
     {
         isAvailable = true;
-        skillIcon.color = Color.white;
+        if (isOffCooldown)
+        {
+            skillIcon.color = Color.white;
+        }
     }
 }

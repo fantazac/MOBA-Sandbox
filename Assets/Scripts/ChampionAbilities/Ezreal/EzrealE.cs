@@ -10,4 +10,10 @@ public class EzrealE : Blink
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }
+
+    protected override void UseSkillFromServer()
+    {
+        playerMovement.PlayerOrientation.RotatePlayer(mousePositionOnCast);
+        base.UseSkillFromServer();
+    }
 }

@@ -7,13 +7,13 @@ public class Dash : Movement
 
     protected override void Start()
     {
-        AbilityType = AbilityType.BLINK;
+        AbilityType = AbilityType.DASH;
         base.Start();
     }
 
     protected override void SkillDone()
     {
-        playerMovement.Player.SetBackMovementAfterDash();
+        playerMovement.Player.SetBackMovementAfterSkillWithoutCastTime();
         base.SkillDone();
     }
 
@@ -31,7 +31,6 @@ public class Dash : Movement
 
             yield return null;
         }
-
         SkillDone();
     }
 }

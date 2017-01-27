@@ -79,12 +79,12 @@ public class PlayerAttackMovement : PlayerBase
     
     private IEnumerator MoveTowardsUnfriendlyTarget(Transform enemyTarget)
     {
-        while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > (Player.range / 100f))
+        while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > Player.range)
         {
             if (PlayerMovement.CanUseMovement())
             {
                 transform.position = Vector3.MoveTowards(transform.position, enemyTarget.position,
-                    Time.deltaTime * (Player.movementSpeed / 100f));
+                    Time.deltaTime * Player.movementSpeed);
 
                 PlayerMovement.NotifyPlayerMoved();
             }
