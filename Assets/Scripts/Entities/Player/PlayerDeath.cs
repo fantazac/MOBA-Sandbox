@@ -11,16 +11,19 @@ public class PlayerDeath : MonoBehaviour
     private float respawnTime = 8;
     private float currentRespawnTimer = 0;
 
+    private bool isLocalPlayer;
+
     public delegate void RespawnPlayerHandler();
     public event RespawnPlayerHandler RespawnPlayer;
 
     private void Start()
     {
-        player = StaticObjects.Player;
-
-        if (player == GetComponent<Player>())
+        player = GetComponent<Player>();
+        
+        if (player.PhotonView.isMine)
         {
             player.GetComponent<Health>().OnDeath += PlayerIsDead;
+            isLocalPlayer = true;
             respawnText = transform.parent.GetChild(1).GetChild(2).GetComponent<Text>();
             respawnText.gameObject.SetActive(false);
         }
@@ -28,23 +31,24 @@ public class PlayerDeath : MonoBehaviour
 
     private void PlayerIsDead()
     {
-        if(currentRespawnTimer <= 0)
+        if (currentRespawnTimer <= 0)
         {
             currentRespawnTimer = respawnTime;
-            if (player == GetComponent<Player>())
+            if (isLocalPlayer)
             {
                 StartCoroutine(Respawn());
             }
-            else
+            /*else
             {
                 StartCoroutine(RespawnWithoutTimer());
-            }
+            }*/
         }
     }
 
     private IEnumerator Respawn()
     {
         respawnText.gameObject.SetActive(true);
+
         while (currentRespawnTimer > 0)
         {
             currentRespawnTimer -= Time.deltaTime;
@@ -53,6 +57,7 @@ public class PlayerDeath : MonoBehaviour
 
             yield return null;
         }
+        
         respawnText.text = "";
         respawnText.gameObject.SetActive(false);
         RespawnPlayer();

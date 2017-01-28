@@ -56,6 +56,12 @@ public class Health : MonoBehaviour
         }
     }
 
+    [PunRPC]
+    private void SetToMaxHealthOnSpawnFromServer()
+    {
+        currentHealth = maxHealth;
+    }
+
     public float GetHealthPercent()
     {
         return currentHealth / maxHealth;
@@ -63,7 +69,7 @@ public class Health : MonoBehaviour
 
     public void SetToMaxHealthOnSpawn()
     {
-        currentHealth = maxHealth;
+        photonView.RPC("SetToMaxHealthOnSpawnFromServer", PhotonTargets.AllBufferedViaServer);
     }
 
     public bool IsDead()

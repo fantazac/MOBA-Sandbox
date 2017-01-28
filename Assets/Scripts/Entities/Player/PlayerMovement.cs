@@ -75,8 +75,14 @@ public class PlayerMovement : PlayerBase
 
     private void RespawnPlayerInBase()
     {
+        PhotonView.RPC("RespawnPlayerInBaseFromServer", PhotonTargets.AllBufferedViaServer, spawnPoint);
+    }
+
+    [PunRPC]
+    private void RespawnPlayerInBaseFromServer(Vector3 spawn)
+    {
         Player.healthBar.SetActive(true);
-        transform.position = spawnPoint;
+        transform.position = spawn;
         transform.rotation = Quaternion.identity;
         if (PlayerMoved != null)
         {

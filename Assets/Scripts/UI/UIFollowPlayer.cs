@@ -22,6 +22,7 @@ public class UIFollowPlayer : Photon.MonoBehaviour
             if(players[i].GetComponent<Player>().PlayerId == playerId)
             {
                 player = players[i].transform;
+                player.gameObject.GetComponent<Player>().healthBar = gameObject;
                 player.gameObject.GetComponent<PlayerMovement>().PlayerMoved += MoveCameraOnPlayer;
                 GetComponentInChildren<UIHealth>().health = player.GetComponent<Health>();
                 MoveCameraOnPlayer();

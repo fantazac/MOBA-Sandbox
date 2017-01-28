@@ -49,10 +49,14 @@ public class PlayerAttackMovement : PlayerBase
         //If a traget is moving and you connect, this is called, which works as intented.
         //But, the target will start moving from its spawn instead of "where it's supposed to be at the current time"
         //Fix this
-        SetMoveTowardsUnfriendlyTarget(FindEnemyPlayer(enemyPlayerId));
+        GameObject enemyPlayer = FindEnemyPlayer(enemyPlayerId);
+        if(enemyPlayer != null)
+        {
+            SetMoveTowardsUnfriendlyTarget(enemyPlayer.transform);
+        }
     }
 
-    private Transform FindEnemyPlayer(int enemyPlayerId)
+    private GameObject FindEnemyPlayer(int enemyPlayerId)
     {
         GameObject enemyPlayer = null;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -66,7 +70,7 @@ public class PlayerAttackMovement : PlayerBase
             }
         }
 
-        return enemyPlayer.transform;
+        return enemyPlayer;
     }
 
     private void SetMoveTowardsUnfriendlyTarget(Transform unfriendlyTarget)
