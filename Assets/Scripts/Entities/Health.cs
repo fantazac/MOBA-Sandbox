@@ -23,12 +23,12 @@ public class Health : MonoBehaviour
 
     public void DamageTargetOnServer(float damage)
     {
-        photonView.RPC("DamageTargetFromServer", PhotonTargets.AllBufferedViaServer, damage);
+        photonView.RPC("DamageTargetFromServer", PhotonTargets.AllViaServer, damage);
     }
 
     public void HealTargetOnServer(float heal)
     {
-        photonView.RPC("HealTargetFromServer", PhotonTargets.AllBufferedViaServer, heal);
+        photonView.RPC("HealTargetFromServer", PhotonTargets.AllViaServer, heal);
     }
 
     [PunRPC]
@@ -69,7 +69,7 @@ public class Health : MonoBehaviour
 
     public void SetToMaxHealthOnSpawn()
     {
-        photonView.RPC("SetToMaxHealthOnSpawnFromServer", PhotonTargets.AllBufferedViaServer);
+        photonView.RPC("SetToMaxHealthOnSpawnFromServer", PhotonTargets.AllViaServer);
     }
 
     public bool IsDead()

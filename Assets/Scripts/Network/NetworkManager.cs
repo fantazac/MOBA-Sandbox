@@ -83,7 +83,11 @@ public class NetworkManager : MonoBehaviour
 
     private void OnJoinedRoom()
     {
-        //doesnt work if someone disconnects and another person tries to connect
+        //LOAD ALL INFO NEEDED FROM ALL PLAYERS BEFORE SHOWING CHAMP SELECT
+        //ex. all healths, all positions, all skillshots positions, all creeps, etc
+
+        //doesnt work if someone disconnects and another person tries to connect 
+        //ex. Player0 on, Player1 on, Player0 leaves, next player will be Player1 when there is one already, no Player0
         playerId = PhotonNetwork.playerList.Length - 1;
 
         if (playerId >= maxNumberOfPlayers)
