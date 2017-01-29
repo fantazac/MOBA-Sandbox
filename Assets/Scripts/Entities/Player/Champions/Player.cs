@@ -154,8 +154,14 @@ public abstract class Player : PlayerBase
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
             SetNextActionAfterCastingSkillWithCastTime(skillId);
-            
-            SendSkillInfoToServer(skillId, mousePosition);
+            if (skills[skillId].isATargetSkill)
+            {
+                SendSkillInfoToServer(skillId, Vector3.zero, PlayerMouseSelection.HoveredObject.GetComponent<Player>().PlayerId);
+            }
+            else
+            {
+                SendSkillInfoToServer(skillId, mousePosition, -1);
+            }
         }
         else
         {
@@ -164,10 +170,17 @@ public abstract class Player : PlayerBase
         }
     }
 
-    protected void SendSkillInfoToServer(int skillId, Vector3 mousePosition)
+    protected void SendSkillInfoToServer(int skillId, Vector3 mousePosition, int playerId)
     {
         //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
-        PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, mousePosition);
+        if(playerId == -1)
+        {
+            PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, mousePosition);
+        }
+        else
+        {
+            PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, Vector3.right * playerId);
+        }
     }
 
     protected void SetNextActionAfterCastingSkillWithCastTime(int skillId)

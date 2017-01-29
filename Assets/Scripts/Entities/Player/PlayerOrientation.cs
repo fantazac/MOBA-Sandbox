@@ -68,7 +68,7 @@ public class PlayerOrientation : PlayerBase
     {
         rotationAmount = Vector3.up;
         rotationAmountLastFrame = Vector3.zero;
-        while (true)
+        while (target != null)
         {
             if (CanRotate())
             {

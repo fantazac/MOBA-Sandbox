@@ -235,6 +235,7 @@
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealR.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealW.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianE.cs" />
+    <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianQ.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianW.cs" />
     <Compile Include="Assets\Scripts\Daniel Scripts\Ability.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Assets\Scripts\Entities\Player\Team.cs" />
     <Compile Include="Assets\Scripts\MovementPoint\MovementCapsule.cs" />
     <Compile Include="Assets\Scripts\Network\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\Projectiles\LineArea.cs" />
     <Compile Include="Assets\Scripts\Projectiles\ProjectileMovement.cs" />
     <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
     <Compile Include="Assets\Scripts\StaticObjects.cs" />

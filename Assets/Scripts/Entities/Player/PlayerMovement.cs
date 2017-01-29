@@ -20,7 +20,7 @@ public class PlayerMovement : PlayerBase
     protected override void Start()
     {
         PlayerInput.OnRightClick += PressedRightClick;
-        PlayerInput.OnPressedS += StopMovement;
+        PlayerInput.OnPressedS += StopMovementOnServer;
         PlayerInput.OnPressedM += TeleportMid;
 
         GetComponent<PlayerDeath>().RespawnPlayer += RespawnPlayerInBase;
@@ -90,6 +90,12 @@ public class PlayerMovement : PlayerBase
         }
     }
 
+    private void StopMovementOnServer()
+    {
+        PhotonView.RPC("StopMovement", PhotonTargets.AllViaServer);
+    }
+
+    [PunRPC]
     public void StopMovement()
     {
         CancelMovement();

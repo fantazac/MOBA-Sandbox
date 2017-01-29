@@ -4,6 +4,7 @@ using System.Collections;
 public class Lucian : Player
 {
     private bool askedServerForCulling;
+    private bool askedServerForQ;
 
     private float distanceBetweenLucianAndMoveTargetBeforeUsingE;
     private Vector3 lastMoveBeforeUsingE;
@@ -33,7 +34,7 @@ public class Lucian : Player
     {
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
-            if (skillId == 1 && askedServerForCulling)
+            if (skillId == 1 && askedServerForCulling || skillId == 2 && askedServerForQ)
             {
                 return;
             }
@@ -45,7 +46,17 @@ public class Lucian : Player
                 askedServerForCulling = true;
             }
 
-            SendSkillInfoToServer(skillId, mousePosition);
+            if (skillId == 0)
+            {
+                askedServerForQ = true;
+                
+                SendSkillInfoToServer(skillId, Vector3.zero, 
+                    PlayerMouseSelection.selectedTargetForUseInNextFrame.GetComponent<Player>().PlayerId);
+            }
+            else
+            {
+                SendSkillInfoToServer(skillId, mousePosition, -1);
+            }
         }
         else
         {
@@ -102,6 +113,10 @@ public class Lucian : Player
         if (skillId == 3)
         {
             askedServerForCulling = false;
+        }
+        if (skillId == 0)
+        {
+            askedServerForQ = false;
         }
         if (skillId == 2 && PlayerNormalMovement.WasMovingBeforeSkill())
         {

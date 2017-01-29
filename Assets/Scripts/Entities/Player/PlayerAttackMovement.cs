@@ -5,6 +5,9 @@ public class PlayerAttackMovement : PlayerBase
 {
     private int lastNetworkTarget;
 
+    public delegate void IsInRangeHandler();
+    public event IsInRangeHandler IsInRange;
+
     protected override void Start()
     {
         lastNetworkTarget = -1;
@@ -40,6 +43,7 @@ public class PlayerAttackMovement : PlayerBase
     public void StopMovement()
     {
         StopAllCoroutines();
+        IsInRange = null;
         lastNetworkTarget = -1;
     }
 
@@ -56,7 +60,7 @@ public class PlayerAttackMovement : PlayerBase
         }
     }
 
-    private GameObject FindEnemyPlayer(int enemyPlayerId)
+    public GameObject FindEnemyPlayer(int enemyPlayerId)
     {
         GameObject enemyPlayer = null;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -73,17 +77,25 @@ public class PlayerAttackMovement : PlayerBase
         return enemyPlayer;
     }
 
-    private void SetMoveTowardsUnfriendlyTarget(Transform unfriendlyTarget)
+    public void SetMoveTowardsUnfriendlyTarget(Transform unfriendlyTarget, float range)
     {
         StopAllCoroutines();
+        IsInRange = null;
+        PlayerNormalMovement.StopMovement();
         PlayerOrientation.StopAllCoroutines();
-        StartCoroutine(MoveTowardsUnfriendlyTarget(unfriendlyTarget));
+        StartCoroutine(MoveTowardsUnfriendlyTarget(unfriendlyTarget, range));
         PlayerOrientation.RotatePlayerUntilReachedTarget(unfriendlyTarget);
     }
-    
-    private IEnumerator MoveTowardsUnfriendlyTarget(Transform enemyTarget)
+
+    public void SetMoveTowardsUnfriendlyTarget(Transform unfriendlyTarget)
     {
-        while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > Player.range)
+        SetMoveTowardsUnfriendlyTarget(unfriendlyTarget, Player.range);
+    }
+    
+    private IEnumerator MoveTowardsUnfriendlyTarget(Transform enemyTarget, float range)
+    {
+        //can come in range for a screen and not for another, so the skill is done on one but not the other, use RPC
+        while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > range)
         {
             if (PlayerMovement.CanUseMovement())
             {
@@ -95,6 +107,12 @@ public class PlayerAttackMovement : PlayerBase
 
             yield return null;
         }
+
+        if (IsInRange != null && enemyTarget != null)
+        {
+            IsInRange();
+        }
+        
         lastNetworkTarget = -1;
     }
 }

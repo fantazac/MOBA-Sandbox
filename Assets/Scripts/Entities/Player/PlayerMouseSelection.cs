@@ -6,6 +6,9 @@ public class PlayerMouseSelection : PlayerBase
     public GameObject HoveredObject { get; private set; }
     public GameObject ClickedObject { get; private set; }
 
+    [HideInInspector]
+    public GameObject selectedTargetForUseInNextFrame;
+
     private EntityTeam hoveredObjectTeam;
     private EntityTeam clickedObjectTeam;
 
@@ -35,6 +38,7 @@ public class PlayerMouseSelection : PlayerBase
         {
             return false;
         }
+        selectedTargetForUseInNextFrame = HoveredObject;
         return hoveredObjectTeam.Team == objectTeam;
     }
 
@@ -44,6 +48,7 @@ public class PlayerMouseSelection : PlayerBase
         {
             return false;
         }
+        selectedTargetForUseInNextFrame = HoveredObject;
         return hoveredObjectTeam.Team != objectTeam;
     }
 

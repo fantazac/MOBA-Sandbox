@@ -124,10 +124,10 @@ public class UISkill
         skillIcon.color = skillUnavailableColor;
     }
 
-    public void SetCastable()
+    public void SetCastable(PhotonView photonView)
     {
         isAvailable = true;
-        if (isOffCooldown)
+        if (photonView.isMine && isOffCooldown)
         {
             skillIcon.color = Color.white;
         }

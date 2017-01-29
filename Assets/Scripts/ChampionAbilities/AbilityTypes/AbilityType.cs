@@ -3,6 +3,7 @@ using System.Collections;
 
 public enum AbilityType
 {
+    NA,
     SKILLSHOT,
     DASH,
     BLINK,

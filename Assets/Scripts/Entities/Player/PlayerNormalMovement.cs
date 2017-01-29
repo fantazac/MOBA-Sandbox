@@ -71,6 +71,7 @@ public class PlayerNormalMovement : PlayerBase
     private void SetMoveTowardsPoint(Vector3 wherePlayerClickedToMove)
     {
         StopAllCoroutines();
+        PlayerAttackMovement.StopMovement();
         PlayerOrientation.StopAllCoroutines();
         StartCoroutine(MoveTowardsPoint(wherePlayerClickedToMove));
         PlayerOrientation.RotatePlayer(wherePlayerClickedToMove);

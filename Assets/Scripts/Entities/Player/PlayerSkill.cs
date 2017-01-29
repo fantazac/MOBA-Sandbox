@@ -8,7 +8,7 @@ public abstract class PlayerSkill : MonoBehaviour
     [HideInInspector]
     public AbilityType AbilityType { get; protected set; }
 
-    private CastTimeBarManager castTimeBar;
+    protected CastTimeBarManager castTimeBar;
 
     protected const float DIVISION_FACTOR = 100f;
 
@@ -20,6 +20,7 @@ public abstract class PlayerSkill : MonoBehaviour
     public bool canBeCancelled = false;
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
+    public bool isATargetSkill = false;
     //doesnt work
     public List<PlayerSkill> uncastableSpellsWhileActive;
     [HideInInspector]
@@ -32,7 +33,8 @@ public abstract class PlayerSkill : MonoBehaviour
     protected WaitForSeconds delayCastTime;
 
     protected PlayerMovement playerMovement;
-    protected int skillId;
+    [HideInInspector]
+    public int skillId;
 
     protected RaycastHit hit;
     protected Vector3 mousePositionOnCast;
@@ -81,7 +83,7 @@ public abstract class PlayerSkill : MonoBehaviour
         skillIsActive = false;
         foreach (PlayerSkill uncastableSkill in uncastableSpellsWhileActive)
         {
-            uncastableSkill.uiSkill.SetCastable();
+            uncastableSkill.uiSkill.SetCastable(playerMovement.PhotonView);
         }
         if (SkillFinished != null)
         {
@@ -103,7 +105,7 @@ public abstract class PlayerSkill : MonoBehaviour
         playerMovement.PhotonView.RPC("CancelSkillFromServer", PhotonTargets.AllViaServer, skillId);
     }
 
-    public void InfoReceivedFromServerToUseSkill(Vector3 mousePositionOnCast)
+    public virtual void InfoReceivedFromServerToUseSkill(Vector3 mousePositionOnCast)
     {
         this.mousePositionOnCast = mousePositionOnCast;
         UseSkillFromServer();
@@ -135,6 +137,11 @@ public abstract class PlayerSkill : MonoBehaviour
     protected bool MouseIsOnTerrain(Vector3 mousePosition)
     {
         return playerMovement.terrainCollider.Raycast(playerMovement.GetRay(mousePosition), out hit, Mathf.Infinity);
+    }
+
+    protected bool MouseIsOnEnemyTarget()
+    {
+        return playerMovement.PlayerMouseSelection.HoveredObjectIsEnemy(playerMovement.EntityTeam.Team);
     }
 
     public virtual bool CanUseSkill(Vector3 mousePosition) { return false; }
