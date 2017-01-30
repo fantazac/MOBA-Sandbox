@@ -94,7 +94,6 @@ public class PlayerAttackMovement : PlayerBase
     
     private IEnumerator MoveTowardsUnfriendlyTarget(Transform enemyTarget, float range)
     {
-        //can come in range for a screen and not for another, so the skill is done on one but not the other, use RPC
         while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > range)
         {
             if (PlayerMovement.CanUseMovement())

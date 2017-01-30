@@ -32,12 +32,11 @@ public class LucianQ : PlayerSkill
 
     public override bool CanUseSkill(Vector3 mousePosition)
     {
-        return MouseIsOnEnemyTarget(); //&& playerMovement.Player.CanCastSpell(this);
+        return MouseIsOnEnemyTarget();
     }
 
     public override void InfoReceivedFromServerToUseSkill(Vector3 mousePositionOnCast)
     {
-        playerMovement.Player.nextAction = Actions.NONE; //still walks after skill
         target = playerMovement.PlayerAttackMovement.FindEnemyPlayer((int)mousePositionOnCast.x);
         if(Vector3.Distance(target.transform.position, transform.position) <= rangeToCast)
         {
@@ -45,7 +44,6 @@ public class LucianQ : PlayerSkill
         }
         else
         {
-            //can come in range for a screen and not for another, so the skill is done on one but not the other, use RPC
             playerMovement.PlayerAttackMovement.SetMoveTowardsUnfriendlyTarget(target.transform, rangeToCast);
             playerMovement.PlayerAttackMovement.IsInRange += IsInRange;
         }
@@ -53,6 +51,7 @@ public class LucianQ : PlayerSkill
 
     private void IsInRange()
     {
+        playerMovement.StopMovement();
         base.InfoReceivedFromServerToUseSkill(Vector3.zero);
     }
 

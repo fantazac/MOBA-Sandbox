@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LineArea : MonoBehaviour
 {
@@ -12,11 +13,26 @@ public class LineArea : MonoBehaviour
 
     private WaitForSeconds delayLineArea;
 
+    private List<GameObject> targetsAlreadyHit;
+
+    private bool lineAreaHasParent;
+
     public void ActivateAoE(PhotonView photonView, Team sourceTeam, float lineAreaDuration)
     {
         hitEnabled = true;
         this.photonView = photonView;
         this.sourceTeam = sourceTeam;
+        delayLineArea = new WaitForSeconds(lineAreaDuration - (Time.deltaTime * 2));
+        StartCoroutine(RemoveLineArea());
+    }
+
+    public void ActivateAoE(PhotonView photonView, Team sourceTeam, float lineAreaDuration, List<GameObject> targetsAlreadyHit, bool lineAreaHasParent)
+    {
+        hitEnabled = true;
+        this.photonView = photonView;
+        this.sourceTeam = sourceTeam;
+        this.targetsAlreadyHit = targetsAlreadyHit;
+        this.lineAreaHasParent = lineAreaHasParent;
         delayLineArea = new WaitForSeconds(lineAreaDuration - (Time.deltaTime * 2));
         StartCoroutine(RemoveLineArea());
     }
@@ -30,7 +46,7 @@ public class LineArea : MonoBehaviour
 
         yield return delayLineArea;
 
-        Destroy(gameObject);
+        Destroy(lineAreaHasParent ? transform.parent.gameObject : gameObject);
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -39,7 +55,7 @@ public class LineArea : MonoBehaviour
         {
             Health targetHealth = collider.gameObject.GetComponent<Health>();
 
-            if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().Team != sourceTeam)
+            if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().Team != sourceTeam && CanHitTarget(collider.gameObject))
             {
                 if (photonView.isMine)
                 {
@@ -48,5 +64,21 @@ public class LineArea : MonoBehaviour
                 }
             }
         }
+    }
+
+    private bool CanHitTarget(GameObject target)
+    {
+        if(targetsAlreadyHit == null)
+        {
+            return true;
+        }
+        foreach (GameObject targetAlreadyHit in targetsAlreadyHit)
+        {
+            if (targetAlreadyHit == target)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

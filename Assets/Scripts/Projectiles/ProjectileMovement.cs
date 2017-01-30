@@ -11,13 +11,15 @@ public class ProjectileMovement : MonoBehaviour
     private PhotonView photonView;
     [HideInInspector]
     public Team sourceTeam;
-    private bool projectileAfterHit = false;
+    private bool lineAreaAfterHit = false;
+    private GameObject lineAreaToActivateAfterHit;
 
     private List<GameObject> targetsAlreadyHit = new List<GameObject>();
 
     private Vector3 initialPosition;
 
-    private WaitForSeconds delayProjectileAfterHit;
+    private float lineAreaAfterHitDuration;
+    private bool lineAreaHasParent;
 
     public void ShootProjectile(PhotonView photonView, Team sourceTeam, float speed, float range)
     {
@@ -29,25 +31,18 @@ public class ProjectileMovement : MonoBehaviour
         StartCoroutine(Shoot());
     }
 
-    public void ShootProjectile(PhotonView photonView, Team sourceTeam, float speed, float range, float projectileAfterHitDuration)
+    public void ShootProjectile(PhotonView photonView, Team sourceTeam, float speed, float range, GameObject lineAreaToActivateAfterHit, float lineAreaAfterHitDuration, bool lineAreaHasParent)
     {
         this.speed = speed;
         this.range = range;
         this.photonView = photonView;
         this.sourceTeam = sourceTeam;
-        projectileAfterHit = true;
-        delayProjectileAfterHit = new WaitForSeconds(projectileAfterHitDuration); //do another coroutine that cancels hitbox after 2 frames
+        lineAreaAfterHit = true;
+        this.lineAreaToActivateAfterHit = lineAreaToActivateAfterHit;
+        this.lineAreaAfterHitDuration = lineAreaAfterHitDuration;
+        this.lineAreaHasParent = lineAreaHasParent;
         initialPosition = transform.position;
         StartCoroutine(Shoot());
-    }
-
-    public void SetupProjectileAfterHit(PhotonView photonView, Team sourceTeam, List<GameObject> targetsAlreadyHit)
-    {
-        Debug.Log(photonView + " 2 " + sourceTeam);
-        this.photonView = photonView;
-        this.sourceTeam = sourceTeam;
-        this.targetsAlreadyHit = targetsAlreadyHit;
-        Debug.Log(photonView + " 3 " + sourceTeam);
     }
 
     private IEnumerator Shoot()
@@ -59,32 +54,22 @@ public class ProjectileMovement : MonoBehaviour
             yield return null;
         }
 
-        if (projectileAfterHit)
+        if (lineAreaAfterHit)
         {
-            StartCoroutine(ShootProjectileAfterHit());
+            ActivateAreaAfterHit();
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+
+        Destroy(gameObject);
     }
 
-    private IEnumerator ShootProjectileAfterHit()
+    private void ActivateAreaAfterHit()
     {
-        if (delayProjectileAfterHit != null)
+        GameObject lineArea = (GameObject)Instantiate(lineAreaToActivateAfterHit, transform.position, transform.rotation);
+
+        foreach (LineArea area in lineArea.GetComponentsInChildren<LineArea>())
         {
-            Debug.Log(photonView + " 1 " + sourceTeam);
-            GameObject shotProjectileAfterHit = (GameObject)Instantiate(transform.GetChild(0).gameObject, transform.position, transform.rotation);
-            shotProjectileAfterHit.GetComponentInChildren<ProjectileMovement>().SetupProjectileAfterHit(photonView, sourceTeam, targetsAlreadyHit);
-            shotProjectileAfterHit.SetActive(true);
-            
-            transform.position = Vector3.down * 5;
-
-            yield return delayProjectileAfterHit;
-
-            Destroy(shotProjectileAfterHit);
+            area.ActivateAoE(photonView, sourceTeam, lineAreaAfterHitDuration, targetsAlreadyHit, lineAreaHasParent);
         }
-        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -94,7 +79,7 @@ public class ProjectileMovement : MonoBehaviour
         if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().IsEnemy(sourceTeam) && CanHitTarget(collider.gameObject))
         {
             targetsAlreadyHit.Add(collider.gameObject);
-            if (photonView.isMine)//WTF?
+            if (photonView.isMine)
             {
                 //if the projectile gives a stat/heals (ex. EzrealW gives AS), changed this
                 targetHealth.DamageTargetOnServer(damage);
@@ -104,10 +89,10 @@ public class ProjectileMovement : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-            else if(projectileAfterHit)
+            else if(lineAreaAfterHit)
             {
-                StopAllCoroutines();
-                StartCoroutine(ShootProjectileAfterHit());
+                ActivateAreaAfterHit();
+                Destroy(gameObject);
             }
         }
     }

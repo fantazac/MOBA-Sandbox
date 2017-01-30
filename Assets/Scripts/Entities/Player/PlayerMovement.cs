@@ -59,7 +59,10 @@ public class PlayerMovement : PlayerBase
 
     private void TeleportMid()
     {
-        PhotonView.RPC("TeleportMidFromServer", PhotonTargets.AllBufferedViaServer);
+        if (!Player.health.IsDead())
+        {
+            PhotonView.RPC("TeleportMidFromServer", PhotonTargets.AllBufferedViaServer);
+        }
     }
 
     [PunRPC]

@@ -4,7 +4,10 @@ using System.Collections;
 public class LucianW : Skillshot
 {
     [SerializeField]
-    private float projectileAfterHitDuration = 0.5f;
+    private GameObject lineAreaAfterHit;
+
+    [SerializeField]
+    private float lineAreaAfterHitDuration = 0.5f;
 
     protected override void Start()
     {
@@ -19,7 +22,7 @@ public class LucianW : Skillshot
         yield return delayCastTime;
 
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
-        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.EntityTeam.Team, speed, range, projectileAfterHitDuration);
+        projectileToShoot.GetComponentInChildren<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.EntityTeam.Team, speed, range, lineAreaAfterHit, lineAreaAfterHitDuration, true);
 
         SkillDone();
     }
