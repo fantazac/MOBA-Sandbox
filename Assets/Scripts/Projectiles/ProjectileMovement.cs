@@ -36,16 +36,18 @@ public class ProjectileMovement : MonoBehaviour
         this.photonView = photonView;
         this.sourceTeam = sourceTeam;
         projectileAfterHit = true;
-        delayProjectileAfterHit = new WaitForSeconds(projectileAfterHitDuration);
+        delayProjectileAfterHit = new WaitForSeconds(projectileAfterHitDuration); //do another coroutine that cancels hitbox after 2 frames
         initialPosition = transform.position;
         StartCoroutine(Shoot());
     }
 
     public void SetupProjectileAfterHit(PhotonView photonView, Team sourceTeam, List<GameObject> targetsAlreadyHit)
     {
+        Debug.Log(photonView + " 2 " + sourceTeam);
         this.photonView = photonView;
         this.sourceTeam = sourceTeam;
         this.targetsAlreadyHit = targetsAlreadyHit;
+        Debug.Log(photonView + " 3 " + sourceTeam);
     }
 
     private IEnumerator Shoot()
@@ -71,6 +73,7 @@ public class ProjectileMovement : MonoBehaviour
     {
         if (delayProjectileAfterHit != null)
         {
+            Debug.Log(photonView + " 1 " + sourceTeam);
             GameObject shotProjectileAfterHit = (GameObject)Instantiate(transform.GetChild(0).gameObject, transform.position, transform.rotation);
             shotProjectileAfterHit.GetComponentInChildren<ProjectileMovement>().SetupProjectileAfterHit(photonView, sourceTeam, targetsAlreadyHit);
             shotProjectileAfterHit.SetActive(true);
@@ -88,10 +91,10 @@ public class ProjectileMovement : MonoBehaviour
     {
         Health targetHealth = collider.gameObject.GetComponent<Health>();
         
-        if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().Team != sourceTeam && CanHitTarget(collider.gameObject))
+        if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().IsEnemy(sourceTeam) && CanHitTarget(collider.gameObject))
         {
             targetsAlreadyHit.Add(collider.gameObject);
-            if (photonView.isMine)
+            if (photonView.isMine)//WTF?
             {
                 //if the projectile gives a stat/heals (ex. EzrealW gives AS), changed this
                 targetHealth.DamageTargetOnServer(damage);

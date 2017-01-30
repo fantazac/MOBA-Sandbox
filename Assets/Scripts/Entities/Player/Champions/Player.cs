@@ -116,7 +116,7 @@ public abstract class Player : PlayerBase
 
     protected void UseNextAction()
     {
-        if (!Player.health.IsDead())
+        if (!Player.health.IsDead() && nextAction != Actions.NONE)
         {
             if (nextAction == Actions.SKILL)
             {
@@ -156,6 +156,7 @@ public abstract class Player : PlayerBase
             SetNextActionAfterCastingSkillWithCastTime(skillId);
             if (skills[skillId].isATargetSkill)
             {
+                PlayerMovement.CancelMovement();
                 SendSkillInfoToServer(skillId, Vector3.zero, PlayerMouseSelection.HoveredObject.GetComponent<Player>().PlayerId);
             }
             else

@@ -49,7 +49,8 @@ public class Lucian : Player
             if (skillId == 0)
             {
                 askedServerForQ = true;
-                
+
+                PlayerMovement.CancelMovement();
                 SendSkillInfoToServer(skillId, Vector3.zero, 
                     PlayerMouseSelection.selectedTargetForUseInNextFrame.GetComponent<Player>().PlayerId);
             }
