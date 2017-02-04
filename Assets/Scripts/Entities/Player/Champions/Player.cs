@@ -14,13 +14,6 @@ public abstract class Player : PlayerBase
 
     public int PlayerId { get { return playerId; } }
 
-    [HideInInspector]
-    public Health health;
-    [HideInInspector]
-    public float movementSpeed;
-    [HideInInspector]
-    public float range;
-
     public List<PlayerSkill> skills;
 
     [HideInInspector]
@@ -33,9 +26,8 @@ public abstract class Player : PlayerBase
     protected override void Start()
     {
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
-
-        health = GetComponent<Health>();
-        health.OnDeath += OnDeath;
+        
+        PlayerStats.health.OnDeath += OnDeath;
 
         PlayerInput.OnPressedD += DoDamageToPlayer;
         PlayerInput.OnPressedF += DoHealToPlayer;
@@ -55,12 +47,12 @@ public abstract class Player : PlayerBase
 
     protected void DoDamageToPlayer()
     {
-        health.DamageTargetOnServer(10);
+        PlayerStats.health.DamageTargetOnServer(10);
     }
 
     protected void DoHealToPlayer()
     {
-        health.HealTargetOnServer(10);
+        PlayerStats.health.HealTargetOnServer(10);
     }
 
     protected void OnDeath()
@@ -116,7 +108,7 @@ public abstract class Player : PlayerBase
 
     protected void UseNextAction()
     {
-        if (!Player.health.IsDead() && nextAction != Actions.NONE)
+        if (!PlayerStats.health.IsDead() && nextAction != Actions.NONE)
         {
             if (nextAction == Actions.SKILL)
             {

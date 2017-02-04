@@ -5,8 +5,11 @@ public class PlayerAttackMovement : PlayerBase
 {
     private int lastNetworkTarget;
 
-    public delegate void IsInRangeHandler();
-    public event IsInRangeHandler IsInRange;
+    public delegate void IsInRangeForBasicAttackHandler(GameObject target);
+    public event IsInRangeForBasicAttackHandler IsInRangeForBasicAttack;
+
+    public delegate void IsInRangeForSkillHandler();
+    public event IsInRangeForSkillHandler IsInRangeForSkill;
 
     protected override void Start()
     {
@@ -43,8 +46,9 @@ public class PlayerAttackMovement : PlayerBase
     public void StopMovement()
     {
         StopAllCoroutines();
-        IsInRange = null;
+        IsInRangeForSkill = null;
         lastNetworkTarget = -1;
+        BasicAttack.CancelBasicAttack();
     }
 
     [PunRPC]
@@ -80,7 +84,8 @@ public class PlayerAttackMovement : PlayerBase
     public void SetMoveTowardsUnfriendlyTarget(Transform unfriendlyTarget, float range)
     {
         StopAllCoroutines();
-        IsInRange = null;
+        BasicAttack.CancelBasicAttack();
+        IsInRangeForSkill = null;
         PlayerNormalMovement.StopMovement();
         PlayerOrientation.StopAllCoroutines();
         StartCoroutine(MoveTowardsUnfriendlyTarget(unfriendlyTarget, range));
@@ -89,7 +94,7 @@ public class PlayerAttackMovement : PlayerBase
 
     public void SetMoveTowardsUnfriendlyTarget(Transform unfriendlyTarget)
     {
-        SetMoveTowardsUnfriendlyTarget(unfriendlyTarget, Player.range);
+        SetMoveTowardsUnfriendlyTarget(unfriendlyTarget, PlayerStats.range);
     }
     
     private IEnumerator MoveTowardsUnfriendlyTarget(Transform enemyTarget, float range)
@@ -99,7 +104,7 @@ public class PlayerAttackMovement : PlayerBase
             if (PlayerMovement.CanUseMovement())
             {
                 transform.position = Vector3.MoveTowards(transform.position, enemyTarget.position,
-                    Time.deltaTime * Player.movementSpeed);
+                    Time.deltaTime * PlayerStats.movementSpeed);
 
                 PlayerMovement.NotifyPlayerMoved();
             }
@@ -107,9 +112,16 @@ public class PlayerAttackMovement : PlayerBase
             yield return null;
         }
 
-        if (IsInRange != null && enemyTarget != null)
+        if(enemyTarget != null)
         {
-            IsInRange();
+            if(IsInRangeForSkill != null)
+            {
+                IsInRangeForSkill();
+            }
+            else if(IsInRangeForBasicAttack != null)
+            {
+                IsInRangeForBasicAttack(enemyTarget.gameObject);
+            }
         }
         
         lastNetworkTarget = -1;

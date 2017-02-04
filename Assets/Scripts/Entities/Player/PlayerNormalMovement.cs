@@ -46,6 +46,7 @@ public class PlayerNormalMovement : PlayerBase
     public void StopMovement()
     {
         StopAllCoroutines();
+        BasicAttack.CancelBasicAttack();
         lastNetworkMove = Vector3.zero;
     }
 
@@ -71,6 +72,7 @@ public class PlayerNormalMovement : PlayerBase
     private void SetMoveTowardsPoint(Vector3 wherePlayerClickedToMove)
     {
         StopAllCoroutines();
+        BasicAttack.CancelBasicAttack();
         PlayerAttackMovement.StopMovement();
         PlayerOrientation.StopAllCoroutines();
         StartCoroutine(MoveTowardsPoint(wherePlayerClickedToMove));
@@ -83,7 +85,7 @@ public class PlayerNormalMovement : PlayerBase
         {
             if (PlayerMovement.CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * Player.movementSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * PlayerStats.movementSpeed);
 
                 PlayerMovement.NotifyPlayerMoved();
             }

@@ -44,7 +44,7 @@ public class PlayerMovement : PlayerBase
 
     private void PressedRightClick(Vector3 mousePosition)
     {
-        if (!Player.health.IsDead())
+        if (!PlayerStats.health.IsDead())
         {
             if (PlayerMouseSelection.HoveredObjectIsEnemy(EntityTeam.Team))
             {
@@ -59,7 +59,7 @@ public class PlayerMovement : PlayerBase
 
     private void TeleportMid()
     {
-        if (!Player.health.IsDead())
+        if (!PlayerStats.health.IsDead())
         {
             PhotonView.RPC("TeleportMidFromServer", PhotonTargets.AllBufferedViaServer);
         }

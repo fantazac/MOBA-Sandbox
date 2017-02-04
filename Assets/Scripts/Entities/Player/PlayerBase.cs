@@ -93,6 +93,26 @@ public abstract class PlayerBase : MonoBehaviour {
         }
     }
 
+    private PlayerStats _playerStats;
+    public PlayerStats PlayerStats
+    {
+        get
+        {
+            InitialisePlayerStats();
+            return _playerStats;
+        }
+    }
+
+    private BasicAttack _basicAttack;
+    public BasicAttack BasicAttack
+    {
+        get
+        {
+            InitialiseBasicAttack();
+            return _basicAttack;
+        }
+    }
+
     private PhotonView _photonView;
     public PhotonView PhotonView
     {
@@ -124,6 +144,8 @@ public abstract class PlayerBase : MonoBehaviour {
         InitializePlayerProjectileCollision();
         InitializePlayerShootProjectile();
         InitialiseMouseSelection();
+        InitialisePlayerStats();
+        InitialiseBasicAttack();
 
         InitializePhotonView();
         InitializeEntityTeam();
@@ -198,6 +220,22 @@ public abstract class PlayerBase : MonoBehaviour {
         if(_playerMouseSelection == null)
         {
             _playerMouseSelection = GetComponent<PlayerMouseSelection>();
+        }
+    }
+
+    private void InitialisePlayerStats()
+    {
+        if(_playerStats == null)
+        {
+            _playerStats = GetComponent<PlayerStats>();
+        }
+    }
+
+    private void InitialiseBasicAttack()
+    {
+        if(_basicAttack == null)
+        {
+            _basicAttack = GetComponent<BasicAttack>();
         }
     }
 

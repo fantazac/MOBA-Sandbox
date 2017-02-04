@@ -18,16 +18,17 @@ public class Lucian : Player
 
     protected override void InitialiseStats()
     {
-        movementSpeed = 325;
-        range = 500;
+        PlayerStats.movementSpeed = 325;
+        PlayerStats.range = 500;
+        BasicAttack.SetAttackSpeed(0.2f);
 
         AdjustStats();
     }
 
     protected override void AdjustStats()
     {
-        movementSpeed /= 100f;
-        range /= 100f;
+        PlayerStats.movementSpeed /= 100f;
+        PlayerStats.range /= 100f;
     }
 
     public override void SendActionToServer(Actions action, int skillId, Vector3 mousePosition)

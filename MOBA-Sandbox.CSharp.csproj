@@ -247,6 +247,7 @@
     <Compile Include="Assets\Scripts\Entities\EntityTeam.cs" />
     <Compile Include="Assets\Scripts\Entities\Health.cs" />
     <Compile Include="Assets\Scripts\Entities\MouseHover.cs" />
+    <Compile Include="Assets\Scripts\Entities\Player\BasicAttack.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\Champions\Ezreal.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\Champions\Lucian.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\Champions\Player.cs" />
@@ -261,10 +262,12 @@
     <Compile Include="Assets\Scripts\Entities\Player\PlayerProjectileCollision.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerShootProjectile.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\PlayerSkill.cs" />
+    <Compile Include="Assets\Scripts\Entities\Player\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\Entities\Player\Team.cs" />
     <Compile Include="Assets\Scripts\MovementPoint\MovementCapsule.cs" />
     <Compile Include="Assets\Scripts\Network\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\Projectiles\LineArea.cs" />
+    <Compile Include="Assets\Scripts\Projectiles\ProjectileBasicAttack.cs" />
     <Compile Include="Assets\Scripts\Projectiles\ProjectileMovement.cs" />
     <Compile Include="Assets\Scripts\Spawners\RotateSpawner.cs" />
     <Compile Include="Assets\Scripts\StaticObjects.cs" />

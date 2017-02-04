@@ -45,7 +45,7 @@ public class LucianQ : PlayerSkill
         else
         {
             playerMovement.PlayerAttackMovement.SetMoveTowardsUnfriendlyTarget(target.transform, rangeToCast);
-            playerMovement.PlayerAttackMovement.IsInRange += IsInRange;
+            playerMovement.PlayerAttackMovement.IsInRangeForSkill += IsInRange;
         }
     }
 
