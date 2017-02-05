@@ -26,7 +26,7 @@ public class BasicAttack : MonoBehaviour
     private bool canBasicAttack;
     private bool queueAttack;
 
-    private GameObject selectedTarget;
+    private int selectedTargetId;
 
     private void Start()
     {
@@ -45,17 +45,24 @@ public class BasicAttack : MonoBehaviour
         realAttackSpeed = 1f / attackSpeed;
     }
 
-    private void UseBasicAttack(GameObject target)
+    private void UseBasicAttack(int targetId)
+    {
+        player.PhotonView.RPC("UseBasicAttackOnServer", PhotonTargets.AllViaServer, targetId);
+    }
+
+    [PunRPC]
+    private void UseBasicAttackOnServer(int targetId)
     {
         queueAttack = true;
         if (canBasicAttack)
         {
-            selectedTarget = target;
+            selectedTargetId = targetId;
             StopAllCoroutines();
             StartCoroutine(Attack());
         }
     }
 
+    //need to call this when the target dies
     public void CancelBasicAttack()
     {
         if (canBasicAttack)
@@ -72,7 +79,7 @@ public class BasicAttack : MonoBehaviour
         canBasicAttack = false;
 
         GameObject basicAttackProjectileToShoot = (GameObject)Instantiate(basicAttackProjectile, transform.position + (transform.forward * 0.6f), transform.rotation);
-        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, selectedTarget, 2000);
+        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, selectedTargetId, 2000);
 
         StartCoroutine(ResetAttack());
     }
@@ -85,7 +92,7 @@ public class BasicAttack : MonoBehaviour
 
         if (queueAttack)
         {
-            UseBasicAttack(selectedTarget);
+            UseBasicAttack(selectedTargetId);
         }
     }
 }

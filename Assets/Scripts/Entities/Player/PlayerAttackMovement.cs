@@ -5,7 +5,7 @@ public class PlayerAttackMovement : PlayerBase
 {
     private int lastNetworkTarget;
 
-    public delegate void IsInRangeForBasicAttackHandler(GameObject target);
+    public delegate void IsInRangeForBasicAttackHandler(int targetId);
     public event IsInRangeForBasicAttackHandler IsInRangeForBasicAttack;
 
     public delegate void IsInRangeForSkillHandler();
@@ -33,7 +33,6 @@ public class PlayerAttackMovement : PlayerBase
         }
         else if (lastNetworkTarget != -1 && PlayerMovement.CanUseMovement())
         {
-            PlayerNormalMovement.StopMovement();
             PhotonView.RPC("MoveTowardsUnfriendlyTargetFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkTarget);
         }
     }
@@ -120,7 +119,7 @@ public class PlayerAttackMovement : PlayerBase
             }
             else if(IsInRangeForBasicAttack != null)
             {
-                IsInRangeForBasicAttack(enemyTarget.gameObject);
+                IsInRangeForBasicAttack(enemyTarget.gameObject.GetComponent<Player>().PlayerId);
             }
         }
         

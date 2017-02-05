@@ -106,6 +106,11 @@ public abstract class Player : PlayerBase
         nextMousePosition = mousePosition;
     }
 
+    public void UseNextActionAfterBasicAttack()
+    {
+        UseNextAction();
+    }
+
     protected void UseNextAction()
     {
         if (!PlayerStats.health.IsDead() && nextAction != Actions.NONE)

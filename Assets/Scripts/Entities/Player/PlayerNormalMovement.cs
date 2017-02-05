@@ -33,7 +33,6 @@ public class PlayerNormalMovement : PlayerBase
         {
             if (PlayerMovement.CanUseMovement())
             {
-                PlayerAttackMovement.StopMovement();
                 PhotonView.RPC("MoveTowardsPointFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkMove);
             }
             else

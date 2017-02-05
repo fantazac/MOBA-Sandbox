@@ -10,12 +10,29 @@ public class ProjectileBasicAttack : MonoBehaviour
     private PhotonView photonView;
     private int targetId;
 
-    public void ShootBasicAttack(PhotonView photonView, GameObject target, float speed)
+    public void ShootBasicAttack(PhotonView photonView, int targetId, float speed)
     {
         this.speed = speed / 100f;
         this.photonView = photonView;
-        targetId = target.GetComponent<Player>().PlayerId;
-        StartCoroutine(Shoot(target));
+        this.targetId = targetId;
+        StartCoroutine(Shoot(FindEnemyPlayer(targetId)));
+    }
+
+    public GameObject FindEnemyPlayer(int enemyPlayerId)
+    {
+        GameObject enemyPlayer = null;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<Player>().PlayerId == enemyPlayerId)
+            {
+                enemyPlayer = player;
+                break;
+            }
+        }
+
+        return enemyPlayer;
     }
 
     private IEnumerator Shoot(GameObject target)

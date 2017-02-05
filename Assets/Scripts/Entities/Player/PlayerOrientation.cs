@@ -49,6 +49,7 @@ public class PlayerOrientation : PlayerBase
     {
         rotationAmount = Vector3.up;
         rotationAmountLastFrame = Vector3.zero;
+        
         while (rotationAmountLastFrame != rotationAmount)
         {
             if (CanRotate())
@@ -68,7 +69,13 @@ public class PlayerOrientation : PlayerBase
     {
         rotationAmount = Vector3.up;
         rotationAmountLastFrame = Vector3.zero;
-        while (target != null)
+        Health enemyHealth = target.GetComponent<Health>();
+        if(enemyHealth == null)
+        {
+            Debug.Log("Target has no health? " + target.name);
+        }
+
+        while (target != null && !enemyHealth.IsDead())
         {
             if (CanRotate())
             {
