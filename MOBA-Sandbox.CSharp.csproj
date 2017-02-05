@@ -238,12 +238,6 @@
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianQ.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianR.cs" />
     <Compile Include="Assets\Scripts\ChampionAbilities\Lucian\LucianW.cs" />
-    <Compile Include="Assets\Scripts\Daniel Scripts\Ability.cs" />
-    <Compile Include="Assets\Scripts\Daniel Scripts\CharacterMotor.cs" />
-    <Compile Include="Assets\Scripts\Daniel Scripts\CharacterScripts.cs" />
-    <Compile Include="Assets\Scripts\Daniel Scripts\Equipment.cs" />
-    <Compile Include="Assets\Scripts\Daniel Scripts\FPSInputController.cs" />
-    <Compile Include="Assets\Scripts\Daniel Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Entities\EntityTeam.cs" />
     <Compile Include="Assets\Scripts\Entities\Health.cs" />
     <Compile Include="Assets\Scripts\Entities\MouseHover.cs" />
