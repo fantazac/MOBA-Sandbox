@@ -22,11 +22,12 @@ public class BasicAttack : MonoBehaviour
     private float delayAfterAttack;
 
     private Player player;
+    private Health targetHealth;
 
     private bool canBasicAttack;
     private bool queueAttack;
 
-    private int selectedTargetId;
+    private int selectedTargetId = -1;
 
     private void Start()
     {
@@ -53,13 +54,45 @@ public class BasicAttack : MonoBehaviour
     [PunRPC]
     private void UseBasicAttackOnServer(int targetId)
     {
-        queueAttack = true;
-        if (canBasicAttack)
+        if(selectedTargetId != targetId)
         {
-            selectedTargetId = targetId;
-            StopAllCoroutines();
-            StartCoroutine(Attack());
+            targetHealth = FindEnemyPlayer(targetId).GetComponent<Health>();
         }
+        
+        if(targetHealth != null && !targetHealth.IsDead())
+        {
+            if (!player.PlayerAttackMovement.IsInRange(targetHealth.gameObject.transform))
+            {
+                player.PlayerAttackMovement.UseAttackMove(selectedTargetId);
+            }
+            else
+            {
+                queueAttack = true;
+                if (canBasicAttack)
+                {
+                    selectedTargetId = targetId;
+                    StopAllCoroutines();
+                    StartCoroutine(Attack());
+                }
+            }
+        }
+    }
+
+    public GameObject FindEnemyPlayer(int enemyPlayerId)
+    {
+        GameObject enemyPlayer = null;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<Player>().PlayerId == enemyPlayerId)
+            {
+                enemyPlayer = player;
+                break;
+            }
+        }
+
+        return enemyPlayer;
     }
 
     //need to call this when the target dies
@@ -79,7 +112,7 @@ public class BasicAttack : MonoBehaviour
         canBasicAttack = false;
 
         GameObject basicAttackProjectileToShoot = (GameObject)Instantiate(basicAttackProjectile, transform.position + (transform.forward * 0.6f), transform.rotation);
-        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, selectedTargetId, 2000);
+        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, 2000);
 
         StartCoroutine(ResetAttack());
     }
@@ -90,9 +123,16 @@ public class BasicAttack : MonoBehaviour
 
         canBasicAttack = true;
 
-        if (queueAttack)
+        if (queueAttack && !targetHealth.IsDead())
         {
-            UseBasicAttack(selectedTargetId);
+            if (!player.PlayerAttackMovement.IsInRange(targetHealth.gameObject.transform))
+            {
+                player.PlayerAttackMovement.UseAttackMove(selectedTargetId);
+            }
+            else
+            {
+                UseBasicAttack(selectedTargetId);
+            }  
         }
     }
 }
