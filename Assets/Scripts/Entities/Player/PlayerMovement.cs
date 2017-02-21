@@ -61,7 +61,7 @@ public class PlayerMovement : PlayerBase
     {
         if (!PlayerStats.health.IsDead())
         {
-            PhotonView.RPC("TeleportMidFromServer", PhotonTargets.AllBufferedViaServer);
+            PhotonView.RPC("TeleportMidFromServer", PhotonTargets.AllViaServer);
         }
     }
 
@@ -78,7 +78,7 @@ public class PlayerMovement : PlayerBase
 
     private void RespawnPlayerInBase()
     {
-        PhotonView.RPC("RespawnPlayerInBaseFromServer", PhotonTargets.AllBufferedViaServer, spawnPoint);
+        PhotonView.RPC("RespawnPlayerInBaseFromServer", PhotonTargets.AllViaServer, spawnPoint);
     }
 
     [PunRPC]

@@ -7,16 +7,21 @@ public class MouseHover : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if(playerMouseSelection == null)
+        if (StaticObjects.Player != null)
         {
-            playerMouseSelection = StaticObjects.Player.PlayerMouseSelection;
+            if (playerMouseSelection == null)
+            {
+                playerMouseSelection = StaticObjects.Player.PlayerMouseSelection;
+            }
+            playerMouseSelection.SetHoveredObject(gameObject);
         }
-        playerMouseSelection.SetHoveredObject(gameObject);
     }
 
     private void OnMouseExit()
     {
-        playerMouseSelection.UnhoverObject(gameObject);
+        if (StaticObjects.Player != null)
+        {
+            playerMouseSelection.UnhoverObject(gameObject);
+        }
     }
-
 }

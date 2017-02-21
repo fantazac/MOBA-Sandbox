@@ -14,7 +14,12 @@ public class Health : MonoBehaviour
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
-        SetToMaxHealthOnSpawn();
+
+        if (photonView.isMine)
+        {
+            SetToMaxHealthOnSpawn();
+        }
+        
         if(GetComponent<Player>() != null)
         {
             GetComponent<PlayerDeath>().RespawnPlayer += SetToMaxHealthOnSpawn;

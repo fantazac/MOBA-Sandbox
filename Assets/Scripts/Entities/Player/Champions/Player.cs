@@ -22,6 +22,7 @@ public abstract class Player : PlayerBase
     protected Vector3 nextMousePosition;
 
     protected bool infoSent = false;
+    protected bool isNewPlayer = true;
 
     protected override void Start()
     {
@@ -76,6 +77,33 @@ public abstract class Player : PlayerBase
             transform.position = transform.position - Vector3.up * 0.06f;
 
             yield return null;
+        }
+    }
+
+    public void SendInfo()
+    {
+        PhotonView.RPC("SendInfoToNewPlayer", PhotonTargets.AllViaServer);
+    }
+
+    [PunRPC]
+    protected void SendInfoToNewPlayer()
+    {
+        if (PhotonView.isMine)
+        {
+            PhotonView.RPC("ReceiveInfoForNewPlayer", PhotonTargets.AllViaServer, GetComponent<Health>().currentHealth, transform.position);
+        }
+    }
+
+    [PunRPC]
+    protected void ReceiveInfoForNewPlayer(float currentHealth, Vector3 position)
+    {
+        //verify if this is useful with multiple clients
+        if (isNewPlayer)
+        {
+            isNewPlayer = false;
+            transform.position = position;
+            PlayerMovement.NotifyPlayerMoved();
+            GetComponent<Health>().currentHealth = currentHealth;
         }
     }
 
