@@ -34,13 +34,19 @@ public class PlayerAttackMovement : PlayerBase
         if (Player.nextAction == Actions.SKILL || Player.nextAction == Actions.MOVE)
         {
             Player.nextAction = Actions.ATTACK;
-            StopAllCoroutines();
-            PlayerOrientation.StopAllCoroutines();
+            PhotonView.RPC("StopAllCoroutinesOnServerForAttackMovement", PhotonTargets.AllViaServer);
         }
         else if (lastNetworkTarget != -1 && PlayerMovement.CanUseMovement())
         {
             PhotonView.RPC("MoveTowardsUnfriendlyTargetFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkTarget);
         }
+    }
+
+    [PunRPC]
+    protected void StopAllCoroutinesOnServerForAttackMovement()
+    {
+        StopAllCoroutines();
+        PlayerOrientation.StopAllCoroutines();
     }
 
     public bool WasMovingBeforeSkill()
