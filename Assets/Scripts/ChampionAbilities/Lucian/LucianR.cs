@@ -31,7 +31,11 @@ public class LucianR : Skillshot
 
     protected override void SkillDone()
     {
-        StaticObjects.Player.SetBackMovementAfterSkillWithoutCastTime();
+        if (playerMovement.PhotonView.isMine)
+        {
+            playerMovement.Player.SetBackMovementAfterSkillWithoutCastTime();
+        }
+
         base.SkillDone();
     }
 
