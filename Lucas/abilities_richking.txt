@@ -1,0 +1,63 @@
+Activate: Summon 1/2/3 knights (undead?) that move 
+with the king (or like tibbers?). Abilities work 
+with the knights.
+
+----------
+
+Passive: Each basic attack steals energy and stores 
+it in the orb. Once it reaches 100% energy, the next 
+basic attack has increased range and will shoot the 
+orb at the selected target. It deals damage to all 
+units it passes through.
+
+----------
+
+
+
+----------
+
+Activate: Orb becomes a perfect shield for a maximum 
+of 3 seconds. It stores 40% of the damage the first 
+blocked attack/ability was supposed to do + 10% of 
+each subsequent ones, up to 80%. 
+
+For 3 seconds after the shield wears off/is 
+deactivated, he gets his passive. The damage is 
+increased by the stored energy from the shield 
+and will use this energy to deal extra damage. Each 
+subsequent target takes 10% damage less from the 
+bonus until it reaches its normal value (cannot go 
+under the base passive damage).
+
+He cannot use any other ability while the shield 
+is active.
+
+----------
+
+fortification
+ralliement
+trap setup
+skill planifié (futuresight)
+
+épée dans le sol, track down tous les champions 
+dans l'area pour les root (track de lumière)
+frappe l'épée au sol avec l'orbe
+
+tous les skills apply on effet "d'illumnation" (temp) 
+et le E slow tout qui est in range
+
+folie comme ressource
+
+if an ally dies near him, his fury is maxed out
+
+q: slash basic, when furious dash to target and apply 
+same/empowered effect
+
+
+
+
+
+
+
+
+
