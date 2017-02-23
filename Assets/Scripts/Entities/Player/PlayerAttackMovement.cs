@@ -23,18 +23,30 @@ public class PlayerAttackMovement : PlayerBase
         ActivateMovementTowardsUnfriendlyTarget();
     }
 
+    public void UseAttackMove(int targetId)
+    {
+        lastNetworkTarget = targetId;
+        ActivateMovementTowardsUnfriendlyTarget();
+    }
+
     public void ActivateMovementTowardsUnfriendlyTarget()
     {
         if (Player.nextAction == Actions.SKILL || Player.nextAction == Actions.MOVE)
         {
             Player.nextAction = Actions.ATTACK;
-            StopAllCoroutines();
-            PlayerOrientation.StopAllCoroutines();
+            PhotonView.RPC("StopAllCoroutinesOnServerForAttackMovement", PhotonTargets.AllViaServer);
         }
         else if (lastNetworkTarget != -1 && PlayerMovement.CanUseMovement())
         {
             PhotonView.RPC("MoveTowardsUnfriendlyTargetFromServer", PhotonTargets.AllBufferedViaServer, lastNetworkTarget);
         }
+    }
+
+    [PunRPC]
+    protected void StopAllCoroutinesOnServerForAttackMovement()
+    {
+        StopAllCoroutines();
+        PlayerOrientation.StopAllCoroutines();
     }
 
     public bool WasMovingBeforeSkill()
@@ -48,6 +60,11 @@ public class PlayerAttackMovement : PlayerBase
         IsInRangeForSkill = null;
         lastNetworkTarget = -1;
         BasicAttack.CancelBasicAttack();
+    }
+
+    public bool IsInRange(Transform target)
+    {
+        return Vector3.Distance(transform.position, target.position) <= PlayerStats.range;
     }
 
     [PunRPC]
@@ -98,7 +115,9 @@ public class PlayerAttackMovement : PlayerBase
     
     private IEnumerator MoveTowardsUnfriendlyTarget(Transform enemyTarget, float range)
     {
-        while (enemyTarget != null && Vector3.Distance(transform.position, enemyTarget.position) > range)
+        Health enemyTargetHealth = enemyTarget.gameObject.GetComponent<Health>();
+        
+        while (enemyTarget != null && enemyTargetHealth != null && !enemyTargetHealth.IsDead() && !IsInRange(enemyTarget))
         {
             if (PlayerMovement.CanUseMovement())
             {
@@ -110,8 +129,8 @@ public class PlayerAttackMovement : PlayerBase
 
             yield return null;
         }
-
-        if(enemyTarget != null)
+        
+        if (enemyTarget != null && enemyTargetHealth != null && !enemyTargetHealth.IsDead())
         {
             if(IsInRangeForSkill != null)
             {

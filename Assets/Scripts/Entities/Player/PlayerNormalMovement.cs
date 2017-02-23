@@ -26,8 +26,7 @@ public class PlayerNormalMovement : PlayerBase
         if (Player.nextAction == Actions.SKILL || Player.nextAction == Actions.ATTACK)
         {
             Player.nextAction = Actions.MOVE;
-            StopAllCoroutines();
-            PlayerOrientation.StopAllCoroutines();
+            PhotonView.RPC("StopAllCoroutinesOnServerForNormalMovement", PhotonTargets.AllViaServer); 
         }
         else if (lastNetworkMove != Vector3.zero)
         {
@@ -40,6 +39,13 @@ public class PlayerNormalMovement : PlayerBase
                 Player.nextAction = Actions.MOVE;
             }
         }
+    }
+
+    [PunRPC]
+    protected void StopAllCoroutinesOnServerForNormalMovement()
+    {
+        StopAllCoroutines();
+        PlayerOrientation.StopAllCoroutines();
     }
 
     public void StopMovement()

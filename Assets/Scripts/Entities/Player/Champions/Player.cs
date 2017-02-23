@@ -22,6 +22,7 @@ public abstract class Player : PlayerBase
     protected Vector3 nextMousePosition;
 
     protected bool infoSent = false;
+    protected bool isNewPlayer = true;
 
     protected override void Start()
     {
@@ -31,11 +32,14 @@ public abstract class Player : PlayerBase
 
         PlayerInput.OnPressedD += DoDamageToPlayer;
         PlayerInput.OnPressedF += DoHealToPlayer;
-        foreach (PlayerSkill ps in skills)
+        if (PhotonView.isMine)
         {
-            if (ps != null)
+            foreach (PlayerSkill ps in skills)
             {
-                ps.SkillFinished += UseNextAction;
+                if (ps != null)
+                {
+                    ps.SkillFinished += UseNextAction;
+                }
             }
         }
 
@@ -79,6 +83,33 @@ public abstract class Player : PlayerBase
         }
     }
 
+    public void SendInfo()
+    {
+        PhotonView.RPC("SendInfoToNewPlayer", PhotonTargets.AllViaServer);
+    }
+
+    [PunRPC]
+    protected void SendInfoToNewPlayer()
+    {
+        if (PhotonView.isMine)
+        {
+            PhotonView.RPC("ReceiveInfoForNewPlayer", PhotonTargets.AllViaServer, GetComponent<Health>().currentHealth, transform.position);
+        }
+    }
+
+    [PunRPC]
+    protected void ReceiveInfoForNewPlayer(float currentHealth, Vector3 position)
+    {
+        //verify if this is useful with multiple clients
+        if (isNewPlayer)
+        {
+            isNewPlayer = false;
+            transform.position = position;
+            PlayerMovement.NotifyPlayerMoved();
+            GetComponent<Health>().currentHealth = currentHealth;
+        }
+    }
+
     public void SetPlayerId(int playerId)
     {
         PhotonView.RPC("SetPlayerOnNetwork", PhotonTargets.AllBufferedViaServer, playerId);
@@ -86,6 +117,11 @@ public abstract class Player : PlayerBase
 
     public virtual void SetBackMovementAfterSkillWithoutCastTime()
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check SetBackMovementAfterSkillWithoutCastTime for this object: " + gameObject.name);
+        }
+
         if (nextAction == Actions.NONE)
         {
             if (PlayerNormalMovement.WasMovingBeforeSkill())
@@ -101,18 +137,33 @@ public abstract class Player : PlayerBase
 
     protected void SetNextAction(Actions action, int skillId, Vector3 mousePosition)
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check SetNextAction for this object: " + gameObject.name);
+        }
+
         nextAction = action;
         nextSkillId = skillId;
         nextMousePosition = mousePosition;
     }
 
+    //Unused?
     public void UseNextActionAfterBasicAttack()
     {
-        UseNextAction();
+        if (PhotonView.isMine)
+        {
+            UseNextAction();
+        }
     }
 
+    //Should only be called if PhotonView.isMine, aka the local player's character
     protected void UseNextAction()
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check UseNextAction for this object: " + gameObject.name);
+        }
+
         if (!PlayerStats.health.IsDead() && nextAction != Actions.NONE)
         {
             if (nextAction == Actions.SKILL)
@@ -148,12 +199,17 @@ public abstract class Player : PlayerBase
 
     public virtual void SendActionToServer(Actions action, int skillId, Vector3 mousePosition)
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check SendActionToServer for this object: " + gameObject.name);
+        }
+
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
             SetNextActionAfterCastingSkillWithCastTime(skillId);
             if (skills[skillId].isATargetSkill)
             {
-                PlayerMovement.CancelMovement();
+                PhotonView.RPC("CancelMovementOnServer", PhotonTargets.AllViaServer);
                 SendSkillInfoToServer(skillId, Vector3.zero, PlayerMouseSelection.HoveredObject.GetComponent<Player>().PlayerId);
             }
             else
@@ -163,15 +219,26 @@ public abstract class Player : PlayerBase
         }
         else
         {
-            PlayerMovement.CancelMovement();
+            PhotonView.RPC("CancelMovementOnServer", PhotonTargets.AllViaServer);
             SetNextAction(action, skillId, mousePosition);
         }
     }
 
+    [PunRPC]
+    protected void CancelMovementOnServer()
+    {
+        PlayerMovement.CancelMovement();
+    }
+
     protected void SendSkillInfoToServer(int skillId, Vector3 mousePosition, int playerId)
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check SendSkillInfoToServer for this object: " + gameObject.name);
+        }
+
         //change to AllBufferedViaServer when prediction is good (ex. ezreal ult server position has to be calculated)
-        if(playerId == -1)
+        if (playerId == -1)
         {
             PhotonView.RPC("UseSkillFromServer", PhotonTargets.AllViaServer, skillId, mousePosition);
         }

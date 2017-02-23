@@ -13,7 +13,11 @@ public class Dash : Movement
 
     protected override void SkillDone()
     {
-        playerMovement.Player.SetBackMovementAfterSkillWithoutCastTime();
+        if (playerMovement.PhotonView.isMine)
+        {
+            playerMovement.Player.SetBackMovementAfterSkillWithoutCastTime();
+        }
+        
         base.SkillDone();
     }
 

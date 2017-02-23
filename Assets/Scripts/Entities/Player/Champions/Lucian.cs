@@ -20,7 +20,7 @@ public class Lucian : Player
     {
         PlayerStats.movementSpeed = 325;
         PlayerStats.range = 500;
-        BasicAttack.SetAttackSpeed(0.2f);
+        BasicAttack.SetAttackSpeed(0.1f);
 
         AdjustStats();
     }
@@ -33,6 +33,11 @@ public class Lucian : Player
 
     public override void SendActionToServer(Actions action, int skillId, Vector3 mousePosition)
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check SendActionToServer(Lucian) for this object: " + gameObject.name);
+        }
+
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
             if (skillId == 1 && askedServerForCulling || skillId == 2 && askedServerForQ)
@@ -51,7 +56,7 @@ public class Lucian : Player
             {
                 askedServerForQ = true;
 
-                PlayerMovement.CancelMovement();
+                PhotonView.RPC("CancelMovementOnServer", PhotonTargets.AllViaServer);
                 SendSkillInfoToServer(skillId, Vector3.zero, 
                     PlayerMouseSelection.selectedTargetForUseInNextFrame.GetComponent<Player>().PlayerId);
             }
@@ -62,7 +67,7 @@ public class Lucian : Player
         }
         else
         {
-            PlayerMovement.CancelMovement();
+            PhotonView.RPC("CancelMovementOnServer", PhotonTargets.AllViaServer);
             SetNextAction(action, skillId, mousePosition);
         }
     }
@@ -75,6 +80,11 @@ public class Lucian : Player
 
     public override void SetBackMovementAfterSkillWithoutCastTime()
     {
+        if (!PhotonView.isMine)
+        {
+            Debug.Log("ERROR - This shouldn't be happening.. Check SetBackMovementAfterSkillWithoutCastTime(Lucian) for this object: " + gameObject.name);
+        }
+
         if (nextAction == Actions.NONE)
         {
             if (skills[2].skillIsActive)

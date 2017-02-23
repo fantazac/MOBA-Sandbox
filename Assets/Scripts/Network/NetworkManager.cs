@@ -97,7 +97,18 @@ public class NetworkManager : MonoBehaviour
         else
         {
             inChampSelect = true;
+            StartCoroutine(LoadPlayers());
         }      
+    }
+
+    private IEnumerator LoadPlayers()
+    {
+        yield return null;
+        
+        foreach (GameObject playerToGetInfo in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            playerToGetInfo.GetComponent<Player>().SendInfo();
+        }
     }
 
     private void SpawnMyPlayer(string champName)
