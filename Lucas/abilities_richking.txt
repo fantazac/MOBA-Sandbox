@@ -1,29 +1,49 @@
-Activate: Summon 1/2/3 knights (undead?) that move 
-with the king (or like tibbers?). Abilities work 
-with the knights.
-
-----------
 
 Passive: Each basic attack steals energy and stores 
 it in the orb. Once it reaches 100% energy, the next 
-basic attack has increased range and will shoot the 
-orb at the selected target. It deals damage to all 
+basic attack has increased range and will shoot a beam
+of light at the selected target. It deals damage to all 
 units it passes through.
 
+Furious: He has Fury as resource. Each basic attack 
+or skill on an enemy target grants 2 fury. Being hit 
+by a basic attack or a skill also grants 2 fury. 
+Hitting a feared target grants an extra fury for each 
+stack of fear.
+
+While Furious, fury decays at a rate of 5 fury per 
+second. The decay rate is doubled if out of combat.
+Fury gains are unchanged.
+
 ----------
 
+Targetted active: He slashes an enemy, dealing 
+damage and applying a stack of fear that lasts 
+5 seconds. A target can have a maximum of 2 stacks.
 
+Basic attacks refresh the fear duration.
+
+Using this ability on a marked target will deal 4% 
+of their missing health for each stack of fear.
+
+Fury mode: Dashes to targetted enemy. It receives 
+2 stacks of fear instantly. Additionnally, 
+he does extra damage per stack equal to 4% of his 
+missing health.
+
+While furious, basic attacks against feared targets
+reduce this ability's cooldown by 1 second per stack.
 
 ----------
 
-Activate: Orb becomes a perfect shield for a maximum 
+Activate: Orb becomes a shield for a maximum 
 of 3 seconds. It stores 40% of the damage the first 
 blocked attack/ability was supposed to do + 10% of 
-each subsequent ones, up to 80%. 
+each subsequent ones, up to 400 damage. 
 
 For 3 seconds after the shield wears off/is 
-deactivated, he gets his passive. The damage is 
-increased by the stored energy from the shield 
+deactivated, he gets an empowered passive. The damage 
+is increased by the stored energy from the shield 
 and will use this energy to deal extra damage. Each 
 subsequent target takes 10% damage less from the 
 bonus until it reaches its normal value (cannot go 
@@ -33,6 +53,25 @@ He cannot use any other ability while the shield
 is active.
 
 ----------
+
+
+
+----------
+
+Active: He smashes his sword in the ground with the 
+orb and targets all enemy champions in range with 
+a light line that follows them. When the light reaches
+them, they are rooted for 1.5 seconds. 
+
+Targets rooted by this ability receive 1 stack of fear.
+
+Fury mode: He gets 15% movement speed when moving 
+towards a target that is or will be rooted by this
+ability.
+
+---------------------
+
+IDEAS
 
 fortification
 ralliement
