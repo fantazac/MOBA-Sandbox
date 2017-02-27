@@ -28,7 +28,7 @@ public class Buff : PlayerSkill
         return isActive;
     }
 
-    protected void ActivateBuff()
+    public virtual void ActivateBuff()
     {
         isActive = true;
         StopAllCoroutines();
@@ -42,7 +42,7 @@ public class Buff : PlayerSkill
         ConsumeBuff();
     }
 
-    public void ConsumeBuff()
+    public virtual void ConsumeBuff()
     {
         StopAllCoroutines();
         isActive = false;

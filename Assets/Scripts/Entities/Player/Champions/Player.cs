@@ -303,4 +303,7 @@ public abstract class Player : PlayerBase
         }
         return true;
     }
+
+    public virtual void ProjectileHitEnemyTarget() { }
+    public virtual void ProjectileHitAllyTarget() { }
 }

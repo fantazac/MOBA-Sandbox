@@ -22,7 +22,7 @@ public class LucianW : Skillshot
         yield return delayCastTime;
 
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
-        projectileToShoot.GetComponentInChildren<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.EntityTeam.Team, speed, range, lineAreaAfterHit, lineAreaAfterHitDuration, true);
+        projectileToShoot.GetComponentInChildren<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player, speed, range, false, lineAreaAfterHit, lineAreaAfterHitDuration, true);
 
         SkillDone();
     }

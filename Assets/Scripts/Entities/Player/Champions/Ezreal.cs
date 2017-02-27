@@ -3,11 +3,15 @@ using System.Collections;
 
 public class Ezreal : Player
 {
+    private EzrealP ezrealPassive;
+
     protected override void Start()
     {
         InitialiseStats();
 
         base.Start();
+
+        ezrealPassive = (EzrealP)passive;
     }
 
     protected override void InitialiseStats()
@@ -23,5 +27,15 @@ public class Ezreal : Player
     {
         PlayerStats.movementSpeed /= 100f;
         PlayerStats.range /= 100f;
+    }
+
+    public override void ProjectileHitEnemyTarget()
+    {
+        ezrealPassive.ActivateBuff();
+    }
+
+    public override void ProjectileHitAllyTarget()
+    {
+        ezrealPassive.ActivateBuff();
     }
 }

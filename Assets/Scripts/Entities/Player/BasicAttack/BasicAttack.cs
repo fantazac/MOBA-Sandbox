@@ -43,13 +43,14 @@ public abstract class BasicAttack : MonoBehaviour
     public void SetAttackSpeedOnSpawn(float baseAttackSpeedToSet, float delayPercentBeforeAttack)
     {
         this.delayPercentBeforeAttack = delayPercentBeforeAttack;
-        SetAttackSpeed(baseAttackSpeedToSet);
+        baseAttackSpeed = baseAttackSpeedToSet;
+        attackSpeed = baseAttackSpeed;
+        SetAttackSpeed(0);
     }
 
-    public void SetAttackSpeed(float baseAttackSpeed)
+    public void SetAttackSpeed(float attackSpeedChange)
     {
-        this.baseAttackSpeed = baseAttackSpeed;
-        attackSpeed = baseAttackSpeed;
+        attackSpeed += attackSpeedChange;
         realAttackSpeed = 1f / attackSpeed;
         timeBeforeAttack = realAttackSpeed * delayPercentBeforeAttack;
         timeAfterAttack = realAttackSpeed * (1 - delayPercentBeforeAttack);

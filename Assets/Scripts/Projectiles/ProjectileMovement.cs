@@ -11,6 +11,8 @@ public class ProjectileMovement : MonoBehaviour
     private PhotonView photonView;
     [HideInInspector]
     public Team sourceTeam;
+    private Player sourcePlayer;
+    private bool canHitAllies;
     private bool lineAreaAfterHit = false;
     private GameObject lineAreaToActivateAfterHit;
 
@@ -21,28 +23,25 @@ public class ProjectileMovement : MonoBehaviour
     private float lineAreaAfterHitDuration;
     private bool lineAreaHasParent;
 
-    public void ShootProjectile(PhotonView photonView, Team sourceTeam, float speed, float range)
+    public void ShootProjectile(PhotonView photonView, Player sourcePlayer, float speed, float range, bool canHitAllies)
     {
         this.speed = speed;
         this.range = range;
         this.photonView = photonView;
-        this.sourceTeam = sourceTeam;
+        this.sourcePlayer = sourcePlayer;
+        this.canHitAllies = canHitAllies;
+        sourceTeam = sourcePlayer.EntityTeam.Team;
         initialPosition = transform.position;
         StartCoroutine(Shoot());
     }
 
-    public void ShootProjectile(PhotonView photonView, Team sourceTeam, float speed, float range, GameObject lineAreaToActivateAfterHit, float lineAreaAfterHitDuration, bool lineAreaHasParent)
+    public void ShootProjectile(PhotonView photonView, Player sourcePlayer, float speed, float range, bool canHitAllies, GameObject lineAreaToActivateAfterHit, float lineAreaAfterHitDuration, bool lineAreaHasParent)
     {
-        this.speed = speed;
-        this.range = range;
-        this.photonView = photonView;
-        this.sourceTeam = sourceTeam;
         lineAreaAfterHit = true;
         this.lineAreaToActivateAfterHit = lineAreaToActivateAfterHit;
         this.lineAreaAfterHitDuration = lineAreaAfterHitDuration;
         this.lineAreaHasParent = lineAreaHasParent;
-        initialPosition = transform.position;
-        StartCoroutine(Shoot());
+        ShootProjectile(photonView, sourcePlayer, speed, range, canHitAllies);
     }
 
     private IEnumerator Shoot()
@@ -75,33 +74,46 @@ public class ProjectileMovement : MonoBehaviour
     private void OnTriggerEnter(Collider collider)
     {
         Health targetHealth = collider.gameObject.GetComponent<Health>();
-        
-        if (targetHealth != null && targetHealth.GetComponent<EntityTeam>().IsEnemy(sourceTeam) && CanHitTarget(collider.gameObject))
+
+        if (targetHealth != null && CanHitTarget(collider.gameObject))
         {
+            EntityTeam targetTeam = targetHealth.GetComponent<EntityTeam>();
             targetsAlreadyHit.Add(collider.gameObject);
-            if (photonView.isMine)
+            if(targetTeam.IsEnemy(sourceTeam) || (!targetTeam.IsEnemy(sourceTeam) && canHitAllies))
             {
-                //if the projectile gives a stat/heals (ex. EzrealW gives AS), changed this
-                targetHealth.DamageTargetOnServer(damage);
-            }
-            
-            if (deleteOnHit)
-            {
-                Destroy(gameObject);
-            }
-            else if(lineAreaAfterHit)
-            {
-                ActivateAreaAfterHit();
-                Destroy(gameObject);
+                if (photonView.isMine)
+                {
+                    //if the projectile gives a stat/heals (ex. EzrealW gives AS), changed this
+                    if (targetTeam.IsEnemy(sourceTeam))
+                    {
+                        sourcePlayer.ProjectileHitEnemyTarget();
+                        targetHealth.DamageTargetOnServer(damage);
+                    }
+                    else if (canHitAllies)
+                    {
+                        sourcePlayer.ProjectileHitAllyTarget();
+                        //buff, heal, etc
+                    }
+                }
+
+                if (deleteOnHit)
+                {
+                    Destroy(gameObject);
+                }
+                else if (lineAreaAfterHit)
+                {
+                    ActivateAreaAfterHit();
+                    Destroy(gameObject);
+                }
             }
         }
     }
 
     private bool CanHitTarget(GameObject target)
     {
-        foreach(GameObject targetAlreadyHit in targetsAlreadyHit)
+        foreach (GameObject targetAlreadyHit in targetsAlreadyHit)
         {
-            if(targetAlreadyHit == target)
+            if (targetAlreadyHit == target)
             {
                 return false;
             }

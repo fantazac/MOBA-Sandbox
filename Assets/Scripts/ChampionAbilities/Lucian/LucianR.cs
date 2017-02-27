@@ -59,7 +59,7 @@ public class LucianR : Skillshot
         GameObject projectileToShoot = (GameObject)Instantiate(projectile, 
             transform.position + (transform.forward * 0.6f) + (transform.right * (bulletsShot % 2 == 0 ? offset : -offset)), 
             transform.rotation);
-        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.EntityTeam.Team, speed, range);
+        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player, speed, range, false);
 
         bulletsShot++;
     }

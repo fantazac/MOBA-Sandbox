@@ -10,4 +10,14 @@ public class EzrealW : Skillshot
         delayCastTime = new WaitForSeconds(castTime);
         base.Start();
     }
+
+    protected override IEnumerator SkillEffectWithCastTime()
+    {
+        yield return delayCastTime;
+
+        GameObject projectileToShoot = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
+        projectileToShoot.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player, speed, range, true);
+
+        SkillDone();
+    }
 }
