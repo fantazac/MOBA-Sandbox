@@ -1,35 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BasicAttack : MonoBehaviour
+public abstract class BasicAttack : MonoBehaviour
 {
-    private const float TWO_FRAMES = 0.066666666f;
+    protected const float TWO_FRAMES = 0.066666666f;
 
     [SerializeField]
-    private GameObject basicAttackProjectile;
+    protected GameObject basicAttackProjectile;
 
-    private float baseAttackSpeed;
+    protected float baseAttackSpeed;
 
     [HideInInspector]
     public float attackSpeed; //# attacks per second
 
-    private float realAttackSpeed; //duration of a full attack cycle
+    protected float realAttackSpeed; //duration of a full attack cycle
 
-    private float delayPercentBeforeAttack;
+    protected float delayPercentBeforeAttack;
 
-    private float timeBeforeAttack;
-    private float timeAfterAttack;
-    private float timeAfterAttackForMovement;
+    protected float timeBeforeAttack;
+    protected float timeAfterAttack;
+    protected float timeAfterAttackForMovement;
 
-    private Player player;
-    private Health targetHealth;
+    protected Player player;
+    protected Health targetHealth;
 
-    private bool canBasicAttack;
-    private bool queueAttack;
+    protected bool canBasicAttack;
+    protected bool queueAttack;
 
-    private int selectedTargetId = -1;
+    protected int selectedTargetId = -1;
 
-    private void Start()
+    public delegate void BasicAttackDoneHandler();
+    public event BasicAttackDoneHandler BasicAttackDone;
+
+    protected virtual void Start()
     {
         player = GetComponent<Player>();
         player.PlayerAttackMovement.IsInRangeForBasicAttack += UseBasicAttack;
@@ -53,13 +56,13 @@ public class BasicAttack : MonoBehaviour
         timeAfterAttackForMovement = timeBeforeAttack + TWO_FRAMES;
     }
 
-    private void UseBasicAttack(int targetId)
+    protected void UseBasicAttack(int targetId)
     {
         player.PhotonView.RPC("UseBasicAttackOnServer", PhotonTargets.AllViaServer, targetId);
     }
 
     [PunRPC]
-    private void UseBasicAttackOnServer(int targetId)
+    protected void UseBasicAttackOnServer(int targetId)
     {
         if (selectedTargetId != targetId)
         {
@@ -109,7 +112,7 @@ public class BasicAttack : MonoBehaviour
         queueAttack = false;
     }
 
-    private IEnumerator CheckMovementEachFrame()
+    protected IEnumerator CheckMovementEachFrame()
     {
         while (queueAttack)
         {
@@ -124,20 +127,30 @@ public class BasicAttack : MonoBehaviour
         }
     }
 
-    private IEnumerator Attack()
+    protected IEnumerator Attack()
     {
         yield return new WaitForSeconds(timeBeforeAttack);
 
         canBasicAttack = false;
 
-        GameObject basicAttackProjectileToShoot = (GameObject)Instantiate(basicAttackProjectile, transform.position + (transform.forward * 0.6f), transform.rotation);
-        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, 2000);
+        CreateProjectile();
+
+        if (BasicAttackDone != null)
+        {
+            BasicAttackDone();
+        }
 
         StartCoroutine(ResetAttack());
         StartCoroutine(AllowMovementIfFollowingTarget());
     }
 
-    private IEnumerator AllowMovementIfFollowingTarget()
+    protected void CreateProjectile()
+    {
+        GameObject basicAttackProjectileToShoot = (GameObject)Instantiate(basicAttackProjectile, transform.position + (transform.forward * 0.6f), transform.rotation);
+        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, 2000);
+    }
+
+    protected virtual IEnumerator AllowMovementIfFollowingTarget()
     {
         yield return new WaitForSeconds(timeAfterAttackForMovement);
 
@@ -145,7 +158,7 @@ public class BasicAttack : MonoBehaviour
 
     }
 
-    private IEnumerator ResetAttack()
+    protected IEnumerator ResetAttack()
     {
         yield return new WaitForSeconds(timeAfterAttack);
 

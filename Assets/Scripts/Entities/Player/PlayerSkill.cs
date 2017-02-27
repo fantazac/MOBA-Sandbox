@@ -21,8 +21,8 @@ public abstract class PlayerSkill : MonoBehaviour
     public bool canRotateWhileCasting = false;
     public bool cooldownStartsOnCast = true;
     public bool isATargetSkill = false;
-    //doesnt work
-    public List<PlayerSkill> uncastableSpellsWhileActive;
+    public bool isPassive = false;
+    public List<PlayerSkill> uncastableSpellsWhileActive; 
     [HideInInspector]
     public bool skillIsActive = false;
     protected string skillName = "TEMPORARY";

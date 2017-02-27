@@ -21,6 +21,8 @@ public abstract class Player : PlayerBase
     protected int nextSkillId;
     protected Vector3 nextMousePosition;
 
+    protected PlayerSkill passive;
+
     protected bool infoSent = false;
     protected bool isNewPlayer = true;
 
@@ -38,12 +40,21 @@ public abstract class Player : PlayerBase
             {
                 if (ps != null)
                 {
+                    if (ps.isPassive)
+                    {
+                        passive = ps;
+                    }
                     ps.SkillFinished += UseNextAction;
                 }
             }
         }
 
         base.Start();
+    }
+
+    public PlayerSkill GetPassiveSkill()
+    {
+        return passive;
     }
 
     protected virtual void InitialiseStats() { }

@@ -39,19 +39,19 @@ public class PlayerInput : PlayerBase
     {
         if (Input.GetKeyDown(KeyCode.Q) && Player.skills[0] != null)
         {
-            OnPressedSkill(0, Input.mousePosition);
+            OnPressedSkill(1, Input.mousePosition);
         }
         if (Input.GetKeyDown(KeyCode.W) && Player.skills[1] != null)
         {
-            OnPressedSkill(1, Input.mousePosition);
+            OnPressedSkill(2, Input.mousePosition);
         }
         if (Input.GetKeyDown(KeyCode.E) && Player.skills[2] != null)
         {
-            OnPressedSkill(2, Input.mousePosition);
+            OnPressedSkill(3, Input.mousePosition);
         }
         if (Input.GetKeyDown(KeyCode.R) && Player.skills[3] != null)
         {
-            OnPressedSkill(3, Input.mousePosition);
+            OnPressedSkill(4, Input.mousePosition);
         }
 
         if (Input.GetKeyDown(KeyCode.D))

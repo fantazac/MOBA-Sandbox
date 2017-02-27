@@ -11,7 +11,8 @@ public enum AbilityType
     TARGET_ENEMY,
     TARGET_ALLY,
     TARGET_SKILLSHOT,
-    SUMMON
+    SUMMON,
+    BUFF
 }
 
 public enum Range
