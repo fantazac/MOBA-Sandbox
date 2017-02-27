@@ -20,7 +20,7 @@ public class Lucian : Player
     {
         PlayerStats.movementSpeed = 325;
         PlayerStats.range = 500;
-        BasicAttack.SetAttackSpeed(0.1f);
+        BasicAttack.SetAttackSpeedOnSpawn(0.638f, 0.14f);
 
         AdjustStats();
     }

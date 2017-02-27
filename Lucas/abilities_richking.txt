@@ -9,11 +9,20 @@ Furious: He has Fury as resource. Each basic attack
 or skill on an enemy target grants 2 fury. Being hit 
 by a basic attack or a skill also grants 2 fury. 
 Hitting a feared target grants an extra fury for each 
-stack of fear.
+stack of fear. When out of combat, he loses 5 Fury 
+per second.
 
-While Furious, fury decays at a rate of 5 fury per 
-second. The decay rate is doubled if out of combat.
-Fury gains are unchanged.
+Once he reaches 100 Fury, he becomes
+Furious.
+
+2 seconds after becoming Furious, fury starts to 
+decay at a rate of 5 fury per second. The decay rate 
+is doubled if out of combat. After 15 seconds in 
+Furious mode, he cannot gain anymore Fury while active.
+
+After exiting Furious mode, he cannot gain fury for 
+the same amount of time the last Furious mode lasted, 
+up to 15 seconds.
 
 ----------
 
@@ -26,10 +35,11 @@ Basic attacks refresh the fear duration.
 Using this ability on a marked target will deal 4% 
 of their missing health for each stack of fear.
 
-Fury mode: Dashes to targetted enemy. It receives 
-2 stacks of fear instantly. Additionnally, 
-he does extra damage per stack equal to 4% of his 
-missing health.
+Furious mode: Dashes to targetted enemy. It receives 
+2 stacks of fear instantly. 
+
+Additionnally, he does extra damage per stack equal 
+to 4% of his missing health.
 
 While furious, basic attacks against feared targets
 reduce this ability's cooldown by 1 second per stack.

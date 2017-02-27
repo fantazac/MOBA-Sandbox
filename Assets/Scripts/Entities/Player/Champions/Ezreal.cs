@@ -14,7 +14,7 @@ public class Ezreal : Player
     {
         PlayerStats.movementSpeed = 325;
         PlayerStats.range = 550;
-        BasicAttack.SetAttackSpeed(0.1f);
+        BasicAttack.SetAttackSpeedOnSpawn(0.625f, 0.14f);
 
         AdjustStats();
     }

@@ -3,23 +3,23 @@ using System.Collections;
 
 public class BasicAttack : MonoBehaviour
 {
-    private const float BASE_ATTACK_SPEED = 0.625f;
+    private const float TWO_FRAMES = 0.066666666f;
 
     [SerializeField]
     private GameObject basicAttackProjectile;
 
-    [HideInInspector]
-    public float baseAttackSpeed;
+    private float baseAttackSpeed;
 
     [HideInInspector]
     public float attackSpeed; //# attacks per second
 
     private float realAttackSpeed; //duration of a full attack cycle
 
-    private float delayPercentBeforeFirstAttack;
+    private float delayPercentBeforeAttack;
 
-    private float delayBeforeAttack;
-    private float delayAfterAttack;
+    private float timeBeforeAttack;
+    private float timeAfterAttack;
+    private float timeAfterAttackForMovement;
 
     private Player player;
     private Health targetHealth;
@@ -37,13 +37,20 @@ public class BasicAttack : MonoBehaviour
         canBasicAttack = true;
     }
 
-    public void SetAttackSpeed(float delayPercentBeforeFirstAttack)
+    public void SetAttackSpeedOnSpawn(float baseAttackSpeedToSet, float delayPercentBeforeAttack)
     {
-        this.delayPercentBeforeFirstAttack = delayPercentBeforeFirstAttack;
+        this.delayPercentBeforeAttack = delayPercentBeforeAttack;
+        SetAttackSpeed(baseAttackSpeedToSet);
+    }
 
-        baseAttackSpeed = BASE_ATTACK_SPEED;
+    public void SetAttackSpeed(float baseAttackSpeed)
+    {
+        this.baseAttackSpeed = baseAttackSpeed;
         attackSpeed = baseAttackSpeed;
         realAttackSpeed = 1f / attackSpeed;
+        timeBeforeAttack = realAttackSpeed * delayPercentBeforeAttack;
+        timeAfterAttack = realAttackSpeed * (1 - delayPercentBeforeAttack);
+        timeAfterAttackForMovement = timeBeforeAttack + TWO_FRAMES;
     }
 
     private void UseBasicAttack(int targetId)
@@ -54,26 +61,23 @@ public class BasicAttack : MonoBehaviour
     [PunRPC]
     private void UseBasicAttackOnServer(int targetId)
     {
-        if(selectedTargetId != targetId)
+        if (selectedTargetId != targetId)
         {
             targetHealth = FindEnemyPlayer(targetId).GetComponent<Health>();
         }
-        
-        if(targetHealth != null && !targetHealth.IsDead())
+
+        if (targetHealth != null && !targetHealth.IsDead())
         {
-            if (!player.PlayerAttackMovement.IsInRange(targetHealth.gameObject.transform))
+            queueAttack = true;
+            selectedTargetId = targetId;
+            if (canBasicAttack)
             {
-                player.PlayerAttackMovement.UseAttackMove(selectedTargetId);
+                StopAllCoroutines();
+                StartCoroutine(Attack());
             }
             else
             {
-                queueAttack = true;
-                if (canBasicAttack)
-                {
-                    selectedTargetId = targetId;
-                    StopAllCoroutines();
-                    StartCoroutine(Attack());
-                }
+                StartCoroutine(CheckMovementEachFrame());
             }
         }
     }
@@ -105,9 +109,24 @@ public class BasicAttack : MonoBehaviour
         queueAttack = false;
     }
 
+    private IEnumerator CheckMovementEachFrame()
+    {
+        while (queueAttack)
+        {
+            yield return null;
+
+            if (!player.PlayerAttackMovement.IsInRange(targetHealth.gameObject.transform) &&
+                !player.PlayerAttackMovement.WasMovingBeforeSkill())
+            {
+                player.PlayerAttackMovement.UseAttackMove(selectedTargetId);
+                CancelBasicAttack();
+            }
+        }
+    }
+
     private IEnumerator Attack()
     {
-        yield return new WaitForSeconds(realAttackSpeed * delayPercentBeforeFirstAttack);
+        yield return new WaitForSeconds(timeBeforeAttack);
 
         canBasicAttack = false;
 
@@ -115,24 +134,26 @@ public class BasicAttack : MonoBehaviour
         basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, 2000);
 
         StartCoroutine(ResetAttack());
+        StartCoroutine(AllowMovementIfFollowingTarget());
+    }
+
+    private IEnumerator AllowMovementIfFollowingTarget()
+    {
+        yield return new WaitForSeconds(timeAfterAttackForMovement);
+
+        StartCoroutine(CheckMovementEachFrame());
+
     }
 
     private IEnumerator ResetAttack()
     {
-        yield return new WaitForSeconds(realAttackSpeed * (1 - delayPercentBeforeFirstAttack));
+        yield return new WaitForSeconds(timeAfterAttack);
 
         canBasicAttack = true;
 
         if (queueAttack && !targetHealth.IsDead())
         {
-            if (!player.PlayerAttackMovement.IsInRange(targetHealth.gameObject.transform))
-            {
-                player.PlayerAttackMovement.UseAttackMove(selectedTargetId);
-            }
-            else
-            {
-                UseBasicAttack(selectedTargetId);
-            }  
+            UseBasicAttackOnServer(selectedTargetId);
         }
     }
 }
