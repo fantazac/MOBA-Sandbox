@@ -139,7 +139,7 @@ public class PlayerMovement : PlayerBase
     {
         StopAllCoroutines();
         PlayerOrientation.StopAllCoroutines();
-        PlayerNormalMovement.StopMovement();
+        PlayerNormalMovement.StopMovement(); 
         PlayerAttackMovement.StopMovement();
     }
     
