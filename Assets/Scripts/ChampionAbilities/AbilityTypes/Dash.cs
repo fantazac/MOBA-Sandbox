@@ -19,6 +19,12 @@ public class Dash : Movement
         }
         
         base.SkillDone();
+
+        if (playerMovement.PhotonView.isMine)
+        {
+            playerMovement.BasicAttack.ResetBasicAttack();
+        }
+        
     }
 
     protected override IEnumerator SkillEffect()

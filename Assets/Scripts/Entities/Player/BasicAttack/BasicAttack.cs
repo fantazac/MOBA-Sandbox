@@ -27,6 +27,8 @@ public abstract class BasicAttack : MonoBehaviour
     protected bool canBasicAttack;
     protected bool queueAttack;
 
+    protected BasicAttackReset basicAttackReset;
+
     protected int selectedTargetId = -1;
 
     public delegate void BasicAttackDoneHandler();
@@ -36,6 +38,9 @@ public abstract class BasicAttack : MonoBehaviour
     {
         player = GetComponent<Player>();
         player.PlayerAttackMovement.IsInRangeForBasicAttack += UseBasicAttack;
+
+        basicAttackReset = GetComponent<BasicAttackReset>();
+        basicAttackReset.BasicAttackAvailable += EnableBasicAttack;
 
         canBasicAttack = true;
     }
@@ -48,9 +53,9 @@ public abstract class BasicAttack : MonoBehaviour
         SetAttackSpeed(0);
     }
 
-    public void SetAttackSpeed(float attackSpeedChange)
+    public void SetAttackSpeed(float attackSpeedPercentChange)
     {
-        attackSpeed += attackSpeedChange;
+        attackSpeed += (baseAttackSpeed * attackSpeedPercentChange);
         realAttackSpeed = 1f / attackSpeed;
         timeBeforeAttack = realAttackSpeed * delayPercentBeforeAttack;
         timeAfterAttack = realAttackSpeed * (1 - delayPercentBeforeAttack);
@@ -77,12 +82,25 @@ public abstract class BasicAttack : MonoBehaviour
             if (canBasicAttack)
             {
                 StopAllCoroutines();
+                VerifyBeforeAttack();
                 StartCoroutine(Attack());
             }
             else
             {
                 StartCoroutine(CheckMovementEachFrame());
             }
+        }
+    }
+
+    protected virtual void VerifyBeforeAttack() { }
+
+    protected void EnableBasicAttack()
+    {
+        canBasicAttack = true;
+
+        if (queueAttack && !targetHealth.IsDead())
+        {
+            UseBasicAttackOnServer(selectedTargetId);
         }
     }
 
@@ -106,11 +124,20 @@ public abstract class BasicAttack : MonoBehaviour
     //need to call this when the target dies
     public void CancelBasicAttack()
     {
-        if (canBasicAttack)
-        {
-            StopAllCoroutines();
-        }
+        StopAllCoroutines();
         queueAttack = false;
+    }
+
+    public void ResetBasicAttack()
+    {
+        player.PhotonView.RPC("ResetBasicAttackOnServer", PhotonTargets.AllViaServer);
+    }
+
+    [PunRPC]
+    protected void ResetBasicAttackOnServer()
+    {
+        basicAttackReset.StopAllCoroutines();
+        EnableBasicAttack();
     }
 
     protected IEnumerator CheckMovementEachFrame()
@@ -141,7 +168,7 @@ public abstract class BasicAttack : MonoBehaviour
             BasicAttackDone();
         }
 
-        StartCoroutine(ResetAttack());
+        basicAttackReset.ResetBasicAttack(timeAfterAttack);
         StartCoroutine(AllowMovementIfFollowingTarget());
     }
 
@@ -159,15 +186,5 @@ public abstract class BasicAttack : MonoBehaviour
 
     }
 
-    protected IEnumerator ResetAttack()
-    {
-        yield return new WaitForSeconds(timeAfterAttack);
-
-        canBasicAttack = true;
-
-        if (queueAttack && !targetHealth.IsDead())
-        {
-            UseBasicAttackOnServer(selectedTargetId);
-        }
-    }
+    
 }

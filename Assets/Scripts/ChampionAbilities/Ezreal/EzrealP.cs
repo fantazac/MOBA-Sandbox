@@ -7,33 +7,33 @@ public class EzrealP : Buff
 
     private int stacks;
 
-    private float attackSpeedPerStack = 0.1f;
+    private float attackSpeedPercentPerStack = 0.1f;
 
     protected override void Start()
     {
         base.Start();
 
         duration = 6;
-
-        //chaque fois qu'un skillshot frappe un ennemi, on gagne un stack et reset la durée
     }
 
-    public override void ActivateBuff()
+    [PunRPC]
+    protected override void ActivateBuffOnServer()
     {
         isActive = true;
         if(stacks < maxStacks)
         {
             stacks++;
-            playerMovement.BasicAttack.SetAttackSpeed(attackSpeedPerStack);
+            playerMovement.BasicAttack.SetAttackSpeed(attackSpeedPercentPerStack);
         }
 
         StopAllCoroutines();
         StartCoroutine(DestroyBuffOnDurationFinished());
     }
 
-    public override void ConsumeBuff()
+    [PunRPC]
+    protected override void ConsumeBuffOnServer()
     {
-        playerMovement.BasicAttack.SetAttackSpeed(-attackSpeedPerStack * stacks);
+        playerMovement.BasicAttack.SetAttackSpeed(-attackSpeedPercentPerStack * stacks);
         stacks = 0;
         StopAllCoroutines();
         isActive = false;

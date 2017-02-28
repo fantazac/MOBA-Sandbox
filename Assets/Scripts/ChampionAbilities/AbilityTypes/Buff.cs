@@ -28,7 +28,13 @@ public class Buff : PlayerSkill
         return isActive;
     }
 
-    public virtual void ActivateBuff()
+    public void ActivateBuff()
+    {
+        playerMovement.PhotonView.RPC("ActivateBuffOnServer", PhotonTargets.AllViaServer);
+    }
+
+    [PunRPC]
+    protected virtual void ActivateBuffOnServer()
     {
         isActive = true;
         StopAllCoroutines();
@@ -38,11 +44,17 @@ public class Buff : PlayerSkill
     protected IEnumerator DestroyBuffOnDurationFinished()
     {
         yield return new WaitForSeconds(duration);
-        
+
         ConsumeBuff();
     }
 
-    public virtual void ConsumeBuff()
+    public void ConsumeBuff()
+    {
+        playerMovement.PhotonView.RPC("ConsumeBuffOnServer", PhotonTargets.AllViaServer);
+    }
+
+    [PunRPC]
+    protected virtual void ConsumeBuffOnServer()
     {
         StopAllCoroutines();
         isActive = false;

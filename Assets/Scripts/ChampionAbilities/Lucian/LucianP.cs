@@ -8,7 +8,7 @@ public class LucianP : Buff
         base.Start();
 
         duration = 3;
-        
+
         foreach (PlayerSkill ps in playerMovement.Player.skills)
         {
             if (ps != null && ps != this)

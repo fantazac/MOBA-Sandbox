@@ -29,21 +29,21 @@ public abstract class Player : PlayerBase
     protected override void Start()
     {
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
-        
+
         PlayerStats.health.OnDeath += OnDeath;
 
         PlayerInput.OnPressedD += DoDamageToPlayer;
         PlayerInput.OnPressedF += DoHealToPlayer;
-        if (PhotonView.isMine)
+        foreach (PlayerSkill ps in skills)
         {
-            foreach (PlayerSkill ps in skills)
+            if (ps != null)
             {
-                if (ps != null)
+                if (ps.isPassive)
                 {
-                    if (ps.isPassive)
-                    {
-                        passive = ps;
-                    }
+                    passive = ps;
+                }
+                if (PhotonView.isMine)
+                {
                     ps.SkillFinished += UseNextAction;
                 }
             }

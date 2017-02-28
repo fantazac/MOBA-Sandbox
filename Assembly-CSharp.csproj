@@ -215,6 +215,7 @@
      <Compile Include="Assets\Scripts\Entities\Health.cs" />
      <Compile Include="Assets\Scripts\Entities\MouseHover.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\BasicAttack.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\BasicAttackReset.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\EzrealBasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\LucianBasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\Champions\Ezreal.cs" />

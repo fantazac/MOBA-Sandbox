@@ -4,6 +4,7 @@ using System.Collections;
 public class LucianBasicAttack : BasicAttack
 {
     private LucianP passive;
+    private bool shootPassiveAfterAttack;
 
     protected override void Start()
     {
@@ -11,21 +12,27 @@ public class LucianBasicAttack : BasicAttack
         passive = (LucianP)player.GetPassiveSkill();
     }
 
+    protected override void VerifyBeforeAttack()
+    {
+        shootPassiveAfterAttack = DetermineIfShootPassive();
+    }
+
     protected override IEnumerator AllowMovementIfFollowingTarget()
     {
         yield return new WaitForSeconds(timeAfterAttackForMovement);
 
-        ShootPassiveShot();
+        if (shootPassiveAfterAttack)
+        {
+            shootPassiveAfterAttack = false;
+            passive.ConsumeBuff();
+            CreateProjectile();
+        }
 
         StartCoroutine(CheckMovementEachFrame());
     }
 
-    private void ShootPassiveShot()
+    private bool DetermineIfShootPassive()
     {
-        if (passive.IsActive())
-        {
-            passive.ConsumeBuff();
-            CreateProjectile();
-        }
+        return passive.IsActive();
     }
 }

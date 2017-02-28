@@ -15,6 +15,7 @@ public class ProjectileBasicAttack : MonoBehaviour
         this.speed = speed / 100f;
         this.photonView = photonView;
         this.targetId = targetId;
+        transform.rotation = Quaternion.LookRotation((target.transform.position - transform.position).normalized);
         StartCoroutine(Shoot(target));
     }
 
@@ -23,7 +24,7 @@ public class ProjectileBasicAttack : MonoBehaviour
         while (true)
         {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, Time.deltaTime * speed);
-            //transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.position, target.transform.position, Time.deltaTime * speed, 0));
+            transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, target.transform.position - transform.position, Time.deltaTime * speed, 0));
 
             yield return null;
         }
