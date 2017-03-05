@@ -16,7 +16,7 @@ public class Ezreal : Player
 
     protected override void InitialiseStats()
     {
-        PlayerStats.movementSpeed = 325;
+        PlayerStats.movementSpeed.SetMovementSpeedOnSpawn(325);
         PlayerStats.range = 550;
         BasicAttack.SetAttackSpeedOnSpawn(0.625f, 0.14f);
 
@@ -25,7 +25,6 @@ public class Ezreal : Player
 
     protected override void AdjustStats()
     {
-        PlayerStats.movementSpeed /= 100f;
         PlayerStats.range /= 100f;
     }
 

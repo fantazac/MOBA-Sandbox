@@ -18,7 +18,7 @@ public class Lucian : Player
 
     protected override void InitialiseStats()
     {
-        PlayerStats.movementSpeed = 325;
+        PlayerStats.movementSpeed.SetMovementSpeedOnSpawn(325);
         PlayerStats.range = 500;
         BasicAttack.SetAttackSpeedOnSpawn(0.638f, 0.14f);
 
@@ -27,7 +27,6 @@ public class Lucian : Player
 
     protected override void AdjustStats()
     {
-        PlayerStats.movementSpeed /= 100f;
         PlayerStats.range /= 100f;
     }
 
@@ -40,19 +39,19 @@ public class Lucian : Player
 
         if (CanUseSkill(skillId) && (!skills[skillId].HasCastTime() || !infoSent))
         {
-            if (skillId == 1 && askedServerForCulling || skillId == 2 && askedServerForQ)
+            if (skillId == (int)SkillId.W && askedServerForCulling || skillId == (int)SkillId.E && askedServerForQ)
             {
                 return;
             }
 
             SetNextActionAfterCastingSkillWithCastTime(skillId);
 
-            if (skillId == 3)
+            if (skillId == (int)SkillId.R)
             {
                 askedServerForCulling = true;
             }
 
-            if (skillId == 0)
+            if (skillId == (int)SkillId.Q)
             {
                 askedServerForQ = true;
 
@@ -87,7 +86,7 @@ public class Lucian : Player
 
         if (nextAction == Actions.NONE)
         {
-            if (skills[2].skillIsActive)
+            if (skills[(int)SkillId.E].skillIsActive)
             {
                 if (DistanceToTravelAfterEIsBiggerThanBeforeTheCast())
                 {
@@ -122,15 +121,15 @@ public class Lucian : Player
     [PunRPC]
     protected override void UseSkillFromServer(int skillId, Vector3 mousePositionOnCast)
     {
-        if (skillId == 3)
+        if (skillId == (int)SkillId.R)
         {
             askedServerForCulling = false;
         }
-        if (skillId == 0)
+        if (skillId == (int)SkillId.Q)
         {
             askedServerForQ = false;
         }
-        if (skillId == 2 && PlayerNormalMovement.WasMovingBeforeSkill())
+        if (skillId == (int)SkillId.E && PlayerNormalMovement.WasMovingBeforeSkill())
         {
             lastMoveBeforeUsingE = PlayerNormalMovement.GetLastMove();
             distanceBetweenLucianAndMoveTargetBeforeUsingE = Vector3.Distance(transform.position, lastMoveBeforeUsingE);

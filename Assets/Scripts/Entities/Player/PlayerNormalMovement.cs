@@ -90,7 +90,8 @@ public class PlayerNormalMovement : PlayerBase
         {
             if (PlayerMovement.CanUseMovement())
             {
-                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, Time.deltaTime * PlayerStats.movementSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, wherePlayerClickedToMove, 
+                    Time.deltaTime * PlayerStats.movementSpeed.GetRealMovementSpeed());
 
                 PlayerMovement.NotifyPlayerMoved();
             }
