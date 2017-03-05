@@ -221,6 +221,7 @@
      <Compile Include="Assets\Scripts\Entities\Health.cs" />
      <Compile Include="Assets\Scripts\Entities\MouseHover.cs" />
      <Compile Include="Assets\Scripts\Entities\MovementSpeed.cs" />
+     <Compile Include="Assets\Scripts\Entities\OutOfCombat.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\ArcherBasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\BasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\BasicAttackReset.cs" />

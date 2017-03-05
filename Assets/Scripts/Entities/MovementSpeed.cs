@@ -5,7 +5,7 @@ public class MovementSpeed : MonoBehaviour
 {
 
     private float baseMovementSpeed;
-    private float movementSpeed;
+    public float movementSpeed;
     private float realMovementSpeed;
 
     public void SetMovementSpeedOnSpawn(float baseMovementSpeed)
@@ -18,6 +18,12 @@ public class MovementSpeed : MonoBehaviour
     public void SetMovementSpeed(float movementSpeedPercentChange)
     {
         movementSpeed += (baseMovementSpeed * movementSpeedPercentChange);
+        realMovementSpeed = movementSpeed * 0.01f;
+    }
+
+    public void SetMovementSpeedForNewPlayer(float currentMovementSpeed)
+    {
+        movementSpeed = currentMovementSpeed;
         realMovementSpeed = movementSpeed * 0.01f;
     }
 

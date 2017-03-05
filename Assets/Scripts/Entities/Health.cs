@@ -8,6 +8,9 @@ public class Health : MonoBehaviour
 
     private PhotonView photonView;
 
+    public delegate void OnDamageTakenHandler();
+    public event OnDamageTakenHandler OnDamageTaken;
+
     public delegate void OnDeathHandler();
     public event OnDeathHandler OnDeath; 
 
@@ -40,6 +43,10 @@ public class Health : MonoBehaviour
     private void DamageTargetFromServer(float damage)
     {
         currentHealth -= damage;
+        if (OnDamageTaken != null)
+        {
+            OnDamageTaken();
+        }
         if (currentHealth <= 0)
         {
             currentHealth = 0;
@@ -47,7 +54,6 @@ public class Health : MonoBehaviour
             {
                 OnDeath();
             }
-            
         }
     }
 

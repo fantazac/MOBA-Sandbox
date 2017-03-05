@@ -6,6 +6,7 @@ public class Buff : PlayerSkill
 
     protected float duration;
     protected bool isActive;
+    protected bool hasNoDuration;
 
     protected override void Start()
     {
@@ -38,7 +39,10 @@ public class Buff : PlayerSkill
     {
         isActive = true;
         StopAllCoroutines();
-        StartCoroutine(DestroyBuffOnDurationFinished());
+        if (!hasNoDuration)
+        {
+            StartCoroutine(DestroyBuffOnDurationFinished());
+        }
     }
 
     protected IEnumerator DestroyBuffOnDurationFinished()
@@ -50,7 +54,10 @@ public class Buff : PlayerSkill
 
     public void ConsumeBuff()
     {
-        playerMovement.PhotonView.RPC("ConsumeBuffOnServer", PhotonTargets.AllViaServer);
+        if (isActive)
+        {
+            playerMovement.PhotonView.RPC("ConsumeBuffOnServer", PhotonTargets.AllViaServer);
+        }
     }
 
     [PunRPC]

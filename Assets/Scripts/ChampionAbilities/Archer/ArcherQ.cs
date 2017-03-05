@@ -17,7 +17,7 @@ public class ArcherQ : Skillshot
     protected override IEnumerator SkillEffectWithCastTime()
     {
         yield return delayCastTime;
-
+        
         GameObject projectileToShoot1 = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
         projectileToShoot1.GetComponent<ProjectileMovement>().ShootProjectile(playerMovement.PhotonView, playerMovement.Player, speed, range, false, true);
 

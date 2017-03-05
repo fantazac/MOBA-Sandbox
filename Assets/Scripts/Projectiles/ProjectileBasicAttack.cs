@@ -7,11 +7,13 @@ public class ProjectileBasicAttack : MonoBehaviour
 
     private float speed = 0;
     private float damage = 10;
+    private Player sourcePlayer;
     private PhotonView photonView;
     private int targetId;
 
-    public void ShootBasicAttack(PhotonView photonView, GameObject target, int targetId, float speed)
+    public void ShootBasicAttack(PhotonView photonView, Player sourcePlayer, GameObject target, int targetId, float speed)
     {
+        this.sourcePlayer = sourcePlayer;
         this.speed = speed / 100f;
         this.photonView = photonView;
         this.targetId = targetId;
@@ -40,6 +42,8 @@ public class ProjectileBasicAttack : MonoBehaviour
             if (photonView.isMine)
             {
                 //if the projectile gives a stat/heals (ex. EzrealW gives AS), changed this
+                
+                sourcePlayer.ProjectileHitEnemyTarget();
                 targetHealth.DamageTargetOnServer(damage);
             }
 

@@ -18,7 +18,7 @@ public class Lucian : Player
 
     protected override void InitialiseStats()
     {
-        PlayerStats.movementSpeed.SetMovementSpeedOnSpawn(325);
+        PlayerStats.MovementSpeed.SetMovementSpeedOnSpawn(325);
         PlayerStats.range = 500;
         BasicAttack.SetAttackSpeedOnSpawn(0.638f, 0.14f);
 

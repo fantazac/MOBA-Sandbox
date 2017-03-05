@@ -12,7 +12,7 @@ public class ProjectileMovement : MonoBehaviour
     private PhotonView photonView;
     [HideInInspector]
     public Team sourceTeam;
-    private Player sourcePlayer;
+    private Player sourcePlayer; 
     private bool canHitAllies;
     private bool lineAreaAfterHit = false;
     private GameObject lineAreaToActivateAfterHit;

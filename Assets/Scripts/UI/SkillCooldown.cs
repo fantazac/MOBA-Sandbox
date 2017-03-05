@@ -61,7 +61,7 @@ public class SkillCooldown : MonoBehaviour
 
     private bool CanUseSkill(int skillId, Vector3 mousePosition)
     {
-        return !StaticObjects.Player.PlayerStats.health.IsDead() && 
+        return !StaticObjects.Player.PlayerStats.Health.IsDead() && 
             skills[skillId].CanUseSkill() && !playerSkills[skillId].skillIsActive && playerSkills[skillId].CanUseSkill(mousePosition);
     }
 

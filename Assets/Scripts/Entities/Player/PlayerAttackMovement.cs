@@ -122,7 +122,7 @@ public class PlayerAttackMovement : PlayerBase
             if (PlayerMovement.CanUseMovement())
             {
                 transform.position = Vector3.MoveTowards(transform.position, enemyTarget.position,
-                    Time.deltaTime * PlayerStats.movementSpeed.GetRealMovementSpeed());
+                    Time.deltaTime * PlayerStats.MovementSpeed.GetRealMovementSpeed());
 
                 PlayerMovement.NotifyPlayerMoved();
             }

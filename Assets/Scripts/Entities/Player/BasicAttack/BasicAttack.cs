@@ -10,7 +10,6 @@ public abstract class BasicAttack : MonoBehaviour
 
     protected float baseAttackSpeed;
 
-    [HideInInspector]
     public float attackSpeed; //# attacks per second
 
     protected float realAttackSpeed; //duration of a full attack cycle
@@ -180,7 +179,7 @@ public abstract class BasicAttack : MonoBehaviour
     protected void CreateProjectile()
     {
         GameObject basicAttackProjectileToShoot = (GameObject)Instantiate(basicAttackProjectile, transform.position + (transform.forward * 0.6f), transform.rotation);
-        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, basicAttackProjectileSpeed);
+        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, player, targetHealth.gameObject, selectedTargetId, basicAttackProjectileSpeed);
     }
 
     protected virtual IEnumerator AllowMovementIfFollowingTarget()

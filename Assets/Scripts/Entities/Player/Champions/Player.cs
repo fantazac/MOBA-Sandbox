@@ -26,11 +26,13 @@ public abstract class Player : PlayerBase
     protected bool infoSent = false;
     protected bool isNewPlayer = true;
 
+
+
     protected override void Start()
     {
         halfHeight = Vector3.up * transform.localScale.y * 0.5f;
 
-        PlayerStats.health.OnDeath += OnDeath;
+        PlayerStats.Health.OnDeath += OnDeath;
 
         PlayerInput.OnPressedD += DoDamageToPlayer;
         PlayerInput.OnPressedF += DoHealToPlayer;
@@ -62,12 +64,12 @@ public abstract class Player : PlayerBase
 
     protected void DoDamageToPlayer()
     {
-        PlayerStats.health.DamageTargetOnServer(10);
+        PlayerStats.Health.DamageTargetOnServer(10);
     }
 
     protected void DoHealToPlayer()
     {
-        PlayerStats.health.HealTargetOnServer(10);
+        PlayerStats.Health.HealTargetOnServer(10);
     }
 
     protected void OnDeath()
@@ -104,12 +106,12 @@ public abstract class Player : PlayerBase
     {
         if (PhotonView.isMine)
         {
-            PhotonView.RPC("ReceiveInfoForNewPlayer", PhotonTargets.AllViaServer, GetComponent<Health>().currentHealth, transform.position);
+            PhotonView.RPC("ReceiveInfoForNewPlayer", PhotonTargets.AllViaServer, GetComponent<Health>().currentHealth, GetComponent<MovementSpeed>().movementSpeed, transform.position);
         }
     }
 
     [PunRPC]
-    protected void ReceiveInfoForNewPlayer(float currentHealth, Vector3 position)
+    protected void ReceiveInfoForNewPlayer(float currentHealth, float currentMovementSpeed, Vector3 position)
     {
         //verify if this is useful with multiple clients
         if (isNewPlayer)
@@ -117,7 +119,8 @@ public abstract class Player : PlayerBase
             isNewPlayer = false;
             transform.position = position;
             PlayerMovement.NotifyPlayerMoved();
-            GetComponent<Health>().currentHealth = currentHealth;
+            PlayerStats.Health.currentHealth = currentHealth;
+            PlayerStats.MovementSpeed.SetMovementSpeedForNewPlayer(currentMovementSpeed);
         }
     }
 
@@ -175,7 +178,7 @@ public abstract class Player : PlayerBase
             Debug.Log("ERROR - This shouldn't be happening.. Check UseNextAction for this object: " + gameObject.name);
         }
 
-        if (!PlayerStats.health.IsDead() && nextAction != Actions.NONE)
+        if (!PlayerStats.Health.IsDead() && nextAction != Actions.NONE)
         {
             if (nextAction == Actions.SKILL)
             {
@@ -304,6 +307,17 @@ public abstract class Player : PlayerBase
         return true;
     }
 
-    public virtual void ProjectileHitEnemyTarget() { }
+    public virtual void ProjectileHitEnemyTarget()
+    {
+        if (PhotonView.isMine)
+        {
+            PlayerStats.OutOfCombat.SetPlayerInCombat();
+        }
+        else
+        {
+            Debug.Log("Check this out please, it shouldn't happen");
+        }
+    }
+
     public virtual void ProjectileHitAllyTarget() { }
 }
