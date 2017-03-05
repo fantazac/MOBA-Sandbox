@@ -27,6 +27,8 @@ public abstract class BasicAttack : MonoBehaviour
     protected bool canBasicAttack;
     protected bool queueAttack;
 
+    protected float basicAttackProjectileSpeed;
+
     protected BasicAttackReset basicAttackReset;
 
     protected int selectedTargetId = -1;
@@ -43,6 +45,9 @@ public abstract class BasicAttack : MonoBehaviour
         basicAttackReset.BasicAttackAvailable += EnableBasicAttack;
 
         canBasicAttack = true;
+
+        //to change
+        basicAttackProjectileSpeed = 2000;
     }
 
     public void SetAttackSpeedOnSpawn(float baseAttackSpeedToSet, float delayPercentBeforeAttack)
@@ -175,7 +180,7 @@ public abstract class BasicAttack : MonoBehaviour
     protected void CreateProjectile()
     {
         GameObject basicAttackProjectileToShoot = (GameObject)Instantiate(basicAttackProjectile, transform.position + (transform.forward * 0.6f), transform.rotation);
-        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, 2000);
+        basicAttackProjectileToShoot.GetComponent<ProjectileBasicAttack>().ShootBasicAttack(player.PhotonView, targetHealth.gameObject, selectedTargetId, basicAttackProjectileSpeed);
     }
 
     protected virtual IEnumerator AllowMovementIfFollowingTarget()

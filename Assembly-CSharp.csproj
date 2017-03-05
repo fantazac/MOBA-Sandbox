@@ -201,6 +201,11 @@
      <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\Dash.cs" />
      <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\Movement.cs" />
      <Compile Include="Assets\Scripts\ChampionAbilities\AbilityTypes\Skillshot.cs" />
+     <Compile Include="Assets\Scripts\ChampionAbilities\Archer\ArcherE.cs" />
+     <Compile Include="Assets\Scripts\ChampionAbilities\Archer\ArcherP.cs" />
+     <Compile Include="Assets\Scripts\ChampionAbilities\Archer\ArcherQ.cs" />
+     <Compile Include="Assets\Scripts\ChampionAbilities\Archer\ArcherR.cs" />
+     <Compile Include="Assets\Scripts\ChampionAbilities\Archer\ArcherW.cs" />
      <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealE.cs" />
      <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealP.cs" />
      <Compile Include="Assets\Scripts\ChampionAbilities\Ezreal\EzrealQ.cs" />
@@ -214,10 +219,12 @@
      <Compile Include="Assets\Scripts\Entities\EntityTeam.cs" />
      <Compile Include="Assets\Scripts\Entities\Health.cs" />
      <Compile Include="Assets\Scripts\Entities\MouseHover.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\ArcherBasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\BasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\BasicAttackReset.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\EzrealBasicAttack.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\BasicAttack\LucianBasicAttack.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\Champions\Archer.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\Champions\Ezreal.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\Champions\Lucian.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\Champions\Player.cs" />

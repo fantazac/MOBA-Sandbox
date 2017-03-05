@@ -58,6 +58,11 @@ public class NetworkManager : MonoBehaviour
 
         if (inChampSelect)
         {
+            if (GUILayout.Button("Archer"))
+            {
+                SpawnMyPlayer("Archer");
+                inChampSelect = false;
+            }
             if (GUILayout.Button("Ezreal"))
             {
                 SpawnMyPlayer("Ezreal");
