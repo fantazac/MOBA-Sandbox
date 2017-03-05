@@ -8,6 +8,7 @@ public class ProjectileMovement : MonoBehaviour
     private float range = 0;
     private float damage = 10;
     public bool deleteOnHit = true;
+    private bool continueOnKill = false;
     private PhotonView photonView;
     [HideInInspector]
     public Team sourceTeam;
@@ -33,6 +34,12 @@ public class ProjectileMovement : MonoBehaviour
         sourceTeam = sourcePlayer.EntityTeam.Team;
         initialPosition = transform.position;
         StartCoroutine(Shoot());
+    }
+
+    public void ShootProjectile(PhotonView photonView, Player sourcePlayer, float speed, float range, bool canHitAllies, bool continueOnKill)
+    {
+        this.continueOnKill = continueOnKill;
+        ShootProjectile(photonView, sourcePlayer, speed, range, canHitAllies);
     }
 
     public void ShootProjectile(PhotonView photonView, Player sourcePlayer, float speed, float range, bool canHitAllies, GameObject lineAreaToActivateAfterHit, float lineAreaAfterHitDuration, bool lineAreaHasParent)
@@ -98,7 +105,10 @@ public class ProjectileMovement : MonoBehaviour
 
                 if (deleteOnHit)
                 {
-                    Destroy(gameObject);
+                    if (!continueOnKill || targetHealth.currentHealth > damage)
+                    {
+                        Destroy(gameObject);
+                    }
                 }
                 else if (lineAreaAfterHit)
                 {
